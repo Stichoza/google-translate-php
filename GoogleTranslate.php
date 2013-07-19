@@ -3,10 +3,10 @@
 /**
  * Google Translate PHP class
  *
- * @author    	Levan Velijanashvili <me@stichoza.com>
- * @link		http://stichoza.com/
- * @version		1.3.0
- * @access		public
+ * @author      Levan Velijanashvili <me@stichoza.com>
+ * @link        http://stichoza.com/
+ * @version     1.3.0
+ * @access      public
  */
 class GoogleTranslate {
     
@@ -36,7 +36,7 @@ class GoogleTranslate {
      * @var string
      * @access private
      */
-    private $urlFormat = "http://translate.google.com/translate_a/t?client=t&text=%s&hl=en&sl=%s&tl=%s&ie=UTF-8&oe=UTF-8&multires=1&otf=1&pc=1&trs=1&ssel=3&tsel=6&sc=1";
+    private static $urlFormat = "http://translate.google.com/translate_a/t?client=t&text=%s&hl=en&sl=%s&tl=%s&ie=UTF-8&oe=UTF-8&multires=1&otf=1&pc=1&trs=1&ssel=3&tsel=6&sc=1";
 
     /**
      * Class constructor
@@ -45,7 +45,7 @@ class GoogleTranslate {
      * @param string $to Language translating to (Optional)
      * @access public
      */
-    public function __construct($from, $to) {
+    public function __construct($from = "en", $to = "ka") {
         $this->setLangFrom($from)->setLangTo($to);
     }
 
@@ -109,10 +109,26 @@ class GoogleTranslate {
      * @access public
      */
     public function translate($string) {
-        $url = sprintf($this->urlFormat, rawurlencode($string), $this->langFrom, $this->langTo);
+        $url = sprintf(self::$urlFormat, rawurlencode($string), $this->langFrom, $this->langTo);
         $result = preg_replace('!,+!', ',', self::makeCurl($url)); // remove repeated commas (causing JSON syntax error)
         $resultArray = json_decode($result, true);
         return $this->lastResult = $resultArray[0][0][0];
+    }
+
+    /**
+     * Static method for translating text
+     * 
+     * @param string $string Text to translate
+     * @param string $from Language code
+     * @param string $to Language code
+     * @return string Translated text
+     * @access public
+     */
+    public static function staticTranslate($string, $from, $to) {
+        $url = sprintf(self::$urlFormat, rawurlencode($string), $from, $to);
+        $result = preg_replace('!,+!', ',', self::makeCurl($url)); // remove repeated commas (causing JSON syntax error)
+        $resultArray = json_decode($result, true);
+        return $resultArray[0][0][0];
     }
 
 }
