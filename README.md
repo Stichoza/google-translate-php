@@ -23,5 +23,9 @@ Also, you can use shorter syntax:
 ```php
 echo $tr->setLangFrom("en")->setLangTo("ru")->translate("Goodbye");
 ```
+Or call static method
+```php
+echo GoogleTranslate::staticTranslate("Hello again", "en", "ka");
+```
     
     
