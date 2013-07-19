@@ -1,7 +1,7 @@
 Google-Translate-PHP
 ====================
 
-Google Translate PHP class, translates totally free of charge.
+Google Translate API free PHP class. Translates totally free of charge.
 
 ## Usage
 
@@ -23,7 +23,7 @@ Also, you can use shorter syntax:
 ```php
 echo $tr->setLangFrom("en")->setLangTo("ru")->translate("Goodbye");
 ```
-Or call static method
+Or call a static method
 ```php
 echo GoogleTranslate::staticTranslate("Hello again", "en", "ka");
 ```
