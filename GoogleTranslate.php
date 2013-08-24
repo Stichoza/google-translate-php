@@ -112,7 +112,9 @@ class GoogleTranslate {
         $url = sprintf(self::$urlFormat, rawurlencode($string), $this->langFrom, $this->langTo);
         $result = preg_replace('!,+!', ',', self::makeCurl($url)); // remove repeated commas (causing JSON syntax error)
         $resultArray = json_decode($result, true);
-        return $this->lastResult = $resultArray[0][0][0];
+        $finalResult = "";
+        foreach ($resultArray[0] as $results) $finalResult .= $results[0];
+        return $this->lastResult = $finalResult;
     }
 
     /**
