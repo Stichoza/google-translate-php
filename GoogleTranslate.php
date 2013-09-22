@@ -89,6 +89,7 @@ class GoogleTranslate {
             curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             $output = curl_exec($ch);
+            return $output;
         }
         
         $queryString = http_build_query($params);
