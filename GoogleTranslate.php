@@ -89,6 +89,11 @@ class GoogleTranslate {
             curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             $output = curl_exec($ch);
+
+            // Clean up temporary file
+            unset($ch);
+            unlink($cookie);
+
             return $output;
         }
         
