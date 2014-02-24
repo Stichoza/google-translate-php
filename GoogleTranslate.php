@@ -111,7 +111,7 @@ class GoogleTranslate {
      * Translate text
      * 
      * @param string $string Text to translate
-     * @return string Translated text
+     * @return string/boolean Translated text
      * @access public
      */
     public function translate($string) {
@@ -119,9 +119,14 @@ class GoogleTranslate {
         $result = preg_replace('!,+!', ',', self::makeCurl($url)); // remove repeated commas (causing JSON syntax error)
         $resultArray = json_decode($result, true);
         $finalResult = "";
-        foreach ($resultArray[0] as $results)
-            $finalResult .= $results[0];
-        return $this->lastResult = $finalResult;
+        if(!empty($resultArray[0])){
+            foreach ($resultArray[0] as $results)
+                $finalResult .= $results[0];
+            return $this->lastResult = $finalResult;
+        }
+        else{
+            return false;
+        }
     }
 
     /**
@@ -130,7 +135,7 @@ class GoogleTranslate {
      * @param string $string Text to translate
      * @param string $from Language code
      * @param string $to Language code
-     * @return string Translated text
+     * @return string/boolean Translated text
      * @access public
      */
     public static function staticTranslate($string, $from, $to) {
@@ -138,9 +143,14 @@ class GoogleTranslate {
         $result = preg_replace('!,+!', ',', self::makeCurl($url)); // remove repeated commas (causing JSON syntax error)
         $resultArray = json_decode($result, true);
         $finalResult = "";
-        foreach ($resultArray[0] as $results)
-            $finalResult .= $results[0];
-        return $finalResult;
+        if(!empty($resultArray[0])){
+            foreach ($resultArray[0] as $results)
+                $finalResult .= $results[0];
+            return $this->lastResult = $finalResult;
+        }
+        else{
+            return false;
+        }
     }
 
 }
