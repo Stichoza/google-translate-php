@@ -84,7 +84,7 @@ class GoogleTranslate {
      */
     public static final function makeCurl($url, array $params = array(), $cookieSet = false) {
         if (!$cookieSet) {
-            $cookie = tempnam("/tmp", "CURLCOOKIE");
+            $cookie = tempnam(sys_get_temp_dir(), "CURLCOOKIE");
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -115,18 +115,7 @@ class GoogleTranslate {
      * @access public
      */
     public function translate($string) {
-        $url = sprintf(self::$urlFormat, rawurlencode($string), $this->langFrom, $this->langTo);
-        $result = preg_replace('!,+!', ',', self::makeCurl($url)); // remove repeated commas (causing JSON syntax error)
-        $resultArray = json_decode($result, true);
-        $finalResult = "";
-        if(!empty($resultArray[0])){
-            foreach ($resultArray[0] as $results)
-                $finalResult .= $results[0];
-            return $this->lastResult = $finalResult;
-        }
-        else{
-            return false;
-        }
+        return self::staticTranslate($string, $this->langFrom, $this->langTo);
     }
 
     /**
@@ -143,14 +132,13 @@ class GoogleTranslate {
         $result = preg_replace('!,+!', ',', self::makeCurl($url)); // remove repeated commas (causing JSON syntax error)
         $resultArray = json_decode($result, true);
         $finalResult = "";
-        if(!empty($resultArray[0])){
-            foreach ($resultArray[0] as $results)
+        if (!empty($resultArray[0])) {
+            foreach ($resultArray[0] as $results) {
                 $finalResult .= $results[0];
+            }
             return $this->lastResult = $finalResult;
         }
-        else{
-            return false;
-        }
+        return false;
     }
 
 }
