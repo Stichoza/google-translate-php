@@ -115,7 +115,7 @@ class GoogleTranslate {
      * @access public
      */
     public function translate($string) {
-        return self::staticTranslate($string, $this->langFrom, $this->langTo);
+        return $this->lastResult = self::staticTranslate($string, $this->langFrom, $this->langTo);
     }
 
     /**
@@ -136,7 +136,7 @@ class GoogleTranslate {
             foreach ($resultArray[0] as $results) {
                 $finalResult .= $results[0];
             }
-            return $this->lastResult = $finalResult;
+            return $finalResult;
         }
         return false;
     }
