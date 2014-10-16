@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "php": ">=5.3.29",
+        "php": ">=5.3.29"
     },
     "require-dev": {
         "phpspec/phpspec": "~2.0",
