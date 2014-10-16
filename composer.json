@@ -1,7 +1,7 @@
 {
     "name": "stichoza/google-translate-php",
     "description": "Google Translate API free PHP class",
-    "license": "GPL-3.0",
+    "license": "MIT",
     "authors": [
         {
             "name": "Levan Velijanashvili",
