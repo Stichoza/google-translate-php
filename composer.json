@@ -1,0 +1,23 @@
+{
+    "name": "stichoza/google-translate-php",
+    "description": "Google Translate API free PHP class",
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "Levan Velijanashvili",
+            "email": "me@stichoza.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.29",
+    },
+    "require-dev": {
+        "phpspec/phpspec": "~2.0",
+        "phpunit/phpunit": "~3.7"
+    },
+    "autoload": {
+        "psr-0": {
+            "Stichoza\\Google": "src/"
+        }
+    }
+}

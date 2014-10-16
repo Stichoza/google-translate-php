@@ -1,4 +1,4 @@
-<?php
+<?php namespace Stichoza\Google;
 
 /**
  * Google Translate PHP class
