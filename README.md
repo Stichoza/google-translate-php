@@ -25,9 +25,11 @@ composer require stichoza/google-translate-php
 
 Instantiate GoogleTranslate object
 ```php
+use Stichoza\Google\GoogleTranslate;
+
 $tr = new GoogleTranslate("en", "ka");
 ```
-Rr set/change languages later
+Or set/change languages later
 ```php
 $tr = new GoogleTranslate();
 $tr->setLangFrom("en");
