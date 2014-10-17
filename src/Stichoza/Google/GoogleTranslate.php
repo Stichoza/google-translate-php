@@ -5,8 +5,7 @@
  *
  * @author      Levan Velijanashvili <me@stichoza.com>
  * @link        http://stichoza.com/
- * @version     1.3.0
- * @access      public
+ * @version     v2.0.3
  */
 class GoogleTranslate {
     
