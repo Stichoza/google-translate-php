@@ -22,7 +22,7 @@
             "Stichoza\\Google": "src/"
         },
         "psr-4": {
-            "Stichoza\\Google": "src/Stichoza/Google/"
+            "Stichoza\\Google": "src/Stichoza/Google"
         }
     }
 }
