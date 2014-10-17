@@ -3,6 +3,16 @@ Google-Translate-PHP
 
 Google Translate API free PHP class. Translates totally free of charge.
 
+## Installation
+
+Installing this package through [Composer](https://getcomposer.org/). Edit your project's `composer.json` file to require `stichoza/google-translate-php`.
+
+```json
+"require": {
+    "stichoza/google-translate-php": "~2.0"
+}
+```
+
 ## Usage
 
 Instantiate GoogleTranslate object
