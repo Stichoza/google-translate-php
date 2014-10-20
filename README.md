@@ -1,6 +1,8 @@
 Google-Translate-PHP
 ====================
 
+[![Latest Stable Version](https://poser.pugx.org/stichoza/google-translate-php/v/stable.svg)](https://packagist.org/packages/stichoza/google-translate-php) [![Total Downloads](https://poser.pugx.org/stichoza/google-translate-php/downloads.svg)](https://packagist.org/packages/stichoza/google-translate-php) [![Latest Unstable Version](https://poser.pugx.org/stichoza/google-translate-php/v/unstable.svg)](https://packagist.org/packages/stichoza/google-translate-php) [![License](https://poser.pugx.org/stichoza/google-translate-php/license.svg)](https://packagist.org/packages/stichoza/google-translate-php)
+
 Google Translate API free PHP class. Translates totally free of charge.
 
 ## Installation
