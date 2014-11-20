@@ -129,6 +129,7 @@ class GoogleTranslate {
     public static function staticTranslate($string, $from, $to) {
         $url = sprintf(self::$urlFormat, rawurlencode($string), $from, $to);
         $result = preg_replace('!,+!', ',', self::makeCurl($url)); // remove repeated commas (causing JSON syntax error)
+        $result = str_replace ("[,", "[", $result);
         $resultArray = json_decode($result, true);
         $finalResult = "";
         if (!empty($resultArray[0])) {
