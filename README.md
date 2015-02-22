@@ -49,5 +49,7 @@ Or call a static method
 ```php
 echo GoogleTranslate::staticTranslate("Hello again", "en", "ka");
 ```
-    
-    
+
+## Disclaimer
+
+This package is developed for educational purposes only. Do not depend on this package as it may break anytime as it is based on "CURLing" the Google Translate website. Consider buying [Official Google Translate API](https://cloud.google.com/translate/) for other types of usage.
