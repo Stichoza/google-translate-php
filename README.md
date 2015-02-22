@@ -1,7 +1,7 @@
 Google-Translate-PHP
 ====================
 
-[![Latest Stable Version](https://poser.pugx.org/stichoza/google-translate-php/v/stable.svg)](https://packagist.org/packages/stichoza/google-translate-php) [![Total Downloads](https://poser.pugx.org/stichoza/google-translate-php/downloads.svg)](https://packagist.org/packages/stichoza/google-translate-php) [![Latest Unstable Version](https://poser.pugx.org/stichoza/google-translate-php/v/unstable.svg)](https://packagist.org/packages/stichoza/google-translate-php) [![License](https://poser.pugx.org/stichoza/google-translate-php/license.svg)](https://packagist.org/packages/stichoza/google-translate-php)
+[![Latest Stable Version](https://img.shields.io/packagist/v/Stichoza/google-translate-php.svg)](https://packagist.org/packages/stichoza/google-translate-php) [![Total Downloads](https://img.shields.io/packagist/dt/Stichoza/google-translate-php.svg)](https://packagist.org/packages/stichoza/google-translate-php) [![Downloads Month](https://img.shields.io/packagist/dm/Stichoza/google-translate-php.svg)](https://packagist.org/packages/stichoza/google-translate-php) [![License](https://img.shields.io/packagist/l/Stichoza/google-translate-php.svg)](https://packagist.org/packages/stichoza/google-translate-php) [![Code Climate](https://img.shields.io/codeclimate/github/Stichoza/google-translate-php.svg)](https://codeclimate.com/github/Stichoza/google-translate-php)
 
 Google Translate API free PHP class. Translates totally free of charge.
 
