@@ -139,7 +139,9 @@ class TranslateClient {
      * @return void
      */
     private static function checkStaticInstance() {
-        if (!isset(self::$staticInstance)) self::$staticInstance = new self();
+        if (!isset(self::$staticInstance)) {
+         self::$staticInstance = new self();
+        }
     }
 
     /**
@@ -227,7 +229,9 @@ class TranslateClient {
         }
 
         // Chack if translation exists
-        if (empty($responseArray[0])) return false;
+        if (empty($responseArray[0])) {
+         return false;
+        }
  
         // Reduce array to generate translated sentenece
         return array_reduce($responseArray[0], function($carry, $item) {
