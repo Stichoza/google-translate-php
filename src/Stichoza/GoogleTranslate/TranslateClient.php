@@ -9,7 +9,7 @@ use GuzzleHttp\Client as GuzzleHttpClient;
 use GuzzleHttp\Exception\RequestException as GuzzleRequestException;
 
 /**
- * Free Google Translate PHP Package
+ * Free Google Translate API PHP Package
  *
  * @author      Levan Velijanashvili <me@stichoza.com>
  * @link        http://stichoza.com/
