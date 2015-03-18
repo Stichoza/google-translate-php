@@ -1,7 +1,5 @@
 <?php namespace Stichoza\GoogleTranslate;
 
-use Exception;
-use BadMethodCallException;
 use Stichoza\GoogleTranslate\Exception\RequestException;
 use Stichoza\GoogleTranslate\Exception\TranslationException;
 use GuzzleHttp\Client as GuzzleHttpClient;
@@ -15,11 +13,6 @@ use GuzzleHttp\Exception\RequestException as GuzzleRequestException;
  * @license     MIT
  */
 class TranslateClient {
-
-    /**
-     * @var Because nobody cares about singletons
-     */
-    private static $staticInstance;
 
     /**
      * @var \Guzzle\Http\Client HTTP Client
@@ -80,28 +73,8 @@ class TranslateClient {
         $this->setSource($source)->setTarget($target); // Set languages
     }
 
-    /**
-     * Call methods
-     * 
-     * @param  string $name      Method name
-     * @param  array $arguments  Method arguments
-     * @throws BadMethodCallException If method is not defined
-     * @return mixed
-     */
-    public function __call($name, $arguments) {
-        switch ($name) {
-            case 'translate':
-            case 'guessLanguage':
-                try {
-                    $method = 'p' . ucfirst($name); // Generate methid name
-                    $result = call_user_func_array([$this, $method], $arguments);
-                } catch (Exception $e) {
-                    throw $e;
-                }
-                return $result;
-            
-            default: throw new BadMethodCallException("Call to undefined method {$name}");
-        }
+    public static function __callStatic($name, $arguments) {
+        return 'lol';
     }
 
     /**
@@ -134,7 +107,7 @@ class TranslateClient {
      * @throws RequestException if the HTTP request fails
      * @return string/boolean Translated text
      */
-    public function pTranslate($string) {
+    public function translate($string) {
 
         if (!is_string($string)) {
             throw new TranslationException("Invalid string provided");
@@ -162,8 +135,6 @@ class TranslateClient {
             throw new TranslationException('Data cannot be decoded or it\'s deeper than the recursion limit');
         }
 
-        return $bodyArray;
-
         // Check if translated data exists
         if (empty($bodyArray[0])) return false;
 
@@ -173,23 +144,6 @@ class TranslateClient {
             return $carry;
         });
 
-    }
-
-    private static function checkStaticInstance() {
-        if (!isset(self::$staticInstance)) self::$staticInstance = new self();
-    }
-
-    public static function translate($source, $target, $string) {
-        self::checkStaticInstance();
-        try {
-            $result = self::$staticInstance
-                ->setSource($source)
-                ->setTarger($target)
-                ->pTranslate($string);
-        } catch (Exception $e) {
-            throw $e;
-        }
-        return $result;
     }
 
 }
