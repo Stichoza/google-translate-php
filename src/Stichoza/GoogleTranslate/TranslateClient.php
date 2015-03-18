@@ -18,12 +18,12 @@ use GuzzleHttp\Exception\RequestException as GuzzleRequestException;
 class TranslateClient {
 
     /**
-     * @var Because nobody cares about singletons
+     * @var TranslateClient Because nobody cares about singletons
      */
     private static $staticInstance;
 
     /**
-     * @var \Guzzle\Http\Client HTTP Client
+     * @var \GuzzleHttp\Client HTTP Client
      */
     private $httpClient;
     
