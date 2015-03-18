@@ -50,6 +50,10 @@ Or call a static method
 echo GoogleTranslate::staticTranslate("Hello again", "en", "ka");
 ```
 
+#### Available languages
+
+Supported languages are listed at [Google API docs](https://cloud.google.com/translate/v2/using_rest#language-params).
+
 ## Disclaimer
 
 This package is developed for educational purposes only. Do not depend on this package as it may break anytime as it is based on "CURLing" the Google Translate website. Consider buying [Official Google Translate API](https://cloud.google.com/translate/) for other types of usage.
