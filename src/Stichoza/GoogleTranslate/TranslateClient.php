@@ -1,7 +1,10 @@
 <?php namespace Stichoza\GoogleTranslate;
 
-use Stichoza\GoogleTranslate\Exception\RequestException;
-use Stichoza\GoogleTranslate\Exception\TranslationException;
+use Exception;
+use ErrorException;
+use BadMethodCallException;
+use InvalidArgumentException;
+use UnexpectedValueException;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use GuzzleHttp\Exception\RequestException as GuzzleRequestException;
 
@@ -13,6 +16,11 @@ use GuzzleHttp\Exception\RequestException as GuzzleRequestException;
  * @license     MIT
  */
 class TranslateClient {
+
+    /**
+     * @var Because nobody cares about singletons
+     */
+    private static $staticInstance;
 
     /**
      * @var \Guzzle\Http\Client HTTP Client
@@ -73,8 +81,66 @@ class TranslateClient {
         $this->setSource($source)->setTarget($target); // Set languages
     }
 
-    public static function __callStatic($name, $arguments) {
-        return 'lol';
+    /**
+     * Override translate method for static call
+     *
+     * @throws BadMethodCallException If calling nonexistent method
+     * @throws InvalidArgumentException If parameters are passed incorrectly
+     * @throws InvalidArgumentException If the provided argument is not of type 'string'
+     * @throws ErrorException If the HTTP request fails
+     * @throws UnexpectedValueException If received data cannot be decoded
+     */
+    public static function __callStatic($name, $args) {
+        switch ($name) {
+            case 'translate':
+                if (count($args) < 3) {
+                    throw new InvalidArgumentException("Expecting 3 parameters");
+                }
+                try {
+                    self::checkStaticInstance();
+                    $result = self::staticTranslate($args[0], $args[1], $args[2]);
+                } catch (Exception $e) {
+                    throw $e;
+                }
+                return $result;
+
+            default: throw new BadMethodCallException("Method [{$name}] does not exist");
+        }
+    }
+
+    /**
+     * Override translate method for instance call
+     *
+     * @throws BadMethodCallException If calling nonexistent method
+     * @throws InvalidArgumentException If parameters are passed incorrectly
+     * @throws InvalidArgumentException If the provided argument is not of type 'string'
+     * @throws ErrorException If the HTTP request fails
+     * @throws UnexpectedValueException If received data cannot be decoded
+     */
+    public function __call($name, $args) {
+        switch ($name) {
+            case 'translate':
+                if (count($args) < 1) {
+                    throw new InvalidArgumentException("Expecting 1 parameter");
+                }
+                try {
+                    $result = $this->instanceTranslate($args[0]);
+                } catch (Exception $e) {
+                    throw $e;
+                }
+                return $result;
+            
+            default: throw new BadMethodCallException("Method [{$name}] does not exist");
+        }
+    }
+
+    /**
+     * Check if static instance exists and instantiate if not
+     * 
+     * @return void
+     */
+    private static function checkStaticInstance() {
+        if (!isset(self::$staticInstance)) self::$staticInstance = new self();
     }
 
     /**
@@ -100,17 +166,18 @@ class TranslateClient {
     }
 
     /**
-     * Translate text
+     * Get response array
      * 
      * @param string $string Text to translate
-     * @throws TranslationException if the provided argument is not of type 'string'
-     * @throws RequestException if the HTTP request fails
-     * @return string/boolean Translated text
+     * @throws InvalidArgumentException If the provided argument is not of type 'string'
+     * @throws ErrorException If the HTTP request fails
+     * @throws UnexpectedValueException If received data cannot be decoded
+     * @return array Response
      */
-    public function translate($string) {
+    public function getResponse($string) {
 
         if (!is_string($string)) {
-            throw new TranslationException("Invalid string provided");
+            throw new InvalidArgumentException("Invalid string provided");
         }
 
         $queryArray = array_merge($this->urlParams, [
@@ -122,7 +189,7 @@ class TranslateClient {
         try {
             $response = $this->httpClient->get($this->urlBase, ['query' => $queryArray]);
         } catch (GuzzleRequestException $e) {
-            throw new RequestException("Error processing request");
+            throw new ErrorException("Error processing request");
         }
 
         $body = $response->getBody(); // Get response body
@@ -132,18 +199,70 @@ class TranslateClient {
         
         // Decode JSON data
         if (($bodyArray = json_decode($bodyJson, true)) === null) {
-            throw new TranslationException('Data cannot be decoded or it\'s deeper than the recursion limit');
+            throw new UnexpectedValueException('Data cannot be decoded or it\'s deeper than the recursion limit');
         }
 
-        // Check if translated data exists
-        if (empty($bodyArray[0])) return false;
+        return $bodyArray;
 
+    }
+
+    /**
+     * Translate text
+     *
+     * This can be called from instance method translate() using __call() magic method.
+     * Use $instance->translate($string) instead.
+     * 
+     * @param string $string Text to translate
+     * @throws InvalidArgumentException If the provided argument is not of type 'string'
+     * @throws ErrorException If the HTTP request fails
+     * @throws UnexpectedValueException If received data cannot be decoded
+     * @return string|boolean Translated text
+     */
+    private function instanceTranslate($string) {
+
+        // Rethrow exceptions
+        try {
+            $responseArray = $this->getResponse($string);
+        } catch (Exception $e) {
+            throw $e;
+        }
+
+        // Chack if translation exists
+        if (empty($responseArray[0])) return false;
+ 
         // Reduce array to generate translated sentenece
-        return array_reduce($bodyArray[0], function($carry, $item) {
+        return array_reduce($responseArray[0], function($carry, $item) {
             $carry .= $item[0];
             return $carry;
         });
-
     }
+
+    /**
+     * Translate text statically
+     *
+     * This can be called from static method translate() using __callStatic() magic method.
+     * Use TranslateClient::translate($source, $target, $string) instead.
+     * 
+     * @param string $source Source language
+     * @param string $target Target language
+     * @param string $string Text to translate
+     * @throws InvalidArgumentException If the provided argument is not of type 'string'
+     * @throws ErrorException If the HTTP request fails
+     * @throws UnexpectedValueException If received data cannot be decoded
+     * @return string|boolean Translated text
+     */
+    private static function staticTranslate($source, $target, $string) {
+        self::checkStaticInstance();
+        try {
+            $result = self::$staticInstance
+                ->setSource($source)
+                ->setTarget($target)
+                ->translate($string);
+        } catch (Exception $e) {
+            throw $e;
+        }
+        return $result;
+    }
+
 
 }
