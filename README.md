@@ -58,10 +58,8 @@ To detect language automatically, just set the source language to `null`
 $tr = new TranslateClient(null, 'es'); // Detect language and translate to Spanish
 ```
 
-Or
-
 ```php
-$tr->setSource(null);
+$tr->setSource(null); // Another way
 ```
 
 #### Get Detected Language
