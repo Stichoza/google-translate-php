@@ -97,7 +97,6 @@ class TranslateClient {
                     throw new InvalidArgumentException("Expecting 3 parameters");
                 }
                 try {
-                    self::checkStaticInstance();
                     $result = self::staticTranslate($args[0], $args[1], $args[2]);
                 } catch (Exception $e) {
                     throw $e;
