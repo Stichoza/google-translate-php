@@ -186,7 +186,7 @@ class TranslateClient {
         ]);
 
         try {
-            $response = $this->httpClient->get($this->urlBase, ['query' => $queryArray]);
+            $response = $this->httpClient->post($this->urlBase, ['query' => $queryArray]);
         } catch (GuzzleRequestException $e) {
             throw new ErrorException("Error processing request");
         }
