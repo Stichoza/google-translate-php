@@ -69,7 +69,7 @@ $tr->setSource(null); // Another way
 ```php
 $tr = new TranslateClient(null, 'fr');
 $text = $tr->translate('Hello World!');
-echo $th->getLastDetectedSource(); // Output: en
+echo $tr->getLastDetectedSource(); // Output: en
 ```
 
 Return value may be boolean `FALSE` if there is no detected language.
