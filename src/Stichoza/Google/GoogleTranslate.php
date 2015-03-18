@@ -1,109 +1,99 @@
 <?php namespace Stichoza\Google;
 
+use GuzzleHttp\Client as GuzzleHttpClient;
+use GuzzleHttp\Exception\RequestException;
+
 /**
- * Google Translate PHP class
+ * Free Google Translate PHP Package
  *
  * @author      Levan Velijanashvili <me@stichoza.com>
  * @link        http://stichoza.com/
- * @version     v2.0.3
+ * @license     MIT
  */
 class GoogleTranslate {
+
+    /**
+     * @var \Guzzle\Http\Client HTTP Client
+     */
+    private $httpClient;
     
     /**
-     * Last translation
-     * @var string
-     * @access private
+     * @var string Source language - from where the string should be translated
      */
-    public $lastResult = "";
+    private $sourceLanguage;
     
     /**
-     * Language translating from
-     * @var string
-     * @access private
+     * @var string Translation language - to which language string should be translated
      */
-    private $langFrom;
+    private $translationLanguage;
     
     /**
-     * Language translating to
-     * @var string
-     * @access private
+     * @var string Google Translate URL base
      */
-    private $langTo;
-    
+    private $urlBase = 'http://translate.google.com/translate_a/t';
+
     /**
-     * Google Translate URL format
-     * @var string
-     * @access private
+     * @var array URL Parameters
      */
-    private static $urlFormat = "http://translate.google.com/translate_a/t?client=t&text=%s&hl=en&sl=%s&tl=%s&ie=UTF-8&oe=UTF-8&multires=1&otf=1&pc=1&trs=1&ssel=3&tsel=6&sc=1";
+    private $urlParams = [
+        'client'   => 't',
+        'text'     => null, // String
+        'hl'       => 'en',
+        'sl'       => null, // Source language
+        'tl'       => null, // Translation language
+        'ie'       => 'UTF-8',
+        'oe'       => 'UTF-8',
+        'multires' => '1',
+        'otf'      => '1',
+        'pc'       => '1',
+        'trs'      => '1',
+        'ssel'     => '3',
+        'tsel'     => '6',
+        'sc'       => '1'
+    ];
 
     /**
      * Class constructor
      * 
      * @param string $from Language translating from (Optional)
      * @param string $to Language translating to (Optional)
-     * @access public
      */
-    public function __construct($from = "en", $to = "ka") {
-        $this->setLangFrom($from)->setLangTo($to);
+    public function __construct($from = 'auto', $to = 'en') {
+        
+        /*
+         * Create HTTP client
+         * Currently using Guzzle and it's awesome!
+         */        
+        $this->httpClient = new GuzzleHttpClient();
+
+        /*
+         * Set languages
+         */
+        $this->setSource($from)->setTranslation($to);
+
     }
 
     /**
-     * Set language we are transleting from
+     * Set source language we are transleting from
      * 
-     * @param string $from Language code
+     * @param string $lang Language code
      * @return GoogleTranslate
-     * @access public
      */
-    public function setLangFrom($lang) {
-        $this->langFrom = $lang;
+    public function setSource($lang = null) {
+        $this->sourceLanguage = is_null($lang) ? 'auto' : $lang;
         return $this;
     }
     
     /**
-     * Set language we are transleting to
+     * Set translation language we are transleting to
      * 
-     * @param string $to Language code
+     * @param string $lang Language code
      * @return GoogleTranslate
      * @access public
      */
-    public function setLangTo($lang) {
-        $this->langTo = $lang;
+    public function setTranslation($lang) {
+        $this->translationLanguage = $lang;
         return $this;
-    }
-    
-    
-    /**
-     * Simplified curl method
-     * @param string $url URL
-     * @param array $params Parameter array
-     * @param boolean $cookieSet
-     * @return string
-     * @access public
-     */
-    public static final function makeCurl($url, array $params = array(), $cookieSet = false) {
-        if (!$cookieSet) {
-            $cookie = tempnam(sys_get_temp_dir(), "CURLCOOKIE");
-            $ch = curl_init($url);
-            curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $output = curl_exec($ch);
-
-            // Clean up temporary file
-            unset($ch);
-            unlink($cookie);
-
-            return $output;
-        }
-        
-        $queryString = http_build_query($params);
-
-        $curl = curl_init($url . "?" . $queryString);
-        curl_setopt($curl, CURLOPT_COOKIEFILE, $cookie);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $output = curl_exec($curl);
-        
-        return $output;
     }
 
     /**
@@ -114,7 +104,17 @@ class GoogleTranslate {
      * @access public
      */
     public function translate($string) {
-        return $this->lastResult = self::staticTranslate($string, $this->langFrom, $this->langTo);
+
+        $queryArray = array_merge($this->urlParams, [
+            'text' => $string,
+            'sl'   => $this->sourceLanguage,
+            'tl'   => $this->translationLanguage
+        ]);
+
+        $response = $this->httpClient->get($this->urlBase, ['query' => $queryArray]);
+
+        return $response->getBody();
+
     }
 
     /**
@@ -127,11 +127,17 @@ class GoogleTranslate {
      * @access public
      */
     public static function staticTranslate($string, $from, $to) {
-        $url = sprintf(self::$urlFormat, rawurlencode($string), $from, $to);
-        $result = preg_replace('!,+!', ',', self::makeCurl($url)); // remove repeated commas (causing JSON syntax error)
+
+        
+
+        /*
+         * remove repeated commas (causing JSON syntax error)
+         */
+        $result = preg_replace('!,+!', ',', self::makeCurl($url));
         $result = str_replace ("[,", "[", $result);
         $resultArray = json_decode($result, true);
-        $finalResult = "";
+
+        $finalResult = '';
         if (!empty($resultArray[0])) {
             foreach ($resultArray[0] as $results) {
                 $finalResult .= $results[0];
