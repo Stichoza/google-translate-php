@@ -25,9 +25,9 @@ class TranslateClient {
     private $sourceLanguage;
     
     /**
-     * @var string Translation language - to which language string should be translated
+     * @var string Target language - to which language string should be translated
      */
-    private $translationLanguage;
+    private $targetLanguage;
     
     /**
      * @var string Google Translate URL base
@@ -42,59 +42,60 @@ class TranslateClient {
         'text'     => null, // String
         'hl'       => 'en',
         'sl'       => null, // Source language
-        'tl'       => null, // Translation language
-        'ie'       => 'UTF-8',
-        'oe'       => 'UTF-8',
+        'tl'       => null, // Target language
+        'ie'       => 'UTF-8', // Input encoding
+        'oe'       => 'UTF-8', // Output encoding
         'multires' => '1',
-        'otf'      => '1',
+        'otf'      => '0',
         'pc'       => '1',
         'trs'      => '1',
-        'ssel'     => '3',
-        'tsel'     => '6',
+        'ssel'     => '0',
+        'tsel'     => '0',
         'sc'       => '1'
+    ];
+
+    /**
+     * @var array Regex key-value patterns to replace on response data
+     */
+    private $resultRegexes = [
+        '/,+/'  => ',',
+        '/\[,/' => '[',
     ];
 
     /**
      * Class constructor
      * 
-     * @param string $from Language translating from (Optional)
-     * @param string $to Language translating to (Optional)
+     * @param string $source Source language (Optional)
+     * @param string $target Target language (Optional)
      */
-    public function __construct($from = 'auto', $to = 'en') {
-        
-        /*
-         * Create HTTP client
-         * Currently using Guzzle and it's awesome!
-         */        
-        $this->httpClient = new GuzzleHttpClient();
+    public function __construct($source = 'auto', $target = 'en') {
+        $this->httpClient = new GuzzleHttpClient(); // Create HTTP client
+        $this->setSource($source)->setTarget($target); // Set languages
+    }
 
-        /*
-         * Set languages
-         */
-        $this->setSource($from)->setTranslation($to);
-
+    public static function __callStatic($name, $arguments) {
+        return 'lol';
     }
 
     /**
      * Set source language we are transleting from
      * 
-     * @param string $lang Language code
+     * @param string $source Language code
      * @return TranslateClient
      */
-    public function setSource($lang = null) {
-        $this->sourceLanguage = is_null($lang) ? 'auto' : $lang;
+    public function setSource($source = null) {
+        $this->sourceLanguage = is_null($source) ? 'auto' : $source;
         return $this;
     }
     
     /**
      * Set translation language we are transleting to
      * 
-     * @param string $lang Language code
+     * @param string $target Language code
      * @return TranslateClient
-     * @access public
      */
-    public function setTranslation($lang) {
-        $this->translationLanguage = $lang;
+    public function setTarget($target) {
+        $this->targetLanguage = $target;
         return $this;
     }
 
@@ -105,7 +106,6 @@ class TranslateClient {
      * @throws TranslationException if the provided argument is not of type 'string'
      * @throws RequestException if the HTTP request fails
      * @return string/boolean Translated text
-     * @access public
      */
     public function translate($string) {
 
@@ -116,49 +116,36 @@ class TranslateClient {
         $queryArray = array_merge($this->urlParams, [
             'text' => $string,
             'sl'   => $this->sourceLanguage,
-            'tl'   => $this->translationLanguage
+            'tl'   => $this->targetLanguage
         ]);
 
         try {
             $response = $this->httpClient->get($this->urlBase, ['query' => $queryArray]);
-        } catch (Exception $e) {
+        } catch (GuzzleRequestException $e) {
             throw new RequestException("Error processing request");
         }
 
-        return $response->getBody();
-
-    }
-
-    /**
-     * Static method for translating text
-     * 
-     * @param string $string Text to translate
-     * @param string $from Language code
-     * @param string $to Language code
-     * @return string/boolean Translated text
-     * @access public
-     */
-    public static function staticTranslate($string, $from, $to) {
-
-        
+        $body = $response->getBody(); // Get response body
 
         /*
-         * remove repeated commas (causing JSON syntax error)
+         * Modify body to avoid json errors
          */
-        $result = preg_replace('!,+!', ',', self::makeCurl($url));
-        $result = str_replace ("[,", "[", $result);
-        $resultArray = json_decode($result, true);
-
-        $finalResult = '';
-        if (!empty($resultArray[0])) {
-            foreach ($resultArray[0] as $results) {
-                $finalResult .= $results[0];
-            }
-            return $finalResult;
+        $bodyJson = preg_replace(array_keys($this->resultRegexes), array_values($this->resultRegexes), $body);
+        
+        /*
+         * Decode JSON data
+         */
+        if (($bodyArray = json_decode($bodyJson, true)) === null) {
+            throw new TranslationException('Data cannot be decoded or it\'s deeper than the recursion limit');
         }
-        return false;
+
+        if (empty($bodyArray[0])) return false;
+            
+        return array_reduce($bodyArray[0], function($carry, $item) {
+            $carry .= $item[0];
+            return $carry;
+        });
+
     }
 
 }
-
-?>
