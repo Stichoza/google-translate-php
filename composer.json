@@ -19,15 +19,15 @@
     },
     "autoload": {
         "psr-0": {
-            "Stichoza\\Google\\": "src/"
+            "Stichoza\\GoogleTranslate\\": "src/"
         },
         "psr-4": {
-            "Stichoza\\Google\\": "src/Stichoza/Google/"
+            "Stichoza\\GoogleTranslate\\": "src/Stichoza/GoogleTranslate/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Stichoza\\Google\\Tests\\": "tests/"
+            "Stichoza\\GoogleTranslate\\Tests\\": "tests/"
         }
     }
 }

@@ -1,7 +1,9 @@
-<?php namespace Stichoza\Google;
+<?php namespace Stichoza\GoogleTranslate;
 
+use Stichoza\GoogleTranslate\Exception\RequestException;
+use Stichoza\GoogleTranslate\Exception\TranslationException;
 use GuzzleHttp\Client as GuzzleHttpClient;
-use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\RequestException as GuzzleRequestException;
 
 /**
  * Free Google Translate PHP Package
@@ -10,7 +12,7 @@ use GuzzleHttp\Exception\RequestException;
  * @link        http://stichoza.com/
  * @license     MIT
  */
-class GoogleTranslate {
+class TranslateClient {
 
     /**
      * @var \Guzzle\Http\Client HTTP Client
@@ -77,7 +79,7 @@ class GoogleTranslate {
      * Set source language we are transleting from
      * 
      * @param string $lang Language code
-     * @return GoogleTranslate
+     * @return TranslateClient
      */
     public function setSource($lang = null) {
         $this->sourceLanguage = is_null($lang) ? 'auto' : $lang;
@@ -88,7 +90,7 @@ class GoogleTranslate {
      * Set translation language we are transleting to
      * 
      * @param string $lang Language code
-     * @return GoogleTranslate
+     * @return TranslateClient
      * @access public
      */
     public function setTranslation($lang) {
@@ -100,10 +102,16 @@ class GoogleTranslate {
      * Translate text
      * 
      * @param string $string Text to translate
+     * @throws TranslationException if the provided argument is not of type 'string'
+     * @throws RequestException if the HTTP request fails
      * @return string/boolean Translated text
      * @access public
      */
     public function translate($string) {
+
+        if (!is_string($string)) {
+            throw new TranslationException("Invalid string provided");
+        }
 
         $queryArray = array_merge($this->urlParams, [
             'text' => $string,
@@ -111,7 +119,11 @@ class GoogleTranslate {
             'tl'   => $this->translationLanguage
         ]);
 
-        $response = $this->httpClient->get($this->urlBase, ['query' => $queryArray]);
+        try {
+            $response = $this->httpClient->get($this->urlBase, ['query' => $queryArray]);
+        } catch (Exception $e) {
+            throw new RequestException("Error processing request");
+        }
 
         return $response->getBody();
 
