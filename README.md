@@ -64,11 +64,23 @@ Or
 $tr->setSource(null);
 ```
 
+#### Get Detected Language
+
+**Warning!** This feature is **experimental** and works only for object calls (non-static).
+
+```php
+$tr = new TranslateClient(null, 'fr');
+$text = $tr->translate('Hello World!');
+echo $th->getLastDetectedSource(); // Output: en
+```
+
+Return value may be boolean `FALSE` if there is no detected language.
+
 #### Available languages
 
 Supported languages are listed in [Google API docs](https://cloud.google.com/translate/v2/using_rest#language-params).
 
-#### Exception Handling
+#### Errors and Exception Handling
 
 Both static and non-static `translate()` methods will throw following Exceptions:
 
@@ -76,6 +88,8 @@ Both static and non-static `translate()` methods will throw following Exceptions
  - `ErrorException` If the HTTP request fails for some reason.
  - `UnexpectedValueException` If data received from Google cannot be decoded.
  - `BadMethodCallException` If you call something wrong. Call `translate()`, not Ghost Busters
+
+In addition `translate()` method will return boolean `FALSE` if there is no translation available.
 
 #### Older versions
 

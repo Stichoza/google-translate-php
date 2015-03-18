@@ -40,7 +40,7 @@ class TranslateClient {
     /**
      * @var string Last detected source language
      */
-    private $lastDetectedSourceLanguage;
+    private $lastDetectedSource;
     
     /**
      * @var string Google Translate URL base
@@ -84,7 +84,7 @@ class TranslateClient {
     public function __construct($source = 'auto', $target = 'en') {
         $this->httpClient = new GuzzleHttpClient(); // Create HTTP client
         $this->setSource($source)->setTarget($target); // Set languages
-        $this->lastDetectedSourceLanguage = false;
+        $this->lastDetectedSource = false;
     }
 
     /**
@@ -241,7 +241,7 @@ class TranslateClient {
         }
 
         // Check for detected language
-        $this->lastDetectedSourceLanguage = (isset($responseArray[1]) && is_string($responseArray[1]))
+        $this->lastDetectedSource = (isset($responseArray[1]) && is_string($responseArray[1]))
             ? $responseArray[1] : false;
  
         // Reduce array to generate translated sentenece
@@ -283,7 +283,7 @@ class TranslateClient {
      * @return string|boolean Language or boolean FALSE
      */
     public function getLastDetectedSource() {
-        return $this->lastDetectedSourceLanguage;
+        return $this->lastDetectedSource;
     }
 
 }
