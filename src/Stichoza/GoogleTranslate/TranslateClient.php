@@ -140,7 +140,7 @@ class TranslateClient {
      */
     private static function checkStaticInstance() {
         if (!isset(self::$staticInstance)) {
-         self::$staticInstance = new self();
+            self::$staticInstance = new self();
         }
     }
 
@@ -228,9 +228,10 @@ class TranslateClient {
             throw $e;
         }
 
-        // Chack if translation exists
-        if (empty($responseArray[0])) {
-         return false;
+
+        // Check if translation exists
+        if (!isset($responseArray[0]) || empty($responseArray[0])) {
+            return false;
         }
  
         // Reduce array to generate translated sentenece
