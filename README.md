@@ -47,7 +47,7 @@ echo $tr->setSource('en')->setTarget('ka')->translate('Goodbye');
 ```
 Or call a static method
 ```php
-echo TranslateClient::translate('Hello again', 'en', 'ka');
+echo TranslateClient::translate('en', 'ka', 'Hello again');
 ```
 
 #### Language Detection
