@@ -38,7 +38,7 @@ class TranslateClient {
     private $targetLanguage;
 
     /**
-     * @var string Last detected source language
+     * @var string|boolean Last detected source language
      */
     private $lastDetectedSource;
     
