@@ -234,7 +234,6 @@ class TranslateClient {
             throw $e;
         }
 
-
         // Check if translation exists
         if (!isset($responseArray[0]) || empty($responseArray[0])) {
             return false;
