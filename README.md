@@ -23,7 +23,7 @@ Or edit your project's `composer.json` to require `stichoza/google-translate-php
 
 ## Usage
 
-#### Basic Usage
+### Basic Usage
 
 Instantiate TranslateClient object
 ```php
@@ -50,7 +50,7 @@ Or call a static method
 echo TranslateClient::translate('en', 'ka', 'Hello again');
 ```
 
-#### Language Detection
+### Language Detection
 
 To detect language automatically, just set the source language to `null`
 
@@ -78,7 +78,7 @@ Return value may be boolean `FALSE` if there is no detected language.
 
 Supported languages are listed in [Google API docs](https://cloud.google.com/translate/v2/using_rest#language-params).
 
-#### Errors and Exception Handling
+### Errors and Exception Handling
 
 Both static and non-static `translate()` methods will throw following Exceptions:
 
@@ -89,9 +89,9 @@ Both static and non-static `translate()` methods will throw following Exceptions
 
 In addition `translate()` method will return boolean `FALSE` if there is no translation available.
 
-#### Older versions
+## Older versions
 
-See older (`~2.0`) docs [here](https://github.com/Stichoza/google-translate-php/tree/7bdf29ed44ed71dadac80ec389699ee327acdf27)
+You can still view usage docs for older (`~2.0`) versions [here](https://github.com/Stichoza/google-translate-php/tree/7bdf29ed44ed71dadac80ec389699ee327acdf27).
 
 ## Disclaimer
 
