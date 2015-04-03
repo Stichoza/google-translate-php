@@ -161,9 +161,9 @@ class TranslateClient
      * @param string $source Language code
      * @return TranslateClient
      */
-    public function setSource($source = null)
+    public function setSource($source = 'auto')
     {
-        $this->sourceLanguage = is_null($source) ? 'auto' : $source;
+        $this->sourceLanguage = $source;
         return $this;
     }
 
