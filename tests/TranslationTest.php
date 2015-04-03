@@ -1,9 +1,10 @@
-<?php namespace Stichoza\GoogleTranslate\Tests;
+<?php
+namespace Stichoza\GoogleTranslate\Tests;
 
 use Stichoza\GoogleTranslate\TranslateClient;
 
-class TranslationTest extends \PHPUnit_Framework_TestCase {
-
+class TranslationTest extends \PHPUnit_Framework_TestCase
+{
     public function setUp()
     {
         $this->tr = new TranslateClient();
@@ -16,5 +17,4 @@ class TranslationTest extends \PHPUnit_Framework_TestCase {
 
         $this->assertEquals($resultOne, $resultTwo, 'გამარჯობა');
     }
-
 }
