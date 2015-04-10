@@ -96,3 +96,5 @@ You can still view usage docs for older (`~2.0`) versions [here](https://github.
 ## Disclaimer
 
 This package is developed for educational purposes only. Do not depend on this package as it may break anytime as it is based on "CURLing" the Google Translate website. Consider buying [Official Google Translate API](https://cloud.google.com/translate/) for other types of usage.
+
+Also, Google might ban your server IP or [requre to solve CAPTCHA](https://github.com/Stichoza/google-translate-php/issues/18) if you send unusual traffic (large amount of data/requests).
