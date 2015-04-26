@@ -25,7 +25,10 @@ Or edit your project's `composer.json` to require `stichoza/google-translate-php
 
 ### Basic Usage
 
+*Note:* You should have composer's autoloader included `require 'vendor/autoload.php'` (that's obvious.)
+
 Instantiate TranslateClient object
+
 ```php
 use Stichoza\GoogleTranslate\TranslateClient;
 
