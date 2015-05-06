@@ -94,7 +94,7 @@ In addition `translate()` method will return boolean `FALSE` if there is no tran
 
 ## Older versions
 
-You can still view usage docs for older (`~2.0`) versions [here](https://github.com/Stichoza/google-translate-php/tree/7bdf29ed44ed71dadac80ec389699ee327acdf27).
+You can still view usage docs for older (`~2.0`) versions [here](https://github.com/Stichoza/google-translate-php/tree/v2.0.3).
 
 ## Disclaimer
 
