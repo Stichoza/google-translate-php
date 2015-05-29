@@ -53,19 +53,19 @@ class TranslateClient
      */
     private $urlParams = [
         'client'   => 't',
-        'text'     => null, // String
         'hl'       => 'en',
         'sl'       => null, // Source language
         'tl'       => null, // Target language
+        'text'     => null, // String to translate
         'ie'       => 'UTF-8', // Input encoding
         'oe'       => 'UTF-8', // Output encoding
-        'multires' => '1',
-        'otf'      => '0',
-        'pc'       => '1',
-        'trs'      => '1',
-        'ssel'     => '0',
-        'tsel'     => '0',
-        'sc'       => '1'
+        'multires' => 1,
+        'otf'      => 0,
+        'pc'       => 1,
+        'trs'      => 1,
+        'ssel'     => 0,
+        'tsel'     => 0,
+        'sc'       => 1
     ];
 
     /**
