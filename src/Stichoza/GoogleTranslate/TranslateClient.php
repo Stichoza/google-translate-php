@@ -65,7 +65,7 @@ class TranslateClient
         'trs'      => 1,
         'ssel'     => 0,
         'tsel'     => 0,
-        'sc'       => 1
+        'sc'       => 1,
     ];
 
     /**
