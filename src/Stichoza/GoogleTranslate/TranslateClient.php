@@ -197,7 +197,7 @@ class TranslateClient
         $queryArray = array_merge($this->urlParams, [
             'text' => $string,
             'sl'   => $this->sourceLanguage,
-            'tl'   => $this->targetLanguage
+            'tl'   => $this->targetLanguage,
         ]);
 
         try {
