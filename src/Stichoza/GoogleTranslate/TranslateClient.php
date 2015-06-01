@@ -29,6 +29,11 @@ class TranslateClient
     private $httpClient;
 
     /**
+     * @var array $httpClientConfig \GuzzleHttp\Client configuration settings 
+     */
+    private $httpClientConfig;
+
+    /**
      * @var string Source language - from where the string should be translated
      */
     private $sourceLanguage;
@@ -82,9 +87,9 @@ class TranslateClient
      * @param string $source Source language (Optional)
      * @param string $target Target language (Optional)
      */
-    public function __construct($source = 'auto', $target = 'en')
+    public function __construct($source = 'auto', $target = 'en', $httpClientConfig = [])
     {
-        $this->httpClient = new GuzzleHttpClient(); // Create HTTP client
+        $this->httpClient = new GuzzleHttpClient($httpClientConfig); // Create HTTP client
         $this->setSource($source)->setTarget($target); // Set languages
         $this->lastDetectedSource = false;
     }
