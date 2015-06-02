@@ -82,9 +82,9 @@ class TranslateClient
      * @param string $source Source language (Optional)
      * @param string $target Target language (Optional)
      */
-    public function __construct($source = 'auto', $target = 'en')
+    public function __construct($source = 'auto', $target = 'en', $httpClientConfig = [])
     {
-        $this->httpClient = new GuzzleHttpClient(); // Create HTTP client
+        $this->httpClient = new GuzzleHttpClient($httpClientConfig); // Create HTTP client
         $this->setSource($source)->setTarget($target); // Set languages
         $this->lastDetectedSource = false;
     }
