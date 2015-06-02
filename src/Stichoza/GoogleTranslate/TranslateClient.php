@@ -312,6 +312,15 @@ class TranslateClient
     }
 
     /**
+     * Get last detected language
+     * @return string|boolean Last detected language or boolean FALSE
+     */
+    private function instanceGetLastDetectedSource()
+    {
+        return $this::$lastDetectedSource;
+    }
+
+    /**
      * Check if given locale is valid
      * @param string $lang Langauge code to verify
      * @return boolean
@@ -321,12 +330,4 @@ class TranslateClient
         return !!preg_match('/([a-z]{2})(-[A-Z]{2})?/', $lang);
     }
 
-    /**
-     * [EXPERIMENTAL] Get last detected language
-     * @return string|boolean Language or boolean FALSE
-     */
-    public function getLastDetectedSource()
-    {
-        return $this::$lastDetectedSource;
-    }
 }
