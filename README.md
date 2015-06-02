@@ -17,7 +17,7 @@ Or edit your project's `composer.json` to require `stichoza/google-translate-php
 
 ```json
 "require": {
-    "stichoza/google-translate-php": "~3.0"
+    "stichoza/google-translate-php": "~3.1"
 }
 ```
 
