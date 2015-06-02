@@ -270,7 +270,7 @@ class TranslateClient
         }
 
         // Set initial detected language to null
-        $this::$lastDetectedSource = null;
+        $this::$lastDetectedSource = false;
 
         // Iterate and set last detected language
         foreach ($detectedLanguages as $lang) {
