@@ -90,13 +90,15 @@ $tr->setSource(null); // Another way
 
 #### Get Detected Language
 
-**Warning!** This feature is **experimental** and works only for object calls (non-static).
-
 ```php
 $tr = new TranslateClient(null, 'fr');
 $text = $tr->translate('Hello World!');
 echo $tr->getLastDetectedSource(); // Output: en
 ```
+
+You can also use `getLastDetectedSource` method statically. `TranslateClient::getLastDetectedSource()`.
+
+> **Note:** Value of last detected source is same for both static and non-static method calls.
 
 Return value may be boolean `FALSE` if there is no detected language.
 
