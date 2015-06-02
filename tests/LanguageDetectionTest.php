@@ -18,4 +18,16 @@ class LanguageDetectionTest extends \PHPUnit_Framework_TestCase
         $this->tr->translate('Cześć');
         $this->assertEquals($this->tr->getLastDetectedSource(), 'pl');
     }
+
+    public function testSingleSentence()
+    {
+        $this->tr->translate('იყო არაბეთს როსტევან');
+        $this->assertEquals($this->tr->getLastDetectedSource(), 'ka');
+    }
+
+    public function testMultipleSentence()
+    {
+        $this->tr->translate('იყო არაბეთს როსტევან. მეფე ღვთისაგან სვიანი. უხვლაშქრიანი და ისეთი რა');
+        $this->assertEquals($this->tr->getLastDetectedSource(), 'ka');
+    }
 }
