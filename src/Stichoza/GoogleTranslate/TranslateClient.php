@@ -314,7 +314,7 @@ class TranslateClient
      * @param string $lang Langauge code to verify
      * @return boolean
      */
-    public function isValidLocale($lang)
+    private function isValidLocale($lang)
     {
         return !!preg_match('/([a-z]{2})(-[A-Z]{2})?/', $lang);
     }
