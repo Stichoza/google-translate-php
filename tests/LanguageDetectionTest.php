@@ -30,7 +30,10 @@ class LanguageDetectionTest extends \PHPUnit_Framework_TestCase
 
     public function testMultipleSentence()
     {
-        $this->tr->translate('იყო არაბეთს როსტევან. მეფე ღვთისაგან სვიანი. უხვლაშქრიანი და ისეთი რა');
+        $this->tr->translate('ჩემი ხატია სამშობლო. სახატე - მთელი ქვეყანა. განათებული მთა-ბარი.');
         $this->assertEquals($this->tr->getLastDetectedSource(), 'ka');
+
+        $this->tr->translate('Ще не вмерла Україна, И слава, и воля! Ще намъ, браття-молодці, Усміхнеться доля!');
+        $this->assertEquals($this->tr->getLastDetectedSource(), 'ua');
     }
 }
