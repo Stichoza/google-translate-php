@@ -79,8 +79,13 @@ class TranslateClient
     /**
      * Class constructor
      *
+     * For more information about HTTP client configuration options, visit
+     * "Creating a client" section of GuzzleHttp docs.
+     * 5.x - http://guzzle.readthedocs.org/en/5.3/clients.html#creating-a-client
+     *
      * @param string $source Source language (Optional)
      * @param string $target Target language (Optional)
+     * @param array $httpClientConfig Associative array of http client configuration options (Optional)
      */
     public function __construct($source = 'auto', $target = 'en', $httpClientConfig = [])
     {
