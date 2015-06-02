@@ -16,14 +16,22 @@ class UtilityTest extends \PHPUnit_Framework_TestCase
 
     public function testIsValidLocale()
     {
-        $this->assertTrue($this->method->invokeArgs($this->tr, ['ab']));
-        $this->assertTrue($this->method->invokeArgs($this->tr, ['ab-CD']));
+        $m = $this->method;
+        $t = $this->tr;
 
-        $this->assertFalse($this->method->invokeArgs($this->tr, ['ab-CDE']));
-        $this->assertFalse($this->method->invokeArgs($this->tr, ['abc-DE']));
-        $this->assertFalse($this->method->invokeArgs($this->tr, ['abc-DEF']));
-        $this->assertFalse($this->method->invokeArgs($this->tr, ['abc']));
-        $this->assertFalse($this->method->invokeArgs($this->tr, ['ab-']));
-        $this->assertFalse($this->method->invokeArgs($this->tr, ['a']));
+        $booleanAssertions = [
+            'ab'      => true,
+            'ab-CD'   => true,
+            'ab-CDE'  => false,
+            'abc-DE'  => false,
+            'abc-DEF' => false,
+            'abc'     => false,
+            'ab-'     => false,
+            'a'       => false,
+        ];
+
+        foreach ($booleanAssertions as $key => $value) {
+            $this->assertEquals($m->invokeArgs($t, [$key]), $value);
+        }
     }
 }
