@@ -117,7 +117,7 @@ class TranslateClient
                 }
                 return $result;
             case 'getLastDetectedSource':
-                return $this::instanceGetLastDetectedSource();
+                return self::staticGetLastDetectedSource();
             default:
                 throw new BadMethodCallException("Method [{$name}] does not exist");
         }
@@ -146,7 +146,7 @@ class TranslateClient
                 }
                 return $result;
             case 'getLastDetectedSource':
-                return $this::instanceGetLastDetectedSource();
+                return $this::staticGetLastDetectedSource();
             default:
                 throw new BadMethodCallException("Method [{$name}] does not exist");
         }
@@ -319,9 +319,9 @@ class TranslateClient
      * Get last detected language
      * @return string|boolean Last detected language or boolean FALSE
      */
-    private function instanceGetLastDetectedSource()
+    private static function staticGetLastDetectedSource()
     {
-        return $this::$lastDetectedSource;
+        return self::$lastDetectedSource;
     }
 
     /**
