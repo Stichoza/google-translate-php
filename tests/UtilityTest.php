@@ -9,7 +9,7 @@ class UtilityTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->tr = new TranslateClient();
-        $reflection = new ReflectionClass(TranslateClient::class);
+        $reflection = new ReflectionClass(get_class($this->tr));
         $this->method = $reflection->getMethod('isValidLocale');
         $this->method->setAccessible(true);
     }
