@@ -253,9 +253,11 @@ class TranslateClient
         // Detect languages
         $detectedLanguages = [];
 
-        // Add detected language
-        if (isset($responseArray[0])) {
-            $detectedLanguages[] = $responseArray[0];
+        // Add detected languages
+        foreach ($responseArray as $item) {
+            if (is_string($item)) {
+                $detectedLanguages[] = $item;
+            }
         }
 
         // Another case of detected language
@@ -268,8 +270,8 @@ class TranslateClient
 
         // Iterate and set last detected language
         foreach ($detectedLanguages as $lang) {
-            if (is_string($lang) && $this->isValidLocale($lang)) {
-                $this->lastDetectedSource = $lang;
+            if ($this->isValidLocale($lang)) {
+                $this::$lastDetectedSource = $lang;
                 break;
             }
         }
