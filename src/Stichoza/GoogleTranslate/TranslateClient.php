@@ -250,9 +250,29 @@ class TranslateClient
             return false;
         }
 
-        // Check for detected language
-        $this->lastDetectedSource = (isset($responseArray[1]) && is_string($responseArray[1]))
-            ? $responseArray[1] : false;
+        // Detect languages
+        $detectedLanguages = [];
+
+        // Add detected language
+        if (isset($responseArray[0])) {
+            $detectedLanguages[] = $responseArray[0];
+        }
+
+        // Another case of detected language
+        if (isset($responseArray[count($responseArray) - 2][0][0])) {
+            $detectedLanguages[] = $responseArray[count($responseArray) - 2][0][0];
+        }
+
+        // Set initial detected language to null
+        $this->lastDetectedSource = null;
+
+        // Iterate and set last detected language
+        foreach ($detectedLanguages as $lang) {
+            if (is_string($lang) && preg_match('/([a-z]{2})(-[A-Z]{2})?/', $lang)) {
+                $this->lastDetectedSource = $lang;
+                break;
+            }
+        }
 
         // Reduce array to generate translated sentenece
         return array_reduce($responseArray[0], function($carry, $item) {
