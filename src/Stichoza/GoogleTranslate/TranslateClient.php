@@ -41,7 +41,7 @@ class TranslateClient
     /**
      * @var string|boolean Last detected source language
      */
-    private $lastDetectedSource;
+    private static $lastDetectedSource;
 
     /**
      * @var string Google Translate URL base
@@ -91,7 +91,7 @@ class TranslateClient
     {
         $this->httpClient = new GuzzleHttpClient($options); // Create HTTP client
         $this->setSource($source)->setTarget($target); // Set languages
-        $this->lastDetectedSource = false;
+        $this::$lastDetectedSource = false;
     }
 
     /**
@@ -327,6 +327,6 @@ class TranslateClient
      */
     public function getLastDetectedSource()
     {
-        return $this->lastDetectedSource;
+        return $this::$lastDetectedSource;
     }
 }
