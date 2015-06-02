@@ -69,7 +69,7 @@ $tr = new TranslateClient(null, 'en', [
         ],
         'headers' => [
             'User-Agent' => 'Foo/5.0 Lorem Ipsum Browser'
-        ],
+        ]
     ]
 ]);
 ```
