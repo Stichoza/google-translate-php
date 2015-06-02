@@ -309,6 +309,11 @@ class TranslateClient
         return $result;
     }
 
+    /**
+     * Check if given locale is valid
+     * @param string $lang Langauge code to verify
+     * @return boolean
+     */
     public function isValidLocale($lang)
     {
         return !!preg_match('/([a-z]{2})(-[A-Z]{2})?/', $lang);
