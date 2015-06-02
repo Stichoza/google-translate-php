@@ -268,7 +268,7 @@ class TranslateClient
 
         // Iterate and set last detected language
         foreach ($detectedLanguages as $lang) {
-            if (is_string($lang) && preg_match('/([a-z]{2})(-[A-Z]{2})?/', $lang)) {
+            if (is_string($lang) && $this->isValidLocale($lang)) {
                 $this->lastDetectedSource = $lang;
                 break;
             }
@@ -307,6 +307,11 @@ class TranslateClient
             throw $e;
         }
         return $result;
+    }
+
+    public function isValidLocale($lang)
+    {
+        return !!preg_match('/([a-z]{2})(-[A-Z]{2})?/', $lang);
     }
 
     /**
