@@ -34,6 +34,6 @@ class LanguageDetectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->tr->getLastDetectedSource(), 'ka');
 
         $this->tr->translate('Ще не вмерла Україна, И слава, и воля! Ще намъ, браття-молодці, Усміхнеться доля!');
-        $this->assertEquals($this->tr->getLastDetectedSource(), 'ua');
+        $this->assertEquals($this->tr->getLastDetectedSource(), 'uk');
     }
 }
