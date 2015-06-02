@@ -59,6 +59,21 @@ This package uses [Guzzle](https://github.com/guzzle/guzzle) for HTTP requests. 
 
 You can configure proxy, user-agent, default headers, connection timeout and so on using this options.
 
+```php
+$tr = new TranslateClient(null, 'en', [
+    'defaults' => [
+        'timeout' => 10,
+        'proxy' => [
+            'http'  => 'tcp://localhost:8125',
+            'https' => 'tcp://localhost:9124'
+        ],
+        'headers' => [
+            'User-Agent' => 'Foo/5.0 Lorem Ipsum Browser'
+        ],
+    ]
+]);
+```
+
 For more information, see [Creating a Client](http://guzzle.readthedocs.org/en/5.3/clients.html#creating-a-client) section in Guzzle docs (5.x version).
 
 ### Language Detection
