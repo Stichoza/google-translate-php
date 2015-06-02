@@ -40,19 +40,12 @@ class LanguageDetectionTest extends \PHPUnit_Framework_TestCase
     public function testStaticAndNonstaticDetection()
     {
         $this->tr->translate('გამარჯობა');
-        
-        TranslateClient::translate('Cześć');
 
-        $this->assertNotEquals($this->tr->getLastDetectedSource(), 'ka');
-        $this->assertNotEquals(TranslateClient::getLastDetectedSource(), 'ka');
-
-        $this->assertEquals($this->tr->getLastDetectedSource(), 'uk');
-        $this->assertEquals(TranslateClient::getLastDetectedSource(), 'uk');
+        TranslateClient::translate(null, 'en', 'Cześć');
+        $this->assertEquals($this->tr->getLastDetectedSource(), 'pl');
+        $this->assertEquals(TranslateClient::getLastDetectedSource(), 'pl');
 
         $this->tr->translate('გამარჯობა');
-
-        $this->assertNotEquals($this->tr->getLastDetectedSource(), 'uk');
-        $this->assertNotEquals(TranslateClient::getLastDetectedSource(), 'uk');
         $this->assertEquals($this->tr->getLastDetectedSource(), 'ka');
         $this->assertEquals(TranslateClient::getLastDetectedSource(), 'ka');
     }
