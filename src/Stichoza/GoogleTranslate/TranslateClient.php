@@ -29,11 +29,6 @@ class TranslateClient
     private $httpClient;
 
     /**
-     * @var array $httpClientConfig \GuzzleHttp\Client configuration settings 
-     */
-    private $httpClientConfig;
-
-    /**
      * @var string Source language - from where the string should be translated
      */
     private $sourceLanguage;
