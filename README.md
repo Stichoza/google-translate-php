@@ -53,6 +53,14 @@ Or call a static method
 echo TranslateClient::translate('en', 'ka', 'Hello again');
 ```
 
+### Additional Configuration
+
+This package uses [Guzzle](https://github.com/guzzle/guzzle) for HTTP requests. You can pass an associative array of [guzzle client configuration options](http://guzzle.readthedocs.org/en/5.3/clients.html#creating-a-client) as a third parameter to `TranslateClient` constructor.
+
+You can configure proxy, user-agent, default headers, connection timeout and so on using this options.
+
+For more information, see [Creating a Client](http://guzzle.readthedocs.org/en/5.3/clients.html#creating-a-client) section in Guzzle docs (5.x version).
+
 ### Language Detection
 
 To detect language automatically, just set the source language to `null`
