@@ -331,6 +331,6 @@ class TranslateClient
      */
     private function isValidLocale($lang)
     {
-        return !!preg_match('/([a-z]{2})(-[A-Z]{2})?/', $lang);
+        return !!preg_match('/^([a-z]{2})(-[A-Z]{2})?$/', $lang);
     }
 }
