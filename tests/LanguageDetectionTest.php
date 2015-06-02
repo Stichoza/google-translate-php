@@ -23,6 +23,9 @@ class LanguageDetectionTest extends \PHPUnit_Framework_TestCase
     {
         $this->tr->translate('იყო არაბეთს როსტევან');
         $this->assertEquals($this->tr->getLastDetectedSource(), 'ka');
+
+        $this->tr->translate('Путин хуйло');
+        $this->assertEquals($this->tr->getLastDetectedSource(), 'ru');
     }
 
     public function testMultipleSentence()
