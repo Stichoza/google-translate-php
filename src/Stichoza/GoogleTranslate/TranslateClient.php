@@ -116,6 +116,8 @@ class TranslateClient
                     throw $e;
                 }
                 return $result;
+            case 'getLastDetectedSource':
+                return $this::instanceGetLastDetectedSource();
             default:
                 throw new BadMethodCallException("Method [{$name}] does not exist");
         }
@@ -143,6 +145,8 @@ class TranslateClient
                     throw $e;
                 }
                 return $result;
+            case 'getLastDetectedSource':
+                return $this::instanceGetLastDetectedSource();
             default:
                 throw new BadMethodCallException("Method [{$name}] does not exist");
         }
