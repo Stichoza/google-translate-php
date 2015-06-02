@@ -53,29 +53,6 @@ Or call a static method
 echo TranslateClient::translate('en', 'ka', 'Hello again');
 ```
 
-### Additional Configuration
-
-This package uses [Guzzle](https://github.com/guzzle/guzzle) for HTTP requests. You can pass an associative array of [guzzle client configuration options](http://guzzle.readthedocs.org/en/5.3/clients.html#creating-a-client) as a third parameter to `TranslateClient` constructor.
-
-You can configure proxy, user-agent, default headers, connection timeout and so on using this options.
-
-```php
-$tr = new TranslateClient(null, 'en', [
-    'defaults' => [
-        'timeout' => 10,
-        'proxy' => [
-            'http'  => 'tcp://localhost:8125',
-            'https' => 'tcp://localhost:9124'
-        ],
-        'headers' => [
-            'User-Agent' => 'Foo/5.0 Lorem Ipsum Browser'
-        ],
-    ]
-]);
-```
-
-For more information, see [Creating a Client](http://guzzle.readthedocs.org/en/5.3/clients.html#creating-a-client) section in Guzzle docs (5.x version).
-
 ### Language Detection
 
 To detect language automatically, just set the source language to `null`
@@ -103,6 +80,29 @@ Return value may be boolean `FALSE` if there is no detected language.
 #### Available languages
 
 Supported languages are listed in [Google API docs](https://cloud.google.com/translate/v2/using_rest#language-params).
+
+### Advanced Configuration
+
+This package uses [Guzzle](https://github.com/guzzle/guzzle) for HTTP requests. You can pass an associative array of [guzzle client configuration options](http://guzzle.readthedocs.org/en/5.3/clients.html#creating-a-client) as a third parameter to `TranslateClient` constructor.
+
+You can configure proxy, user-agent, default headers, connection timeout and so on using this options.
+
+```php
+$tr = new TranslateClient(null, 'en', [
+    'defaults' => [
+        'timeout' => 10,
+        'proxy' => [
+            'http'  => 'tcp://localhost:8125',
+            'https' => 'tcp://localhost:9124'
+        ],
+        'headers' => [
+            'User-Agent' => 'Foo/5.0 Lorem Ipsum Browser'
+        ],
+    ]
+]);
+```
+
+For more information, see [Creating a Client](http://guzzle.readthedocs.org/en/5.3/clients.html#creating-a-client) section in Guzzle docs (5.x version).
 
 ### Errors and Exception Handling
 
