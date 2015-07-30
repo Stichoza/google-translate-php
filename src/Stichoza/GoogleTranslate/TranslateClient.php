@@ -209,8 +209,11 @@ class TranslateClient
             'tl'   => $this->targetLanguage
         ]);
 
+        $queryUrl = http_build_query($queryArray);
+        $queryUrl = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', $queryUrl);
+
         try {
-            $response = $this->httpClient->post($this->urlBase, ['form_params' => $queryArray]);
+            $response = $this->httpClient->post($this->urlBase, ['body' => $queryUrl]);
         } catch (GuzzleRequestException $e) {
             throw new ErrorException($e->getMessage());
         }
