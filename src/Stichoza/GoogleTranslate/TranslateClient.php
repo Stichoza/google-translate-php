@@ -260,11 +260,7 @@ class TranslateClient
 
         // Detect languages
         $detectedLanguages = [];
-
-        // Switch for array translation
         $responseArrayForLanguages = ($isArray) ? $responseArray[0] : [$responseArray];
-        
-        // Add detected languages
         foreach ($responseArrayForLanguages as $itemArray) {
             foreach ($itemArray as $item) {
                 if (is_string($item)) {
