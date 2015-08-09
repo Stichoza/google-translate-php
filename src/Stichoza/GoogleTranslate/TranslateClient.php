@@ -191,32 +191,32 @@ class TranslateClient
     /**
      * Get response array
      *
-     * @param string $string Text to translate
+     * @param string|array $data String or array of strings to translate
      * @throws InvalidArgumentException If the provided argument is not of type 'string'
      * @throws ErrorException If the HTTP request fails
      * @throws UnexpectedValueException If received data cannot be decoded
      * @return array Response
      */
-    public function getResponse($string)
+    private function getResponse($data)
     {
-        if (!is_string($string) && !is_array($string)) {
+        if (!is_string($data) && !is_array($data)) {
             throw new InvalidArgumentException("Invalid argument provided");
         }
 
         $queryArray = array_merge($this->urlParams, [
-            'text' => $string,
+            'text' => $data,
             'sl'   => $this->sourceLanguage,
-            'tl'   => $this->targetLanguage
+            'tl'   => $this->targetLanguage,
         ]);
 
-        $queryUrl = http_build_query($queryArray);
-        $queryUrl = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', $queryUrl);
+        $queryUrl = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', http_build_query($queryArray));
 
         try {
             $response = $this->httpClient->post($this->urlBase, ['body' => $queryUrl]);
         } catch (GuzzleRequestException $e) {
             throw new ErrorException($e->getMessage());
         }
+
         $body = $response->getBody(); // Get response body
 
         // Modify body to avoid json errors
@@ -235,18 +235,20 @@ class TranslateClient
      * This can be called from instance method translate() using __call() magic method.
      * Use $instance->translate($string) instead.
      *
-     * @param string $string Text to translate
+     * @param string|array $data Text or array of texts to translate
      * @throws InvalidArgumentException If the provided argument is not of type 'string'
      * @throws ErrorException If the HTTP request fails
      * @throws UnexpectedValueException If received data cannot be decoded
      * @return string|boolean Translated text
      */
-    private function instanceTranslate($string)
-    {   
-        $array_flag = is_array($string);
+    private function instanceTranslate($data)
+    {
+        // Whether or not is the data an array
+        $isArray = is_array($data);
+
         // Rethrow exceptions
         try {
-            $responseArray = $this->getResponse($string);
+            $responseArray = $this->getResponse($data);
         } catch (Exception $e) {
             throw $e;
         }
@@ -259,19 +261,14 @@ class TranslateClient
         // Detect languages
         $detectedLanguages = [];
 
+        // Switch for array translation
+        $responseArrayForLanguages = ($isArray) ? $responseArray[0] : [$responseArray];
+        
         // Add detected languages
-        if($array_flag){
-            foreach ($responseArray[0] as $itemArray) {
-              foreach($itemArray as $item){
-                 if (is_string($item)) {
-                    $detectedLanguages[] = $item;
-                }
-            }
-        }
-        }else{
-            foreach ($responseArray as $item) {
+        foreach ($responseArrayForLanguages as $itemArray) {
+            foreach ($itemArray as $item) {
                 if (is_string($item)) {
-                  $detectedLanguages[] = $item;
+                    $detectedLanguages[] = $item;
                 }
             }
         }
@@ -293,17 +290,17 @@ class TranslateClient
         }
 
         // Reduce array to generate translated sentenece
-        if($array_flag){
-            $carry = array();
-            foreach($responseArray[0] as $item ){
+        if ($isArray) {
+            $carry = [];
+            foreach ($responseArray[0] as $item) {
                 $carry[] = $item[0][0][0];
             }
             return $carry;
-        }else{
-        return array_reduce($responseArray[0], function($carry, $item) {
-            $carry .= $item[0];
-            return $carry;
-        });
+        } else {
+            return array_reduce($responseArray[0], function($carry, $item) {
+                $carry .= $item[0];
+                return $carry;
+            });
         }
     }
 
