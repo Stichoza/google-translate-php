@@ -199,22 +199,24 @@ class TranslateClient
      */
     public function getResponse($string)
     {
-        if (!is_string($string)) {
-            throw new InvalidArgumentException("Invalid string provided");
+        if (!is_string($string) && !is_array($string)) {
+            throw new InvalidArgumentException("Invalid argument provided");
         }
 
         $queryArray = array_merge($this->urlParams, [
             'text' => $string,
             'sl'   => $this->sourceLanguage,
-            'tl'   => $this->targetLanguage,
+            'tl'   => $this->targetLanguage
         ]);
 
+        $queryUrl = http_build_query($queryArray);
+        $queryUrl = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', $queryUrl);
+
         try {
-            $response = $this->httpClient->post($this->urlBase, ['body' => $queryArray]);
+            $response = $this->httpClient->post($this->urlBase, ['body' => $queryUrl]);
         } catch (GuzzleRequestException $e) {
             throw new ErrorException($e->getMessage());
         }
-
         $body = $response->getBody(); // Get response body
 
         // Modify body to avoid json errors
@@ -224,7 +226,6 @@ class TranslateClient
         if (($bodyArray = json_decode($bodyJson, true)) === null) {
             throw new UnexpectedValueException('Data cannot be decoded or it\'s deeper than the recursion limit');
         }
-
         return $bodyArray;
     }
 
@@ -241,7 +242,8 @@ class TranslateClient
      * @return string|boolean Translated text
      */
     private function instanceTranslate($string)
-    {
+    {   
+        $array_flag = is_array($string);
         // Rethrow exceptions
         try {
             $responseArray = $this->getResponse($string);
@@ -258,9 +260,19 @@ class TranslateClient
         $detectedLanguages = [];
 
         // Add detected languages
-        foreach ($responseArray as $item) {
-            if (is_string($item)) {
-                $detectedLanguages[] = $item;
+        if($array_flag){
+            foreach ($responseArray[0] as $itemArray) {
+              foreach($itemArray as $item){
+                 if (is_string($item)) {
+                    $detectedLanguages[] = $item;
+                }
+            }
+        }
+        }else{
+            foreach ($responseArray as $item) {
+                if (is_string($item)) {
+                  $detectedLanguages[] = $item;
+                }
             }
         }
 
@@ -281,10 +293,18 @@ class TranslateClient
         }
 
         // Reduce array to generate translated sentenece
+        if($array_flag){
+            $carry = array();
+            foreach($responseArray[0] as $item ){
+                $carry[] = $item[0][0][0];
+            }
+            return $carry;
+        }else{
         return array_reduce($responseArray[0], function($carry, $item) {
             $carry .= $item[0];
             return $carry;
         });
+        }
     }
 
     /**
