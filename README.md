@@ -74,7 +74,7 @@ $tr = new TranslateClient(null, 'en', [
 ]);
 ```
 
-For more information, see [Creating a Client](http://guzzle.readthedocs.org/en/5.3/clients.html#creating-a-client) section in Guzzle docs (5.x version).
+For more information, see [Creating a Client](http://guzzle.readthedocs.org/en/latest/quickstart.html#creating-a-client) section in Guzzle docs (6.x version).
 
 ### Language Detection
 
