@@ -27,9 +27,14 @@ class TranslationTest extends \PHPUnit_Framework_TestCase
         $resultFish = $this->tr->translate('fish');
 
         $arrayResults = $this->tr->translate(['cat', 'dog', 'fish']);
+        $arrayZesults = TranslateClient::translate('en', 'ka', ['cat', 'dog', 'fish']);
 
         $this->assertEquals($resultCat,  $arrayResults[0], 'კატა');
         $this->assertEquals($resultDog,  $arrayResults[1], 'ძაღლი');
         $this->assertEquals($resultFish, $arrayResults[2], 'თევზი');
+
+        $this->assertEquals($resultCat,  $arrayZesults[0], 'კატა');
+        $this->assertEquals($resultDog,  $arrayZesults[1], 'ძაღლი');
+        $this->assertEquals($resultFish, $arrayZesults[2], 'თევზი');
     }
 }
