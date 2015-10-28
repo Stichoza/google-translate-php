@@ -17,7 +17,7 @@ Or edit your project's `composer.json` to require `stichoza/google-translate-php
 
 ```json
 "require": {
-    "stichoza/google-translate-php": "~3.1"
+    "stichoza/google-translate-php": "~3.2"
 }
 ```
 
@@ -51,6 +51,12 @@ echo $tr->setSource('en')->setTarget('ka')->translate('Goodbye');
 Or call a static method
 ```php
 echo TranslateClient::translate('en', 'ka', 'Hello again');
+```
+
+As of v3.2 multiple sentence/array translation is available.
+
+```php
+echo $tr->translate(['I can dance', 'I like trains', 'Double rainbow']);
 ```
 
 ### Advanced Configuration
