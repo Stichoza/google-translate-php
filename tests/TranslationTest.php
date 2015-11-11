@@ -37,4 +37,11 @@ class TranslationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($resultDog,  $arrayZesults[1], 'ძაღლი');
         $this->assertEquals($resultFish, $arrayZesults[2], 'თევზი');
     }
+
+    public function testRawResponse()
+    {
+        $rawResult = $this->tr->getResponse('cat');
+
+        $this->assertTrue(is_array($rawResult), 'Method getResponse() should return an array.');
+    }
 }
