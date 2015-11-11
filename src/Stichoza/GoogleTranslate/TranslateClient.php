@@ -106,8 +106,6 @@ class TranslateClient
     public static function __callStatic($name, $args)
     {
         switch ($name) {
-            case 'getResponse':
-                return self::getResponse($args[0]);
             case 'translate':
                 if (count($args) < 3) {
                     throw new InvalidArgumentException("Expecting 3 parameters");
@@ -137,8 +135,6 @@ class TranslateClient
     public function __call($name, $args)
     {
         switch ($name) {
-            case 'getResponse':
-                return $this->getResponse($args[0]);
             case 'translate':
                 if (count($args) < 1) {
                     throw new InvalidArgumentException("Expecting 1 parameter");
@@ -151,6 +147,9 @@ class TranslateClient
                 return $result;
             case 'getLastDetectedSource':
                 return $this::staticGetLastDetectedSource();
+            case 'getResponse':
+                // getResponse is available for instanse calls only.
+                return $this->getResponse($args[0]);
             default:
                 throw new BadMethodCallException("Method [{$name}] does not exist");
         }
