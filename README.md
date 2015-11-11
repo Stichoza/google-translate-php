@@ -59,6 +59,12 @@ As of v3.2 multiple sentence/array translation is available.
 echo $tr->translate(['I can dance', 'I like trains', 'Double rainbow']);
 ```
 
+As of v3.2.3 you can call `getResponse()` method to get raw response from Google Translate. Note that this method is not available for static calls.
+
+```php
+$tr->getResponse($word); // Returns raw array of translated data.
+```
+
 ### Advanced Configuration
 
 This package uses [Guzzle](https://github.com/guzzle/guzzle) for HTTP requests. You can pass an associative array of [guzzle client configuration options](http://guzzle.readthedocs.org/en/5.3/clients.html#creating-a-client) as a third parameter to `TranslateClient` constructor.
