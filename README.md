@@ -132,10 +132,6 @@ Both static and non-static `translate()` methods will throw following Exceptions
 
 In addition `translate()` method will return boolean `FALSE` if there is no translation available.
 
-## Older versions
-
-You can still view usage docs for older (`~2.0`) versions [here](https://github.com/Stichoza/google-translate-php/tree/v2.0.3).
-
 ## Disclaimer
 
 This package is developed for educational purposes only. Do not depend on this package as it may break anytime as it is based on crawling the Google Translate website. Consider buying [Official Google Translate API](https://cloud.google.com/translate/) for other types of usage.
