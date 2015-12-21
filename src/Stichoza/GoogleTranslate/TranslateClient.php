@@ -1,13 +1,17 @@
 <?php
+
 namespace Stichoza\GoogleTranslate;
 
 use Exception;
 use ErrorException;
 use BadMethodCallException;
 use InvalidArgumentException;
+use ReflectionClass;
 use UnexpectedValueException;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use GuzzleHttp\Exception\RequestException as GuzzleRequestException;
+use Stichoza\GoogleTranslate\Tokens\SampleTokenGenerator;
+use Stichoza\GoogleTranslate\Tokens\TokenProviderInterface;
 
 /**
  * Free Google Translate API PHP Package
@@ -66,6 +70,7 @@ class TranslateClient
         'ssel'     => 0,
         'tsel'     => 0,
         'sc'       => 1,
+        'tk'       => null,
     ];
 
     /**
@@ -77,21 +82,44 @@ class TranslateClient
     ];
 
     /**
+     * @var TokenProviderInterface
+     */
+    private $tokenProvider;
+
+    /**
+     * @var string Default token generator class name
+     */
+    private $defaultTokenProvider = SampleTokenGenerator::class;
+
+    /**
      * Class constructor
      *
      * For more information about HTTP client configuration options, visit
      * "Creating a client" section of GuzzleHttp docs.
      * 5.x - http://guzzle.readthedocs.org/en/5.3/clients.html#creating-a-client
      *
+     * @throws Exception If token provider does not implement TokenProviderInterface
      * @param string $source Source language (Optional)
      * @param string $target Target language (Optional)
      * @param array $options Associative array of http client configuration options (Optional)
      */
-    public function __construct($source = null, $target = 'en', $options = [])
+    public function __construct($source = null, $target = 'en', $options = [], TokenProviderInterface $tokener = null)
     {
         $this->httpClient = new GuzzleHttpClient($options); // Create HTTP client
         $this->setSource($source)->setTarget($target); // Set languages
         $this::$lastDetectedSource = false;
+
+        if (!isset($tokener)) {
+            $tokener = $this->defaultTokenProvider;
+        }
+
+        $tokenProviderReflection = new ReflectionClass($tokener);
+        
+        if ($tokenProviderReflection->implementsInterface(TokenProviderInterface::class)) {
+            $this->tokenProvider = $tokenProviderReflection->newInstance();
+        } else {
+            throw new Exception("Token provider should implement TokenProviderInterface");    
+        }
     }
 
     /**
@@ -210,6 +238,7 @@ class TranslateClient
             'text' => $data,
             'sl'   => $this->sourceLanguage,
             'tl'   => $this->targetLanguage,
+            'tk'   => $this->tokenProvider->generateToken($this->sourceLanguage, $this->targetLanguage, $data),
         ]);
 
         $queryUrl = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', http_build_query($queryArray));
