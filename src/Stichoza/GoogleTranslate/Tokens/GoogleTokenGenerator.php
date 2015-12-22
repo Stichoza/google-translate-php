@@ -1,8 +1,14 @@
 <?php
+
 namespace Stichoza\GoogleTranslate\Tokens;
 
+use DateTime;
+
 /**
- * Google token generator
+ * Google Token Generator
+ *
+ * Thanks to @helen5106 and @tehmaestro and few other cool guys
+ * at https://github.com/Stichoza/google-translate-php/issues/32
  */
 class GoogleTokenGenerator implements TokenProviderInterface
 {
@@ -70,8 +76,8 @@ class GoogleTokenGenerator implements TokenProviderInterface
      */
     private function generateB()
     {
-        $start = new \DateTime('1970-01-01');
-        $now = new \DateTime('now');
+        $start = new DateTime('1970-01-01');
+        $now = new DateTime('now');
 
         $diff = $now->diff($start);
 
@@ -105,15 +111,15 @@ class GoogleTokenGenerator implements TokenProviderInterface
      */
     private function shr32($x, $bits)
     {
-        if($bits <= 0) {
+        if ($bits <= 0) {
             return $x;
         }
-        if($bits >= 32) {
+        if ($bits >= 32) {
             return 0;
         }
         $bin = decbin($x);
         $l = strlen($bin);
-        if($l > 32) {
+        if ($l > 32) {
             $bin = substr($bin, $l - 32, 32);
         } elseif($l < 32) {
             $bin = str_pad($bin, 32, '0', STR_PAD_LEFT);
