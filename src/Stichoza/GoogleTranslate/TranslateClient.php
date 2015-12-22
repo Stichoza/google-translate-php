@@ -10,7 +10,7 @@ use ReflectionClass;
 use UnexpectedValueException;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use GuzzleHttp\Exception\RequestException as GuzzleRequestException;
-use Stichoza\GoogleTranslate\Tokens\SampleTokenGenerator;
+use Stichoza\GoogleTranslate\Tokens\GoogleTokenGenerator;
 use Stichoza\GoogleTranslate\Tokens\TokenProviderInterface;
 
 /**
@@ -89,7 +89,7 @@ class TranslateClient
     /**
      * @var string Default token generator class name
      */
-    private $defaultTokenProvider = SampleTokenGenerator::class;
+    private $defaultTokenProvider = GoogleTokenGenerator::class;
 
     /**
      * Class constructor
