@@ -37,13 +37,13 @@ class GoogleTokenGenerator implements TokenProviderInterface
 
         for ($d = array(), $e = 0, $f = 0; $f < mb_strlen($a, 'UTF-8'); $f++) {
             $g = $this->charCodeAt($a, $f);
-            if ( 128 > $g ) {
+            if (128 > $g) {
                 $d[$e++] = $g;
             } else {
-                if ( 2048 > $g ) {
+                if (2048 > $g) {
                     $d[$e++] = $g >> 6 | 192;
                 } else {
-                    if ( 55296 == ($g & 64512) && $f + 1 < mb_strlen($a, 'UTF-8') && 56320 == ($this->charCodeAt($a, $f + 1) & 64512) ) {
+                    if (55296 == ($g & 64512) && $f + 1 < mb_strlen($a, 'UTF-8') && 56320 == ($this->charCodeAt($a, $f + 1) & 64512)) {
                         $g = 65536 + (($g & 1023) << 10) + ($this->charCodeAt($a, ++$f) & 1023);
                         $d[$e++] = $g >> 18 | 240;
                         $d[$e++] = $g >> 12 & 63 | 128;
@@ -72,7 +72,7 @@ class GoogleTokenGenerator implements TokenProviderInterface
      * Generate "b" parameter
      * The number of hours elapsed, since 1st of January 1970
      *
-     * @return int
+     * @return double
      */
     private function generateB()
     {
@@ -93,10 +93,10 @@ class GoogleTokenGenerator implements TokenProviderInterface
      */
     private function RL($a, $b)
     {
-        for($c = 0; $c < strlen($b) - 2; $c +=3) {
-            $d = $b{$c+2};
+        for ($c = 0; $c < strlen($b) - 2; $c += 3) {
+            $d = $b{$c + 2};
             $d = $d >= 'a' ? $this->charCodeAt($d, 0) - 87 : intval($d);
-            $d = $b{$c+1} == '+' ? $this->shr32($a, $d) : $a << $d;
+            $d = $b{$c + 1} == '+' ? $this->shr32($a, $d) : $a << $d;
             $a = $b{$c} == '+' ? ($a + $d & 4294967295) : $a ^ $d;
         }
         return $a;
@@ -121,7 +121,7 @@ class GoogleTokenGenerator implements TokenProviderInterface
         $l = strlen($bin);
         if ($l > 32) {
             $bin = substr($bin, $l - 32, 32);
-        } elseif($l < 32) {
+        } elseif ($l < 32) {
             $bin = str_pad($bin, 32, '0', STR_PAD_LEFT);
         }
         return bindec(str_pad(substr($bin, 0, 32 - $bits), 32, '0', STR_PAD_LEFT));
@@ -139,7 +139,7 @@ class GoogleTokenGenerator implements TokenProviderInterface
         $char = mb_substr($str, $index, 1, 'UTF-8');
         if (mb_check_encoding($char, 'UTF-8')) {
             $ret = mb_convert_encoding($char, 'UTF-32BE', 'UTF-8');
-            $result =  hexdec(bin2hex($ret));
+            $result = hexdec(bin2hex($ret));
             return $result;
         }
         return null;
