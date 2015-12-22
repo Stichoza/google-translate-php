@@ -1,4 +1,4 @@
-Google Translate PHP [<img alt="SensioLabsInsight" src="https://insight.sensiolabs.com/projects/b80c185c-cfad-44e7-b7c8-9186ae895bb8/small.png" align="right">](https://insight.sensiolabs.com/projects/b80c185c-cfad-44e7-b7c8-9186ae895bb8)
+Google Translate PHP
 ====================
 
 [![Build Status](https://travis-ci.org/Stichoza/google-translate-php.svg?branch=master)](https://travis-ci.org/Stichoza/google-translate-php) [![Latest Stable Version](https://img.shields.io/packagist/v/Stichoza/google-translate-php.svg)](https://packagist.org/packages/stichoza/google-translate-php) [![Total Downloads](https://img.shields.io/packagist/dt/Stichoza/google-translate-php.svg)](https://packagist.org/packages/stichoza/google-translate-php) [![Downloads Month](https://img.shields.io/packagist/dm/Stichoza/google-translate-php.svg)](https://packagist.org/packages/stichoza/google-translate-php) [![Code Climate](https://img.shields.io/codeclimate/github/Stichoza/google-translate-php.svg)](https://codeclimate.com/github/Stichoza/google-translate-php) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Stichoza/google-translate-php/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Stichoza/google-translate-php/?branch=master)
@@ -53,7 +53,7 @@ Or call a static method
 echo TranslateClient::translate('en', 'ka', 'Hello again');
 ```
 
-As of v3.2 multiple sentence/array translation is available.
+As of v3.2 multiple sentence/array translation is available. **WARNING: Due to some Google updates, array translation is currently broken. Everything else still works fine thanks to awesome guys at #32**
 
 ```php
 echo $tr->translate(['I can dance', 'I like trains', 'Double rainbow']);
