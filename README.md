@@ -53,7 +53,7 @@ Or call a static method
 echo TranslateClient::translate('en', 'ka', 'Hello again');
 ```
 
-As of v3.2 multiple sentence/array translation is available. **WARNING: Due to some Google updates, array translation is currently broken. Everything else still works fine thanks to awesome guys at #32**
+As of v3.2 multiple sentence/array translation is available. *WARNING: Due to some Google updates, array translation is currently broken. Everything else still works fine thanks to awesome guys at [#32](https://github.com/Stichoza/google-translate-php/issues/32)*
 
 ```php
 echo $tr->translate(['I can dance', 'I like trains', 'Double rainbow']);
