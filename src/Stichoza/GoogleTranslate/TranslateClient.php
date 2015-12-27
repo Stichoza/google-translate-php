@@ -234,11 +234,13 @@ class TranslateClient
             throw new InvalidArgumentException("Invalid argument provided");
         }
 
+        $tokenData = is_array($data) ? implode('', $data) : $data;
+
         $queryArray = array_merge($this->urlParams, [
             'text' => $data,
             'sl'   => $this->sourceLanguage,
             'tl'   => $this->targetLanguage,
-            'tk'   => $this->tokenProvider->generateToken($this->sourceLanguage, $this->targetLanguage, $data),
+            'tk'   => $this->tokenProvider->generateToken($this->sourceLanguage, $this->targetLanguage, $tokenData),
         ]);
 
         $queryUrl = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', http_build_query($queryArray));
