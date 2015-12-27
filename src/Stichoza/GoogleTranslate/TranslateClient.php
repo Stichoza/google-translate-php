@@ -228,17 +228,23 @@ class TranslateClient
      * @throws UnexpectedValueException If received data cannot be decoded
      * @return array Response
      */
-    private function getResponse($data)
+    private function getResponse($data, $isArray = false)
     {
         if (!is_string($data) && !is_array($data)) {
             throw new InvalidArgumentException("Invalid argument provided");
+        }
+    
+        if($isArray){
+            $tkdata = implode('', $data);
+        }else{
+            $tkdata = $data;
         }
 
         $queryArray = array_merge($this->urlParams, [
             'text' => $data,
             'sl'   => $this->sourceLanguage,
             'tl'   => $this->targetLanguage,
-            'tk'   => $this->tokenProvider->generateToken($this->sourceLanguage, $this->targetLanguage, $data),
+            'tk'   => $this->tokenProvider->generateToken($this->sourceLanguage, $this->targetLanguage, $tkdata),
         ]);
 
         $queryUrl = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', http_build_query($queryArray));
@@ -280,7 +286,7 @@ class TranslateClient
 
         // Rethrow exceptions
         try {
-            $responseArray = $this->getResponse($data);
+            $responseArray = $this->getResponse($data, $isArray);
         } catch (Exception $e) {
             throw $e;
         }
