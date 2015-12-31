@@ -25,6 +25,15 @@ class GoogleTokenGenerator implements TokenProviderInterface
         return $this->TL($text);
     }
 
+    private function mb_str_split($str, $length = 1) 
+    {
+        if ($length < 1) return false;
+        $result = array();
+        for ($i = 0; $i < mb_strlen($str); $i += $length) {
+            $result[] = mb_substr($str, $i, $length);
+        }
+        return $result;
+    }
     /**
      * Generate a valid Google Translate request token
      *
@@ -34,38 +43,16 @@ class GoogleTokenGenerator implements TokenProviderInterface
     private function TL($a)
     {
         $b = $this->generateB();
-
-        for ($d = array(), $e = 0, $f = 0; $f < mb_strlen($a, 'UTF-8'); $f++) {
-            $g = $this->charCodeAt($a, $f);
-            if (128 > $g) {
-                $d[$e++] = $g;
-            } else {
-                if (2048 > $g) {
-                    $d[$e++] = $g >> 6 | 192;
-                } else {
-                    if (55296 == ($g & 64512) && $f + 1 < mb_strlen($a, 'UTF-8') && 56320 == ($this->charCodeAt($a, $f + 1) & 64512)) {
-                        $g = 65536 + (($g & 1023) << 10) + ($this->charCodeAt($a, ++$f) & 1023);
-                        $d[$e++] = $g >> 18 | 240;
-                        $d[$e++] = $g >> 12 & 63 | 128;
-                    } else {
-                        $d[$e++] = $g >> 12 | 224;
-                        $d[$e++] = $g >> 6 & 63 | 128;
-                    }
-                }
-                $d[$e++] = $g & 63 | 128;
-            }
-        }
+        $d = array_map('ord', $this->mb_str_split($a));
         $a = $b;
         for ($e = 0; $e < count($d); $e++) {
-            $a += $d[$e];
-            $a = $this->RL($a, '+-a^+6');
+            $a = $a + $d[$e];
+            $a = RL($a, '+-a^+6');
         }
-        $a = $this->RL($a, "+-3^+b+-f");
-        if (0 > $a) {
-            $a = ($a & 2147483647) + 2147483648;
-        }
+        $a = RL($a, "+-3^+b+-f");
+        $a  =  $a >= 0 ? $a : ($a & 0x7FFFFFFF) + 0x80000000;
         $a = fmod($a, pow(10, 6));
-        return $a . "." . ($a ^ $b);
+        return $a . "." . ($a ^ $b);   
     }
 
     /**
