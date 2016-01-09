@@ -8,9 +8,10 @@ namespace Stichoza\GoogleTranslate\Tokens;
 class SampleTokenGenerator implements TokenProviderInterface
 {
     /**
-     * Generate a fake token just as an example
+     * Generate a fake token just as an example.
      */
-    public function generateToken($source, $target, $text) {
+    public function generateToken($source, $target, $text)
+    {
         return sprintf('%d.%d', rand(10000, 99999), rand(10000, 99999));
     }
 }

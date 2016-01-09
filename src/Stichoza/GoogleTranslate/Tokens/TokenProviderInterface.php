@@ -8,11 +8,12 @@ namespace Stichoza\GoogleTranslate\Tokens;
 interface TokenProviderInterface
 {
     /**
-     * Generate and return a token
+     * Generate and return a token.
      * 
      * @param string $source Source language
      * @param string $target Target language
-     * @param string $text Text to translate
+     * @param string $text   Text to translate
+     *
      * @return mixed A token
      */
     public function generateToken($source, $target, $text);

@@ -2,22 +2,24 @@
 
 namespace Stichoza\GoogleTranslate;
 
-use Exception;
-use ErrorException;
 use BadMethodCallException;
-use InvalidArgumentException;
-use ReflectionClass;
-use UnexpectedValueException;
+use ErrorException;
+use Exception;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use GuzzleHttp\Exception\RequestException as GuzzleRequestException;
+use InvalidArgumentException;
+use ReflectionClass;
 use Stichoza\GoogleTranslate\Tokens\GoogleTokenGenerator;
 use Stichoza\GoogleTranslate\Tokens\TokenProviderInterface;
+use UnexpectedValueException;
 
 /**
- * Free Google Translate API PHP Package
+ * Free Google Translate API PHP Package.
  *
  * @author      Levan Velijanashvili <me@stichoza.com>
+ *
  * @link        http://stichoza.com/
+ *
  * @license     MIT
  */
 class TranslateClient
@@ -43,7 +45,7 @@ class TranslateClient
     private $targetLanguage;
 
     /**
-     * @var string|boolean Last detected source language
+     * @var string|bool Last detected source language
      */
     private static $lastDetectedSource;
 
@@ -92,16 +94,17 @@ class TranslateClient
     private $defaultTokenProvider = GoogleTokenGenerator::class;
 
     /**
-     * Class constructor
+     * Class constructor.
      *
      * For more information about HTTP client configuration options, visit
      * "Creating a client" section of GuzzleHttp docs.
      * 5.x - http://guzzle.readthedocs.org/en/5.3/clients.html#creating-a-client
      *
+     * @param string $source  Source language (Optional)
+     * @param string $target  Target language (Optional)
+     * @param array  $options Associative array of http client configuration options (Optional)
+     *
      * @throws Exception If token provider does not implement TokenProviderInterface
-     * @param string $source Source language (Optional)
-     * @param string $target Target language (Optional)
-     * @param array $options Associative array of http client configuration options (Optional)
      */
     public function __construct($source = null, $target = 'en', $options = [], TokenProviderInterface $tokener = null)
     {
@@ -114,21 +117,21 @@ class TranslateClient
         }
 
         $tokenProviderReflection = new ReflectionClass($tokener);
-        
+
         if ($tokenProviderReflection->implementsInterface(TokenProviderInterface::class)) {
             $this->tokenProvider = $tokenProviderReflection->newInstance();
         } else {
-            throw new Exception("Token provider should implement TokenProviderInterface");    
+            throw new Exception('Token provider should implement TokenProviderInterface');
         }
     }
 
     /**
-     * Override translate method for static call
+     * Override translate method for static call.
      *
-     * @throws BadMethodCallException If calling nonexistent method
+     * @throws BadMethodCallException   If calling nonexistent method
      * @throws InvalidArgumentException If parameters are passed incorrectly
      * @throws InvalidArgumentException If the provided argument is not of type 'string'
-     * @throws ErrorException If the HTTP request fails
+     * @throws ErrorException           If the HTTP request fails
      * @throws UnexpectedValueException If received data cannot be decoded
      */
     public static function __callStatic($name, $args)
@@ -136,13 +139,14 @@ class TranslateClient
         switch ($name) {
             case 'translate':
                 if (count($args) < 3) {
-                    throw new InvalidArgumentException("Expecting 3 parameters");
+                    throw new InvalidArgumentException('Expecting 3 parameters');
                 }
                 try {
                     $result = self::staticTranslate($args[0], $args[1], $args[2]);
                 } catch (Exception $e) {
                     throw $e;
                 }
+
                 return $result;
             case 'getLastDetectedSource':
                 return self::staticGetLastDetectedSource();
@@ -152,12 +156,12 @@ class TranslateClient
     }
 
     /**
-     * Override translate method for instance call
+     * Override translate method for instance call.
      *
-     * @throws BadMethodCallException If calling nonexistent method
+     * @throws BadMethodCallException   If calling nonexistent method
      * @throws InvalidArgumentException If parameters are passed incorrectly
      * @throws InvalidArgumentException If the provided argument is not of type 'string'
-     * @throws ErrorException If the HTTP request fails
+     * @throws ErrorException           If the HTTP request fails
      * @throws UnexpectedValueException If received data cannot be decoded
      */
     public function __call($name, $args)
@@ -165,13 +169,14 @@ class TranslateClient
         switch ($name) {
             case 'translate':
                 if (count($args) < 1) {
-                    throw new InvalidArgumentException("Expecting 1 parameter");
+                    throw new InvalidArgumentException('Expecting 1 parameter');
                 }
                 try {
                     $result = $this->instanceTranslate($args[0]);
                 } catch (Exception $e) {
                     throw $e;
                 }
+
                 return $result;
             case 'getLastDetectedSource':
                 return $this::staticGetLastDetectedSource();
@@ -184,7 +189,7 @@ class TranslateClient
     }
 
     /**
-     * Check if static instance exists and instantiate if not
+     * Check if static instance exists and instantiate if not.
      *
      * @return void
      */
@@ -196,42 +201,48 @@ class TranslateClient
     }
 
     /**
-     * Set source language we are transleting from
+     * Set source language we are transleting from.
      *
      * @param string $source Language code
+     *
      * @return TranslateClient
      */
     public function setSource($source = null)
     {
         $this->sourceLanguage = is_null($source) ? 'auto' : $source;
+
         return $this;
     }
 
     /**
-     * Set translation language we are transleting to
+     * Set translation language we are transleting to.
      *
      * @param string $target Language code
+     *
      * @return TranslateClient
      */
     public function setTarget($target)
     {
         $this->targetLanguage = $target;
+
         return $this;
     }
 
     /**
-     * Get response array
+     * Get response array.
      *
      * @param string|array $data String or array of strings to translate
+     *
      * @throws InvalidArgumentException If the provided argument is not of type 'string'
-     * @throws ErrorException If the HTTP request fails
+     * @throws ErrorException           If the HTTP request fails
      * @throws UnexpectedValueException If received data cannot be decoded
+     *
      * @return array Response
      */
     private function getResponse($data)
     {
         if (!is_string($data) && !is_array($data)) {
-            throw new InvalidArgumentException("Invalid argument provided");
+            throw new InvalidArgumentException('Invalid argument provided');
         }
 
         $tokenData = is_array($data) ? implode('', $data) : $data;
@@ -260,20 +271,23 @@ class TranslateClient
         if (($bodyArray = json_decode($bodyJson, true)) === null) {
             throw new UnexpectedValueException('Data cannot be decoded or it\'s deeper than the recursion limit');
         }
+
         return $bodyArray;
     }
 
     /**
-     * Translate text
+     * Translate text.
      *
      * This can be called from instance method translate() using __call() magic method.
      * Use $instance->translate($string) instead.
      *
      * @param string|array $data Text or array of texts to translate
+     *
      * @throws InvalidArgumentException If the provided argument is not of type 'string'
-     * @throws ErrorException If the HTTP request fails
+     * @throws ErrorException           If the HTTP request fails
      * @throws UnexpectedValueException If received data cannot be decoded
-     * @return string|boolean Translated text
+     *
+     * @return string|bool Translated text
      */
     private function instanceTranslate($data)
     {
@@ -325,17 +339,19 @@ class TranslateClient
             foreach ($responseArray[0] as $item) {
                 $carry[] = $item[0][0][0];
             }
+
             return $carry;
         } else {
-            return array_reduce($responseArray[0], function($carry, $item) {
+            return array_reduce($responseArray[0], function ($carry, $item) {
                 $carry .= $item[0];
+
                 return $carry;
             });
         }
     }
 
     /**
-     * Translate text statically
+     * Translate text statically.
      *
      * This can be called from static method translate() using __callStatic() magic method.
      * Use TranslateClient::translate($source, $target, $string) instead.
@@ -343,10 +359,12 @@ class TranslateClient
      * @param string $source Source language
      * @param string $target Target language
      * @param string $string Text to translate
+     *
      * @throws InvalidArgumentException If the provided argument is not of type 'string'
-     * @throws ErrorException If the HTTP request fails
+     * @throws ErrorException           If the HTTP request fails
      * @throws UnexpectedValueException If received data cannot be decoded
-     * @return string|boolean Translated text
+     *
+     * @return string|bool Translated text
      */
     private static function staticTranslate($source, $target, $string)
     {
@@ -359,12 +377,14 @@ class TranslateClient
         } catch (Exception $e) {
             throw $e;
         }
+
         return $result;
     }
 
     /**
-     * Get last detected language
-     * @return string|boolean Last detected language or boolean FALSE
+     * Get last detected language.
+     *
+     * @return string|bool Last detected language or boolean FALSE
      */
     private static function staticGetLastDetectedSource()
     {
@@ -372,12 +392,14 @@ class TranslateClient
     }
 
     /**
-     * Check if given locale is valid
+     * Check if given locale is valid.
+     *
      * @param string $lang Langauge code to verify
-     * @return boolean
+     *
+     * @return bool
      */
     private function isValidLocale($lang)
     {
-        return !!preg_match('/^([a-z]{2})(-[A-Z]{2})?$/', $lang);
+        return (bool) preg_match('/^([a-z]{2})(-[A-Z]{2})?$/', $lang);
     }
 }

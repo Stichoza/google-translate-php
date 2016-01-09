@@ -5,7 +5,7 @@ namespace Stichoza\GoogleTranslate\Tokens;
 use DateTime;
 
 /**
- * Google Token Generator
+ * Google Token Generator.
  *
  * Thanks to @helen5106 and @tehmaestro and few other cool guys
  * at https://github.com/Stichoza/google-translate-php/issues/32
@@ -13,11 +13,12 @@ use DateTime;
 class GoogleTokenGenerator implements TokenProviderInterface
 {
     /**
-     * Generate and return a token
+     * Generate and return a token.
      *
      * @param string $source Source language
      * @param string $target Target language
-     * @param string $text Text to translate
+     * @param string $text   Text to translate
+     *
      * @return mixed A token
      */
     public function generateToken($source, $target, $text)
@@ -26,16 +27,17 @@ class GoogleTokenGenerator implements TokenProviderInterface
     }
 
     /**
-     * Generate a valid Google Translate request token
+     * Generate a valid Google Translate request token.
      *
      * @param string $a text to translate
+     *
      * @return string
      */
     private function TL($a)
     {
         $b = $this->generateB();
 
-        for ($d = array(), $e = 0, $f = 0; $f < mb_strlen($a, 'UTF-8'); $f++) {
+        for ($d = [], $e = 0, $f = 0; $f < mb_strlen($a, 'UTF-8'); $f++) {
             $g = $this->charCodeAt($a, $f);
             if (128 > $g) {
                 $d[$e++] = $g;
@@ -60,19 +62,20 @@ class GoogleTokenGenerator implements TokenProviderInterface
             $a += $d[$e];
             $a = $this->RL($a, '+-a^+6');
         }
-        $a = $this->RL($a, "+-3^+b+-f");
+        $a = $this->RL($a, '+-3^+b+-f');
         if (0 > $a) {
             $a = ($a & 2147483647) + 2147483648;
         }
         $a = fmod($a, pow(10, 6));
-        return $a . "." . ($a ^ $b);
+
+        return $a.'.'.($a ^ $b);
     }
 
     /**
      * Generate "b" parameter
-     * The number of hours elapsed, since 1st of January 1970
+     * The number of hours elapsed, since 1st of January 1970.
      *
-     * @return double
+     * @return float
      */
     private function generateB()
     {
@@ -85,10 +88,11 @@ class GoogleTokenGenerator implements TokenProviderInterface
     }
 
     /**
-     * Process token data by applying multiple operations
+     * Process token data by applying multiple operations.
      *
      * @param $a
      * @param $b
+     *
      * @return int
      */
     private function RL($a, $b)
@@ -96,17 +100,21 @@ class GoogleTokenGenerator implements TokenProviderInterface
         for ($c = 0; $c < strlen($b) - 2; $c += 3) {
             $d = $b{$c + 2};
             $d = $d >= 'a' ? $this->charCodeAt($d, 0) - 87 : intval($d);
-            $d = $b{$c + 1} == '+' ? $this->shr32($a, $d) : $a << $d;
-            $a = $b{$c} == '+' ? ($a + $d & 4294967295) : $a ^ $d;
+            $d = $b{$c + 1}
+            == '+' ? $this->shr32($a, $d) : $a << $d;
+            $a = $b{$c}
+            == '+' ? ($a + $d & 4294967295) : $a ^ $d;
         }
+
         return $a;
     }
 
     /**
-     * Crypto function
+     * Crypto function.
      *
      * @param $x
      * @param $bits
+     *
      * @return number
      */
     private function shr32($x, $bits)
@@ -124,14 +132,16 @@ class GoogleTokenGenerator implements TokenProviderInterface
         } elseif ($l < 32) {
             $bin = str_pad($bin, 32, '0', STR_PAD_LEFT);
         }
+
         return bindec(str_pad(substr($bin, 0, 32 - $bits), 32, '0', STR_PAD_LEFT));
     }
 
     /**
-     * Get the Unicode of the character at the specified index in a string
+     * Get the Unicode of the character at the specified index in a string.
      *
      * @param string $str
-     * @param int $index
+     * @param int    $index
+     *
      * @return null|number
      */
     private function charCodeAt($str, $index)
@@ -140,8 +150,10 @@ class GoogleTokenGenerator implements TokenProviderInterface
         if (mb_check_encoding($char, 'UTF-8')) {
             $ret = mb_convert_encoding($char, 'UTF-32BE', 'UTF-8');
             $result = hexdec(bin2hex($ret));
+
             return $result;
         }
-        return null;
+
+        return;
     }
 }

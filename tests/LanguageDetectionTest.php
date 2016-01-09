@@ -1,4 +1,5 @@
 <?php
+
 namespace Stichoza\GoogleTranslate\Tests;
 
 use Stichoza\GoogleTranslate\TranslateClient;
