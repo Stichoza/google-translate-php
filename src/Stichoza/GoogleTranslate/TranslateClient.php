@@ -342,7 +342,7 @@ class TranslateClient
 
             return $carry;
         } else {
-            return array_reduce($responseArray[0], function ($carry, $item) {
+            return array_reduce($responseArray[0], function($carry, $item) {
                 $carry .= $item[0];
 
                 return $carry;
