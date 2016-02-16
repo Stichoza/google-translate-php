@@ -342,11 +342,14 @@ class TranslateClient
 
             return $carry;
         } else {
-            return array_reduce($responseArray[0], function($carry, $item) {
-                $carry .= $item[0];
-
-                return $carry;
-            });
+            if (is_array($responseArray[0])) {
+                return array_reduce($responseArray[0], function($carry, $item) {
+                    $carry .= $item[0];
+                    return $carry;
+                });
+            } else {
+                return $responseArray[0];
+            }
         }
     }
 
