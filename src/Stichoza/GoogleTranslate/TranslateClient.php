@@ -348,11 +348,11 @@ class TranslateClient
             return $carry;
         }
         // the response can be sometimes an translated string.
-        else if (is_string($responseArray)) {
+        elseif (is_string($responseArray)) {
             return $responseArray;
         } else {
             if (is_array($responseArray[0])) {
-                return array_reduce($responseArray[0], function($carry, $item) {
+                return array_reduce($responseArray[0], function ($carry, $item) {
                     $carry .= $item[0];
                     return $carry;
                 });
