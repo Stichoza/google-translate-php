@@ -308,11 +308,16 @@ class TranslateClient
 
         // Detect languages
         $detectedLanguages = [];
-        $responseArrayForLanguages = ($isArray) ? $responseArray[0] : [$responseArray];
-        foreach ($responseArrayForLanguages as $itemArray) {
-            foreach ($itemArray as $item) {
-                if (is_string($item)) {
-                    $detectedLanguages[] = $item;
+
+        // the response contains only single translation, dont create loop that will end with
+        // invalide foreach and warning
+        if ($isArray || !is_string($responseArray)) {
+            $responseArrayForLanguages = ($isArray) ? $responseArray[0] : [$responseArray];
+            foreach ($responseArrayForLanguages as $itemArray) {
+                foreach ($itemArray as $item) {
+                    if (is_string($item)) {
+                        $detectedLanguages[] = $item;
+                    }
                 }
             }
         }
@@ -341,10 +346,15 @@ class TranslateClient
             }
 
             return $carry;
+        }
+        // the response can be sometimes an translated string.
+        elseif (is_string($responseArray)) {
+            return $responseArray;
         } else {
             if (is_array($responseArray[0])) {
-                return array_reduce($responseArray[0], function($carry, $item) {
+                return array_reduce($responseArray[0], function ($carry, $item) {
                     $carry .= $item[0];
+                    
                     return $carry;
                 });
             } else {
