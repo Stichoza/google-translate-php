@@ -301,6 +301,12 @@ class TranslateClient
             throw $e;
         }
 
+        // if response in text and the content has zero the empty returns true, lets check
+        // if response is string and not empty and create array for further logic
+        if (is_string($responseArray) && $responseArray != "") {
+             $responseArray = [$responseArray];
+        }
+
         // Check if translation exists
         if (!isset($responseArray[0]) || empty($responseArray[0])) {
             return false;
