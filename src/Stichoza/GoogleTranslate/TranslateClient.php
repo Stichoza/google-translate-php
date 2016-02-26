@@ -303,8 +303,8 @@ class TranslateClient
 
         // if response in text and the content has zero the empty returns true, lets check
         // if response is string and not empty and create array for further logic
-        if (is_string($responseArray) && $responseArray != "") {
-             $responseArray = [$responseArray];
+        if (is_string($responseArray) && $responseArray != '') {
+            $responseArray = [$responseArray];
         }
 
         // Check if translation exists
@@ -360,7 +360,7 @@ class TranslateClient
             if (is_array($responseArray[0])) {
                 return array_reduce($responseArray[0], function ($carry, $item) {
                     $carry .= $item[0];
-                    
+
                     return $carry;
                 });
             } else {
