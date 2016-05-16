@@ -54,7 +54,7 @@ class TranslateClient
      */
     private $urlBase = 'http://translate.google.com/translate_a/t';
 
-        /**
+    /**
      * @var array URL Parameters
      */
     private $urlParams = [

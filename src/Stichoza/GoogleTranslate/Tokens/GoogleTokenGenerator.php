@@ -2,8 +2,6 @@
 
 namespace Stichoza\GoogleTranslate\Tokens;
 
-use DateTime;
-
 /**
  * Google Token Generator.
  *
@@ -148,6 +146,6 @@ class GoogleTokenGenerator implements TokenProviderInterface
             return $result;
         }
 
-        return null;
+        return;
     }
 }
