@@ -54,15 +54,16 @@ class TranslateClient
      */
     private $urlBase = 'http://translate.google.com/translate_a/t';
 
-    /**
+        /**
      * @var array URL Parameters
      */
     private $urlParams = [
-        'client'   => 't',
+        'client'   => 'webapp',
         'hl'       => 'en',
+        'dt'       => null,
         'sl'       => null, // Source language
         'tl'       => null, // Target language
-        'text'     => null, // String to translate
+        'q'        => null, // String to translate
         'ie'       => 'UTF-8', // Input encoding
         'oe'       => 'UTF-8', // Output encoding
         'multires' => 1,
@@ -71,7 +72,7 @@ class TranslateClient
         'trs'      => 1,
         'ssel'     => 0,
         'tsel'     => 0,
-        'sc'       => 1,
+        'kc'       => 1,
         'tk'       => null,
     ];
 

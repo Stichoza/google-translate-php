@@ -35,7 +35,8 @@ class GoogleTokenGenerator implements TokenProviderInterface
      */
     private function TL($a)
     {
-        $b = $this->generateB();
+        $tkk = $this->TKK();
+        $b = $tkk[0];
 
         for ($d = [], $e = 0, $f = 0; $f < mb_strlen($a, 'UTF-8'); $f++) {
             $g = $this->charCodeAt($a, $f);
@@ -63,6 +64,7 @@ class GoogleTokenGenerator implements TokenProviderInterface
             $a = $this->RL($a, '+-a^+6');
         }
         $a = $this->RL($a, '+-3^+b+-f');
+        $a ^= $tkk[1];
         if (0 > $a) {
             $a = ($a & 2147483647) + 2147483648;
         }
@@ -72,19 +74,11 @@ class GoogleTokenGenerator implements TokenProviderInterface
     }
 
     /**
-     * Generate "b" parameter
-     * The number of hours elapsed, since 1st of January 1970.
-     *
-     * @return float
+     * @return array
      */
-    private function generateB()
+    private function TKK()
     {
-        $start = new DateTime('1970-01-01');
-        $now = new DateTime('now');
-
-        $diff = $now->diff($start);
-
-        return $diff->h + ($diff->days * 24);
+        return ['406398', (561666268 + 1526272306)];
     }
 
     /**
@@ -154,6 +148,6 @@ class GoogleTokenGenerator implements TokenProviderInterface
             return $result;
         }
 
-        return;
+        return null;
     }
 }
