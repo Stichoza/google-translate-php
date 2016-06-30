@@ -21,6 +21,10 @@ use UnexpectedValueException;
  * @link        http://stichoza.com/
  *
  * @license     MIT
+ *
+ * @method string getLastDetectedSource() Can be called statically too.
+ * @method string translate(string $text) Can be called statically with signature
+ *                                        string translate(string $source, string $target, string $text)
  */
 class TranslateClient
 {
