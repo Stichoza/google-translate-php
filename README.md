@@ -86,6 +86,16 @@ $tr = new TranslateClient(null, 'en', [
 ]);
 ```
 
+You can use `setHttpOption` method configure [guzzle client configuration options](http://docs.guzzlephp.org/en/latest/request-options.html).
+
+```php
+// set proxy to tcp://localhost:8090
+$tr->setHttpOption(['proxy' => 'tcp://localhost:8090'])->translate('Hello');
+
+// set proxy to socks5://localhost:1080
+$tr->setHttpOption(['proxy' => 'socks5://localhost:1080'])->translate('World');
+```
+
 For more information, see [Creating a Client](http://guzzle.readthedocs.org/en/latest/quickstart.html#creating-a-client) section in Guzzle docs (6.x version).
 
 ### Language Detection
