@@ -59,6 +59,11 @@ class TranslateClient
     private $urlBase = 'http://translate.google.com/translate_a/t';
 
     /**
+     * @var array Dynamic guzzleHTTP client options
+     */
+    private $httpOptions = [];
+
+    /**
      * @var array URL Parameters
      */
     private $urlParams = [
@@ -234,6 +239,20 @@ class TranslateClient
     }
 
     /**
+     * Set guzzleHttp client options.
+     *
+     * @param array $options guzzleHttp client options.
+     *
+     * @return TranslateClient
+     */
+    public function setHttpOption(array $options)
+    {
+        $this->httpOptions = $options;
+
+        return $this;
+    }
+
+    /**
      * Get response array.
      *
      * @param string|array $data String or array of strings to translate
@@ -262,7 +281,7 @@ class TranslateClient
         $queryUrl = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', http_build_query($queryArray));
 
         try {
-            $response = $this->httpClient->post($this->urlBase, ['body' => $queryUrl]);
+            $response = $this->httpClient->post($this->urlBase, ['body' => $queryUrl] + $this->httpOptions);
         } catch (GuzzleRequestException $e) {
             throw new ErrorException($e->getMessage());
         }
