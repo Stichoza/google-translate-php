@@ -69,7 +69,7 @@ class TranslateClient
     private $urlParams = [
         'client'   => 't',
         'hl'       => 'en',
-        'dt'       => null,
+        'dt'       => 't',
         'sl'       => null, // Source language
         'tl'       => null, // Target language
         'q'        => null, // String to translate
