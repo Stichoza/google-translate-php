@@ -269,7 +269,7 @@ class TranslateClient
             throw new InvalidArgumentException('Invalid argument provided');
         }
 
-        $data = implode('~ | ~', $data);
+        $data = implode(' \ ~ \ ~ ', $data);
         $tokenData = is_array($data) ? implode('', $data) : $data;
 
         $queryArray = array_merge($this->urlParams, [
@@ -365,8 +365,8 @@ class TranslateClient
             $split = [];
             foreach ($responseArray[0] as $item) {
                 $tmpstr .= $item[0];
-                if (strpos($tmpstr, '~ | ~')) {
-                    $split = explode('~ | ~', $tmpstr);
+                if (strpos($tmpstr, ' \ ~ \ ~ ')) {
+                    $split = explode(' \ ~ \ ~ ', $tmpstr);
                     $tmpstr = array_pop($split);
                     foreach ($split as $st) {
                         $carry[] = $st;
