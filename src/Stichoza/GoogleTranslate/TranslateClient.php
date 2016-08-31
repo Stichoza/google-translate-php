@@ -56,7 +56,7 @@ class TranslateClient
     /**
      * @var string Google Translate URL base
      */
-    private $urlBase = 'http://translate.google.com/translate_a/t';
+    private $urlBase = 'http://translate.google.com/translate_a/single';
 
     /**
      * @var array Dynamic guzzleHTTP client options
@@ -67,7 +67,7 @@ class TranslateClient
      * @var array URL Parameters
      */
     private $urlParams = [
-        'client'   => 'webapp',
+        'client'   => 't',
         'hl'       => 'en',
         'dt'       => null,
         'sl'       => null, // Source language
