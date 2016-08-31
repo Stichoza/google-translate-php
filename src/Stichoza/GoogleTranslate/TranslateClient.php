@@ -343,8 +343,8 @@ class TranslateClient
         // Another case of detected language
         if (isset($responseArray[count($responseArray) - 2][0][0])) {
             $detectedLanguages[] = $responseArray[count($responseArray) - 2][0][0];
-        } elseif (isset($responseArray[1])){
-          $detectedLanguages[] = $responseArray[1];
+        } elseif (isset($responseArray[1])) {
++            $detectedLanguages[] = $responseArray[1];
         }
 
         // Set initial detected language to null
