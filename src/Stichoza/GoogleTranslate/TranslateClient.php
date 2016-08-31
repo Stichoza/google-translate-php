@@ -269,7 +269,7 @@ class TranslateClient
             throw new InvalidArgumentException('Invalid argument provided');
         }
 
-        $data = implode("\n", $data);
+        $data = implode('~ | ~', $data);
         $tokenData = is_array($data) ? implode('', $data) : $data;
 
         $queryArray = array_merge($this->urlParams, [
@@ -361,10 +361,20 @@ class TranslateClient
         // Reduce array to generate translated sentenece
         if ($isArray) {
             $carry = [];
+            $tmpstr = '';
+            $split = [];
             foreach ($responseArray[0] as $item) {
-                $carry[] = $item[0];
-
+                $tmpstr .= $item[0];
+                if (strpos($tmpstr, '~ | ~')) {
+                    $split = explode('~ | ~', $tmpstr);
+                    $tmpstr = array_pop($split);
+                    foreach ($split as $st) {
+                        $carry[] = $st;
+                    }
+                }
             }
+            $carry[] = $tmpstr;
+
             return $carry;
         }
         // the response can be sometimes an translated string.
