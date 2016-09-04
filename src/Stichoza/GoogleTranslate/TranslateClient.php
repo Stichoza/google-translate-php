@@ -269,7 +269,7 @@ class TranslateClient
             throw new InvalidArgumentException('Invalid argument provided');
         }
 
-        $data = implode(' \ ~ \ ~ ', $data);
+        $data = is_array($data) ? implode(' \ ~ \ ~ ', $data) : $data;
         $tokenData = is_array($data) ? implode('', $data) : $data;
 
         $queryArray = array_merge($this->urlParams, [
