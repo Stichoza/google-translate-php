@@ -272,7 +272,6 @@ class TranslateClient
         $tokenData = is_array($data) ? implode('', $data) : $data;
 
         $queryArray = array_merge($this->urlParams, [
-            'text' => $data,
             'sl'   => $this->sourceLanguage,
             'tl'   => $this->targetLanguage,
             'tk'   => $this->tokenProvider->generateToken($this->sourceLanguage, $this->targetLanguage, $tokenData),
@@ -280,8 +279,17 @@ class TranslateClient
 
         $queryUrl = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', http_build_query($queryArray));
 
+        $queryBodyArray = [
+            'q' => $data,
+        ];
+
+        $queryBodyEncoded = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', http_build_query($queryBodyArray));
+
         try {
-            $response = $this->httpClient->post($this->urlBase, ['body' => $queryUrl] + $this->httpOptions);
+            $response = $this->httpClient->post($this->urlBase, [
+                    'query' => $queryUrl,
+                    'body' => $queryBodyEncoded
+                ] + $this->httpOptions);
         } catch (GuzzleRequestException $e) {
             throw new ErrorException($e->getMessage());
         }
