@@ -288,7 +288,7 @@ class TranslateClient
         try {
             $response = $this->httpClient->post($this->urlBase, [
                     'query' => $queryUrl,
-                    'body'  => $queryBodyEncoded
+                    'body'  => $queryBodyEncoded,
                 ] + $this->httpOptions);
         } catch (GuzzleRequestException $e) {
             throw new ErrorException($e->getMessage());
