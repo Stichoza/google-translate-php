@@ -36,9 +36,9 @@ class UtilityTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function noTestSetHttpOption()
+    public function testSetHttpOption()
     {
-        $res = fopen('php://memory', 'r+');
+        $res = fopen('php://temp', 'r+');
 
         $this->tr->setHttpOption([
             'debug'   => $res,
