@@ -27,22 +27,22 @@ class Translator
     /**
      * @var \GuzzleHttp\Client HTTP Client
      */
-    private $httpClient;
+    protected $httpClient;
 
     /**
      * @var string Source language - from where the string should be translated
      */
-    private $sourceLanguage;
+    protected $sourceLanguage;
 
     /**
      * @var string Target language - to which language string should be translated
      */
-    private $targetLanguage;
+    protected $targetLanguage;
 
     /**
      * @var string|bool Last detected source language
      */
-    private $lastDetectedSource;
+    protected $lastDetectedSource = false;
 
     /**
      * @var string Google Translate URL base
@@ -52,12 +52,12 @@ class Translator
     /**
      * @var array Dynamic guzzleHTTP client options
      */
-    private $httpOptions = [];
+    protected $httpOptions = [];
 
     /**
      * @var array URL Parameters
      */
-    private $urlParams = [
+    protected $urlParams = [
         'client'   => 't',
         'hl'       => 'en',
         'dt'       => 't',
@@ -79,7 +79,7 @@ class Translator
     /**
      * @var array Regex key-value patterns to replace on response data
      */
-    private $resultRegexes = [
+    protected $resultRegexes = [
         '/,+/'  => ',',
         '/\[,/' => '[',
     ];
@@ -87,12 +87,7 @@ class Translator
     /**
      * @var TokenProviderInterface
      */
-    private $tokenProvider;
-
-    /**
-     * @var string Default token generator class name
-     */
-    private $defaultTokenProvider = GoogleTokenGenerator::class;
+    protected $tokenProvider;
 
     /**
      * Class constructor.
@@ -107,23 +102,16 @@ class Translator
      *
      * @throws Exception If token provider does not implement TokenProviderInterface
      */
-    public function __construct($source = null, $target = 'en', $options = [], TokenProviderInterface $tokener = null)
+    public function __construct($source = null, $target = 'en', $options = [], TokenProviderInterface $tokenProvider = null)
     {
         $this->httpClient = new GuzzleHttpClient($options); // Create HTTP client
         $this->setSource($source)->setTarget($target); // Set languages
-        $this->lastDetectedSource = false;
 
-        if (!isset($tokener)) {
-            $tokener = $this->defaultTokenProvider;
+        if (!$tokenProvider) {
+            $tokenProvider = new GoogleTokenGenerator();
         }
 
-        $tokenProviderReflection = new ReflectionClass($tokener);
-
-        if ($tokenProviderReflection->implementsInterface(TokenProviderInterface::class)) {
-            $this->tokenProvider = $tokenProviderReflection->newInstance();
-        } else {
-            throw new Exception('Token provider should implement TokenProviderInterface');
-        }
+        $this->tokenProvider = $tokenProvider;
     }
 
     /**
@@ -141,7 +129,7 @@ class Translator
     }
 
     /**
-     * Set translation language we are transleting to.
+     * Set translation language we are translating to.
      *
      * @param string $target Language code
      *
@@ -210,7 +198,7 @@ class Translator
             throw new ErrorException($e->getMessage());
         }
 
-        $body = $response->getBody(); // Get response body
+        $body = $response->getBody()->getContents(); // Get response body
 
         // Modify body to avoid json errors
         $bodyJson = preg_replace(array_keys($this->resultRegexes), array_values($this->resultRegexes), $body);
@@ -221,6 +209,21 @@ class Translator
         }
 
         return $bodyArray;
+    }
+
+    public function translate($data)
+    {
+        if (is_string($data)) {
+            return $this->translateStuff($data);
+        }
+
+        if (is_array($data)) {
+            $translatedStuff = $this->translateStuff(implode(' || ', $data));
+
+            return explode(' || ', $translatedStuff);
+        }
+
+        throw new InvalidArgumentException("Expecting string or array as an argument on translate method.");
     }
 
     /**
@@ -237,14 +240,18 @@ class Translator
      *
      * @return string|bool Translated text
      */
-    public function translate($data)
+    public function translateStuff($data)
     {
         // Whether or not is the data an array
         $isArray = is_array($data);
 
         // Rethrow exceptions
         try {
-            $responseArray = $this->getResponse($data);
+            if ($isArray) {
+                $responseArray = $this->getResponse(implode(' || ', $data));
+            } else {
+                $responseArray = $this->getResponse($data);
+            }
         } catch (Exception $e) {
             throw $e;
         }

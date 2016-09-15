@@ -19,24 +19,31 @@ class TranslationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($resultOne, $resultTwo, 'გამარჯობა');
     }
 
-    public function noTestArrayTranslation()
+    public function testArrayTranslation()
     {
-        $this->tr->setSource('en')->setTarget('pt');
+        $data = [
+            'This looks like',
+            'an awesome array',
+            'with some sentences'
+        ];
+        $source = 'en';
+        $target = 'ka';
 
-        $resultCat = $this->tr->translate('cat');
-        $resultDog = $this->tr->translate('dog');
-        $resultFish = $this->tr->translate('fish');
+        $this->tr->setSource($source)->setTarget($target);
 
-        $arrayResults = $this->tr->translate(['cat', 'dog', 'fish']);
-        $arrayZesults = TranslateClient::translate('en', 'pt', ['cat', 'dog', 'fish']);
+        $translatedData = [];
+        foreach ($data as $key => $text) {
+            $translatedData[$key] = $this->tr->translate($text);
+        }
 
-        $this->assertEquals($resultCat, $arrayResults[0], 'gato');
-        $this->assertEquals($resultDog, $arrayResults[1], 'cachorro');
-        $this->assertEquals($resultFish, $arrayResults[2], 'peixe');
+        foreach ($this->tr->translate($data) as $key => $text) {
+            $this->assertEquals($translatedData[$key], $text);
+        }
 
-        $this->assertEquals($resultCat, $arrayZesults[0], 'gato');
-        $this->assertEquals($resultDog, $arrayZesults[1], 'cachorro');
-        $this->assertEquals($resultFish, $arrayZesults[2], 'peixe');
+        // testing static
+        foreach (TranslateClient::translate($source, $target, $data) as $key => $text) {
+            $this->assertEquals($translatedData[$key], $text);
+        }
     }
 
     public function testRawResponse()
