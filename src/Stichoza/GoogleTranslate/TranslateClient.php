@@ -272,9 +272,9 @@ class TranslateClient
         $tokenData = is_array($data) ? implode('', $data) : $data;
 
         $queryArray = array_merge($this->urlParams, [
-            'sl'   => $this->sourceLanguage,
-            'tl'   => $this->targetLanguage,
-            'tk'   => $this->tokenProvider->generateToken($this->sourceLanguage, $this->targetLanguage, $tokenData),
+            'sl' => $this->sourceLanguage,
+            'tl' => $this->targetLanguage,
+            'tk' => $this->tokenProvider->generateToken($this->sourceLanguage, $this->targetLanguage, $tokenData),
         ]);
 
         $queryUrl = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', http_build_query($queryArray));
@@ -384,8 +384,7 @@ class TranslateClient
             }
 
             return $carry;
-        }
-        // the response can be sometimes an translated string.
+        } // the response can be sometimes an translated string.
         elseif (is_string($responseArray)) {
             return $responseArray;
         } else {
@@ -451,6 +450,6 @@ class TranslateClient
      */
     private function isValidLocale($lang)
     {
-        return (bool) preg_match('/^([a-z]{2})(-[A-Z]{2})?$/', $lang);
+        return (bool)preg_match('/^([a-z]{2})(-[A-Z]{2})?$/', $lang);
     }
 }

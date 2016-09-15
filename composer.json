@@ -1,33 +1,40 @@
 {
-    "name": "stichoza/google-translate-php",
-    "description": "Free Google Translate API PHP Package",
-    "keywords": ["google", "translate", "php"],
-    "license": "MIT",
-    "homepage": "http://github.com/Stichoza/google-translate-php",
-    "authors": [
-        {
-            "name": "Levan Velijanashvili",
-            "email": "me@stichoza.com"
-        }
-    ],
-    "require": {
-        "php": ">=5.5.0",
-        "guzzlehttp/guzzle": "~6.0"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "~4.0"
-    },
-    "autoload": {
-        "psr-0": {
-            "Stichoza\\GoogleTranslate\\": "src/"
-        },
-        "psr-4": {
-            "Stichoza\\GoogleTranslate\\": "src/Stichoza/GoogleTranslate/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Stichoza\\GoogleTranslate\\Tests\\": "tests/"
-        }
+  "name": "stichoza/google-translate-php",
+  "description": "Free Google Translate API PHP Package",
+  "keywords": [
+    "google",
+    "translate",
+    "php"
+  ],
+  "license": "MIT",
+  "homepage": "http://github.com/Stichoza/google-translate-php",
+  "authors": [
+    {
+      "name": "Levan Velijanashvili",
+      "email": "me@stichoza.com"
     }
+  ],
+  "require": {
+    "php": ">=5.5.0",
+    "guzzlehttp/guzzle": "~6.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.0"
+  },
+  "autoload": {
+    "psr-0": {
+      "Stichoza\\GoogleTranslate\\": "src/"
+    },
+    "psr-4": {
+      "Stichoza\\GoogleTranslate\\": "src/Stichoza/GoogleTranslate/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Stichoza\\GoogleTranslate\\Tests\\": "tests/"
+    }
+  },
+  "config": {
+    "bin-dir": "bin"
+  }
 }

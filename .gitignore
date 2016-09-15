@@ -1,2 +1,5 @@
-/vendor/
+.idea
+
+bin
+vendor
 composer.lock
