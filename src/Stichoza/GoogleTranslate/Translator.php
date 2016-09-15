@@ -7,7 +7,6 @@ use Exception;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use GuzzleHttp\Exception\RequestException as GuzzleRequestException;
 use InvalidArgumentException;
-use ReflectionClass;
 use Stichoza\GoogleTranslate\Tokens\GoogleTokenGenerator;
 use Stichoza\GoogleTranslate\Tokens\TokenProviderInterface;
 use UnexpectedValueException;
@@ -211,21 +210,6 @@ class Translator
         return $bodyArray;
     }
 
-    public function translate($data)
-    {
-        if (is_string($data)) {
-            return $this->translateStuff($data);
-        }
-
-        if (is_array($data)) {
-            $translatedStuff = $this->translateStuff(implode(' || ', $data));
-
-            return explode(' || ', $translatedStuff);
-        }
-
-        throw new InvalidArgumentException("Expecting string or array as an argument on translate method.");
-    }
-
     /**
      * Translate text.
      *
@@ -240,18 +224,40 @@ class Translator
      *
      * @return string|bool Translated text
      */
-    public function translateStuff($data)
+    public function translate($data)
     {
-        // Whether or not is the data an array
-        $isArray = is_array($data);
+        if (is_string($data)) {
+            return $this->translateText($data);
+        }
 
+        if (is_array($data)) {
+            $translatedText = $this->translateText(implode(' || ', $data));
+
+            return array_combine(array_keys($data), explode(' || ', $translatedText));
+        }
+
+        throw new InvalidArgumentException("Expecting string or array as an argument on translate method.");
+    }
+
+    /**
+     * Translate text.
+     *
+     * This can be called from instance method translate() using __call() magic method.
+     * Use $instance->translate($string) instead.
+     *
+     * @param string $data Text or array of texts to translate
+     *
+     * @throws InvalidArgumentException If the provided argument is not of type 'string'
+     * @throws ErrorException           If the HTTP request fails
+     * @throws UnexpectedValueException If received data cannot be decoded
+     *
+     * @return string|bool Translated text
+     */
+    protected function translateText($string)
+    {
         // Rethrow exceptions
         try {
-            if ($isArray) {
-                $responseArray = $this->getResponse(implode(' || ', $data));
-            } else {
-                $responseArray = $this->getResponse($data);
-            }
+            $responseArray = $this->getResponse($string);
         } catch (Exception $e) {
             throw $e;
         }
@@ -271,9 +277,10 @@ class Translator
         $detectedLanguages = [];
 
         // the response contains only single translation, dont create loop that will end with
-        // invalide foreach and warning
-        if ($isArray || !is_string($responseArray)) {
-            $responseArrayForLanguages = ($isArray) ? $responseArray[0] : [$responseArray];
+        // invalid foreach and warning
+        if (!is_string($responseArray)) {
+            $responseArrayForLanguages = [$responseArray];
+
             foreach ($responseArrayForLanguages as $itemArray) {
                 foreach ($itemArray as $item) {
                     if (is_string($item)) {
@@ -299,27 +306,19 @@ class Translator
             }
         }
 
-        // Reduce array to generate translated sentence
-        if ($isArray) {
-            $carry = [];
-            foreach ($responseArray[0] as $item) {
-                $carry[] = $item[0][0][0];
-            }
-
-            return $carry;
-        } // the response can be sometimes an translated string.
-        elseif (is_string($responseArray)) {
+        // the response can be sometimes an translated string.
+        if (is_string($responseArray)) {
             return $responseArray;
-        } else {
-            if (is_array($responseArray[0])) {
-                return array_reduce($responseArray[0], function ($carry, $item) {
-                    $carry .= $item[0];
+        }
 
-                    return $carry;
-                });
-            } else {
-                return $responseArray[0];
-            }
+        if (is_array($responseArray[0])) {
+            return array_reduce($responseArray[0], function ($carry, $item) {
+                $carry .= $item[0];
+
+                return $carry;
+            });
+        } else {
+            return $responseArray[0];
         }
     }
 
