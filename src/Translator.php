@@ -19,7 +19,6 @@ use UnexpectedValueException;
  * @link        http://stichoza.com/
  *
  * @license     MIT
- *
  */
 class Translator
 {

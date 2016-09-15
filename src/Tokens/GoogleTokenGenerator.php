@@ -68,7 +68,7 @@ class GoogleTokenGenerator implements TokenProviderInterface
         }
         $a = fmod($a, pow(10, 6));
 
-        return $a.'.'.($a ^ $b);
+        return $a . '.' . ($a ^ $b);
     }
 
     /**
