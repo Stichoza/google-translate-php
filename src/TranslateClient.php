@@ -88,7 +88,6 @@ class TranslateClient
                         ->setSource($args[0])
                         ->setTarget($args[1])
                         ->translate($args[2]);
-
                 } catch (Exception $e) {
                     throw $e;
                 }
