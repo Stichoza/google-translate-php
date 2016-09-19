@@ -235,7 +235,7 @@ class Translator
             return array_combine(array_keys($data), explode(' || ', $translatedText));
         }
 
-        throw new InvalidArgumentException("Expecting string or array as an argument on translate method.");
+        throw new InvalidArgumentException('Expecting string or array as an argument on translate method.');
     }
 
     /**
@@ -340,6 +340,6 @@ class Translator
      */
     public function isValidLocale($lang)
     {
-        return (bool)preg_match('/^([a-z]{2})(-[A-Z]{2})?$/', $lang);
+        return (bool) preg_match('/^([a-z]{2})(-[A-Z]{2})?$/', $lang);
     }
 }

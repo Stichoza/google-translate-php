@@ -68,7 +68,7 @@ class GoogleTokenGenerator implements TokenProviderInterface
         }
         $a = fmod($a, pow(10, 6));
 
-        return $a . '.' . ($a ^ $b);
+        return $a.'.'.($a ^ $b);
     }
 
     /**
@@ -90,11 +90,11 @@ class GoogleTokenGenerator implements TokenProviderInterface
     private function RL($a, $b)
     {
         for ($c = 0; $c < strlen($b) - 2; $c += 3) {
-            $d = $b{$c + 2};
+            $d = $b[$c + 2];
             $d = $d >= 'a' ? $this->charCodeAt($d, 0) - 87 : intval($d);
-            $d = $b{$c + 1}
+            $d = $b[$c + 1]
             == '+' ? $this->shr32($a, $d) : $a << $d;
-            $a = $b{$c}
+            $a = $b[$c]
             == '+' ? ($a + $d & 4294967295) : $a ^ $d;
         }
 
@@ -145,7 +145,5 @@ class GoogleTokenGenerator implements TokenProviderInterface
 
             return $result;
         }
-
-        return;
     }
 }

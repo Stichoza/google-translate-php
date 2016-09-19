@@ -51,7 +51,7 @@ class TranslateClient
     }
 
     /**
-     * Returns the singleton instance of Translator
+     * Returns the singleton instance of Translator.
      *
      * @param TokenProviderInterface|null $tokener
      *
@@ -115,10 +115,10 @@ class TranslateClient
             throw new BadMethodCallException("Method [{$methodName}] does not exist");
         }
 
-        $reflectionMethod = new \ReflectionMethod (self::getInstance(), $methodName);
+        $reflectionMethod = new \ReflectionMethod(self::getInstance(), $methodName);
         $minimumArgs = $reflectionMethod->getNumberOfRequiredParameters();
         if (count($args) < $minimumArgs) {
-            throw new InvalidArgumentException("Expecting $minimumArgs parameter" . ($minimumArgs == 1 ? '' : 's'));
+            throw new InvalidArgumentException("Expecting $minimumArgs parameter".($minimumArgs == 1 ? '' : 's'));
         }
 
         return call_user_func_array([self::getInstance(), $methodName], $args);

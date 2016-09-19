@@ -24,7 +24,7 @@ class TranslationTest extends \PHPUnit_Framework_TestCase
         $data = [
             'This looks like',
             'an awesome array',
-            'with some sentences'
+            'with some sentences',
         ];
         $source = 'en';
         $target = 'ka';
