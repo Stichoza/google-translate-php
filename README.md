@@ -3,6 +3,27 @@ Google Translate PHP
 
 [![Build Status](https://travis-ci.org/Stichoza/google-translate-php.svg?branch=master)](https://travis-ci.org/Stichoza/google-translate-php) [![Latest Stable Version](https://img.shields.io/packagist/v/Stichoza/google-translate-php.svg)](https://packagist.org/packages/stichoza/google-translate-php) [![Total Downloads](https://img.shields.io/packagist/dt/Stichoza/google-translate-php.svg)](https://packagist.org/packages/stichoza/google-translate-php) [![Downloads Month](https://img.shields.io/packagist/dm/Stichoza/google-translate-php.svg)](https://packagist.org/packages/stichoza/google-translate-php) [![Code Climate](https://img.shields.io/codeclimate/github/Stichoza/google-translate-php.svg)](https://codeclimate.com/github/Stichoza/google-translate-php) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Stichoza/google-translate-php/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Stichoza/google-translate-php/?branch=master)
 
+<div style="margin: 25px;">
+<a href="https://rapidapi.com/package/GoogleTranslate/functions?utm_source=GoogleTranslateGitHub-PHP&utm_medium=button&utm_content=Vendor_GitHub" style="
+    all: initial;
+    background-color: #498FE1;
+    border-width: 0;
+    border-radius: 5px;
+    padding: 10px 20px;
+    color: white;
+    font-family: 'Helvetica';
+    font-size: 12pt;
+    background-image: url(https://scdn.rapidapi.com/logo-small.png);
+    background-size: 25px;
+    background-repeat: no-repeat;
+    background-position-y: center;
+    background-position-x: 10px;
+    padding-left: 44px;
+    cursor: pointer;">
+  Run now on <b>RapidAPI</b>
+</a>
+</div>
+
 Free Google Translate API PHP Package. Translates totally free of charge.
 
 ## Installation
