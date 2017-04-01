@@ -38,7 +38,8 @@ Or set/change languages later
 ```php
 $tr = new TranslateClient(); // Default is from 'auto' to 'en'
 $tr->setSource('en'); // Translate from English
-$tr->setTarget('ka'); // Translate to Georgian
+$tr->setTarget('ka'); // Translate to Georgia
+$tr->setUrlBase('http://translate.google.cn/translate_a/single'); // Set Google Translate URL base (This is not necessary, only for some countries)
 ```
 Translate sentences
 ```php
