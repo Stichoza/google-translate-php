@@ -239,6 +239,20 @@ class TranslateClient
     }
 
     /**
+     * Set Google Translate URL base
+     *
+     * @param string $urlBase  Google Translate URL base
+     *
+     * @return TranslateClient
+     */
+    public function setUrlBase($urlBase)
+    {
+        $this->urlBase = $urlBase;
+
+        return $this;
+    }
+
+    /**
      * Set guzzleHttp client options.
      *
      * @param array $options guzzleHttp client options.
