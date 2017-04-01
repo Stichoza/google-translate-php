@@ -56,7 +56,7 @@ class TranslateClient
     /**
      * @var string Google Translate URL base
      */
-    private $urlBase = 'http://translate.google.com/translate_a/single';
+    private $urlBase = 'https://translate.google.com/translate_a/single';
 
     /**
      * @var array Dynamic guzzleHTTP client options
@@ -208,6 +208,22 @@ class TranslateClient
         if (!isset(self::$staticInstance)) {
             self::$staticInstance = new self();
         }
+    }
+    
+    /**
+     * Set the api we are used to translete.
+     *
+     * @param string $source Google translate api, default is https://translate.google.com/translate_a/single
+     *
+     * @return TranslateClient
+     */
+    public function setApi($api = null)
+    {
+        if ($api) {
+            $this->urlBase = $api;
+        }
+
+        return $this;
     }
 
     /**
