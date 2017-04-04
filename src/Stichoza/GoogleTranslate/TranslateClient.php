@@ -299,6 +299,7 @@ class TranslateClient
             throw new InvalidArgumentException('Invalid argument provided');
         }
 
+        $data = is_array($data) ? implode(' \ ~ \ ~ ', $data) : $data;
         $tokenData = is_array($data) ? implode('', $data) : $data;
 
         $queryArray = array_merge($this->urlParams, [
@@ -377,22 +378,11 @@ class TranslateClient
         // Detect languages
         $detectedLanguages = [];
 
-        // the response contains only single translation, dont create loop that will end with
-        // invalide foreach and warning
-        if ($isArray || !is_string($responseArray)) {
-            $responseArrayForLanguages = ($isArray) ? $responseArray[0] : [$responseArray];
-            foreach ($responseArrayForLanguages as $itemArray) {
-                foreach ($itemArray as $item) {
-                    if (is_string($item)) {
-                        $detectedLanguages[] = $item;
-                    }
-                }
-            }
-        }
-
         // Another case of detected language
         if (isset($responseArray[count($responseArray) - 2][0][0])) {
             $detectedLanguages[] = $responseArray[count($responseArray) - 2][0][0];
+        } elseif (isset($responseArray[1])) {
++            $detectedLanguages[] = $responseArray[1];
         }
 
         // Set initial detected language to null
@@ -409,9 +399,19 @@ class TranslateClient
         // Reduce array to generate translated sentenece
         if ($isArray) {
             $carry = [];
+            $tmpstr = '';
+            $split = [];
             foreach ($responseArray[0] as $item) {
-                $carry[] = $item[0][0][0];
+                $tmpstr .= $item[0];
+                if (strpos($tmpstr, ' \ ~ \ ~ ')) {
+                    $split = explode(' \ ~ \ ~ ', $tmpstr);
+                    $tmpstr = array_pop($split);
+                    foreach ($split as $st) {
+                        $carry[] = $st;
+                    }
+                }
             }
+            $carry[] = $tmpstr;
 
             return $carry;
         }
