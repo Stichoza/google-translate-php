@@ -227,7 +227,7 @@ class TranslateClient
     }
 
     /**
-     * Set source language we are transleting from.
+     * Set source language we are translating from.
      *
      * @param string $source Language code
      *
@@ -241,7 +241,7 @@ class TranslateClient
     }
 
     /**
-     * Set translation language we are transleting to.
+     * Set translation language we are translating to.
      *
      * @param string $target Language code
      *
@@ -377,8 +377,8 @@ class TranslateClient
         // Detect languages
         $detectedLanguages = [];
 
-        // the response contains only single translation, dont create loop that will end with
-        // invalide foreach and warning
+        // the response contains only single translation, don't create loop that will end with
+        // invalid foreach and warning
         if ($isArray || !is_string($responseArray)) {
             $responseArrayForLanguages = ($isArray) ? $responseArray[0] : [$responseArray];
             foreach ($responseArrayForLanguages as $itemArray) {
