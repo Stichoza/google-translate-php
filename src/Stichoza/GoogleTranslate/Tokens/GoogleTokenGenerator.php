@@ -62,7 +62,7 @@ class GoogleTokenGenerator implements TokenProviderInterface
             $a = $this->RL($a, '+-a^+6');
         }
         $a = $this->RL($a, '+-3^+b+-f');
-        $a ^= $tkk[1];
+        $a ^= $tkk[1] ? $tkk[1] + 0 : 0;
         if (0 > $a) {
             $a = ($a & 2147483647) + 2147483648;
         }
@@ -81,35 +81,34 @@ class GoogleTokenGenerator implements TokenProviderInterface
 
     /**
      * Process token data by applying multiple operations.
+     * (Params are safe, no need for multibyte functions)
      *
-     * @param $a
-     * @param $b
+     * @param int $a
+     * @param string $b
      *
      * @return int
      */
     private function RL($a, $b)
     {
         for ($c = 0; $c < strlen($b) - 2; $c += 3) {
-            $d = $b{$c + 2};
-            $d = $d >= 'a' ? $this->charCodeAt($d, 0) - 87 : intval($d);
-            $d = $b{$c + 1}
-            == '+' ? $this->shr32($a, $d) : $a << $d;
-            $a = $b{$c}
-            == '+' ? ($a + $d & 4294967295) : $a ^ $d;
+            $d = $b[$c + 2];
+            $d = 'a' <= $d ? ord($d[0]) - 87 : intval($d);
+            $d = '+' == $b[$c + 1] ? $this->unsignedRightShift($a, $d) : $a << $d;
+            $a = '+' == $b[$c] ? ($a + $d & 4294967295) : $a ^ $d;
         }
 
         return $a;
     }
 
     /**
-     * Crypto function.
+     * Unsigned right shift implementation
      *
      * @param $x
      * @param $bits
      *
      * @return number
      */
-    private function shr32($x, $bits)
+    private function unsignedRightShift($x, $bits)
     {
         if ($bits <= 0) {
             return $x;
