@@ -50,8 +50,8 @@ class GoogleTokenGenerator implements TokenProviderInterface
                         $d[$e++] = $g >> 12 & 63 | 128;
                     } else {
                         $d[$e++] = $g >> 12 | 224;
-                        $d[$e++] = $g >> 6 & 63 | 128;
                     }
+                    $d[$e++] = $g >> 6 & 63 | 128;
                 }
                 $d[$e++] = $g & 63 | 128;
             }
