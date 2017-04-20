@@ -102,29 +102,39 @@ class GoogleTokenGenerator implements TokenProviderInterface
 
     /**
      * Unsigned right shift implementation
+     * https://msdn.microsoft.com/en-us/library/342xfs5s(v=vs.94).aspx
+     * http://stackoverflow.com/a/43359819/2953830
      *
-     * @param $x
-     * @param $bits
+     * @param $a
+     * @param $b
      *
      * @return number
      */
-    private function unsignedRightShift($x, $bits)
+    private function unsignedRightShift($a, $b)
     {
-        if ($bits <= 0) {
-            return $x;
-        }
-        if ($bits >= 32) {
-            return 0;
-        }
-        $bin = decbin($x);
-        $l = strlen($bin);
-        if ($l > 32) {
-            $bin = substr($bin, $l - 32, 32);
-        } elseif ($l < 32) {
-            $bin = str_pad($bin, 32, '0', STR_PAD_LEFT);
+        if ($b >= 32 || $b < -32) {
+            $m = (int)($b / 32);
+            $b = $b - ($m * 32);
         }
 
-        return bindec(str_pad(substr($bin, 0, 32 - $bits), 32, '0', STR_PAD_LEFT));
+        if ($b < 0) {
+            $b = 32 + $b;
+        }
+
+        if ($b == 0) {
+            return (($a >> 1) & 0x7fffffff) * 2 + (($a >> $b) & 1);
+        }
+
+        if ($a < 0) {
+            $a = ($a >> 1);
+            $a &= 2147483647;
+            $a |= 0x40000000;
+            $a = ($a >> ($b - 1));
+        } else { 
+            $a = ($a >> $b);
+        }
+
+        return $a;
     }
 
     /**
