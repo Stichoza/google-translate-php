@@ -355,7 +355,11 @@ class TranslateClient
     {
         // Whether or not is the data an array
         $isArray = is_array($data);
-
+		
+		if($isArray){
+			// implode array into string, with elements delimited by new paragraph (\r\n)
+			$data = implode("\r\n", $data);
+		}
         // Rethrow exceptions
         try {
             $responseArray = $this->getResponse($data);
@@ -379,7 +383,9 @@ class TranslateClient
 
         // the response contains only single translation, don't create loop that will end with
         // invalid foreach and warning
-        if ($isArray || !is_string($responseArray)) {
+        
+        // DEPRECATED !!
+        /*if ($isArray || !is_string($responseArray)) {
             $responseArrayForLanguages = ($isArray) ? $responseArray[0] : [$responseArray];
             foreach ($responseArrayForLanguages as $itemArray) {
                 foreach ($itemArray as $item) {
@@ -388,7 +394,8 @@ class TranslateClient
                     }
                 }
             }
-        }
+        }*/
+		
 
         // Another case of detected language
         if (isset($responseArray[count($responseArray) - 2][0][0])) {
@@ -405,15 +412,18 @@ class TranslateClient
                 break;
             }
         }
-
+		
         // Reduce array to generate translated sentenece
         if ($isArray) {
-            $carry = [];
-            foreach ($responseArray[0] as $item) {
-                $carry[] = $item[0][0][0];
-            }
+            if (is_array($responseArray[0])) {
+                return array_reduce($responseArray[0], function ($carry, $item) {
+                    $carry[] = trim($item[0], "\r\n");
 
-            return $carry;
+                    return $carry;
+                });
+            } else {
+                return $responseArray[0];
+            }
         }
         // the response can be sometimes an translated string.
         elseif (is_string($responseArray)) {
