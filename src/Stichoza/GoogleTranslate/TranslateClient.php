@@ -69,7 +69,18 @@ class TranslateClient
     private $urlParams = [
         'client'   => 't',
         'hl'       => 'en',
-        'dt'       => 't',
+        'dt'       => [
+            't',   // Translate
+            'bd',  // Full translate with synonym ($bodyArray[1])
+            'at',  // Other translate ($bodyArray[5] - in google translate page this shows when click on translated word)
+            'ex',  // Example part ($bodyArray[13])
+            'ld',  // I don't know ($bodyArray[8])
+            'md',  // Definition part with example ($bodyArray[12])
+            'qca', // I don't know ($bodyArray[8])
+            'rw',  // Read also part ($bodyArray[14])
+            'rm',  // I don't know
+            'ss'   // Full synonym ($bodyArray[11])
+        ],
         'sl'       => null, // Source language
         'tl'       => null, // Target language
         'q'        => null, // String to translate
@@ -308,7 +319,7 @@ class TranslateClient
         ]);
 
         $queryUrl = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', http_build_query($queryArray));
-
+        
         $queryBodyArray = [
             'q' => $data,
         ];
