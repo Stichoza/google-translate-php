@@ -74,15 +74,13 @@ You can configure proxy, user-agent, default headers, connection timeout and so 
 
 ```php
 $tr = new TranslateClient(null, 'en', [
-    'defaults' => [
-        'timeout' => 10,
-        'proxy' => [
-            'http'  => 'tcp://localhost:8125',
-            'https' => 'tcp://localhost:9124'
-        ],
-        'headers' => [
-            'User-Agent' => 'Foo/5.0 Lorem Ipsum Browser'
-        ]
+    'timeout' => 10,
+    'proxy' => [
+        'http'  => 'tcp://localhost:8125',
+        'https' => 'tcp://localhost:9124'
+    ],
+    'headers' => [
+        'User-Agent' => 'Foo/5.0 Lorem Ipsum Browser'
     ]
 ]);
 ```
