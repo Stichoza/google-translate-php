@@ -68,21 +68,19 @@ $tr->getResponse($word); // Returns raw array of translated data.
 
 ### Advanced Configuration
 
-This package uses [Guzzle](https://github.com/guzzle/guzzle) for HTTP requests. You can pass an associative array of [guzzle client configuration options](http://guzzle.readthedocs.org/en/5.3/clients.html#creating-a-client) as a third parameter to `TranslateClient` constructor.
+This package uses [Guzzle](https://github.com/guzzle/guzzle) for HTTP requests. You can pass an associative array of [guzzle client configuration options](http://docs.guzzlephp.org/en/latest/request-options.html) as a third parameter to `TranslateClient` constructor.
 
 You can configure proxy, user-agent, default headers, connection timeout and so on using this options.
 
 ```php
 $tr = new TranslateClient(null, 'en', [
-    'defaults' => [
-        'timeout' => 10,
-        'proxy' => [
-            'http'  => 'tcp://localhost:8125',
-            'https' => 'tcp://localhost:9124'
-        ],
-        'headers' => [
-            'User-Agent' => 'Foo/5.0 Lorem Ipsum Browser'
-        ]
+    'timeout' => 10,
+    'proxy' => [
+        'http'  => 'tcp://localhost:8125',
+        'https' => 'tcp://localhost:9124'
+    ],
+    'headers' => [
+        'User-Agent' => 'Foo/5.0 Lorem Ipsum Browser'
     ]
 ]);
 ```
@@ -143,9 +141,14 @@ Both static and non-static `translate()` methods will throw following Exceptions
 
 In addition `translate()` method will return boolean `FALSE` if there is no translation available.
 
+### Known limitations
+ 
+ - `503 Service Unavailable` response:  
+   If you are getting this error, it is most likely that Google has banned your external IP address and/or [requires you to solve a CAPTCHA](https://github.com/Stichoza/google-translate-php/issues/18). This is not a bug in this package. Google has become stricter, and it seems like they keep lowering the number of allowed requests per IP per a certain amount of time. Try sending less requests to stay under the radar, or change your IP frequently ([for example using proxies](#advanced-configuration)). Please note that once an IP is banned, even if it's only temporary, the ban can last from a few minutes to more than 12-24 hours, as each case is different.
+ - `413 Request Entity Too Large` response:  
+   This error means that your input string is too long. Google only allows a maximum of 5000 characters to be translated at once. If you want to translate a longer text, you can split it to shorter parts, and translate them one-by-one.
+ 
 ## Disclaimer
 
 This package is developed for educational purposes only. Do not depend on this package as it may break anytime as it is based on crawling the Google Translate website. Consider buying [Official Google Translate API](https://cloud.google.com/translate/) for other types of usage.
 
-Also, Google might ban your server IP or [require to solve CAPTCHA](https://github.com/Stichoza/google-translate-php/issues/18) if you send unusual traffic (large amount of data/requests).
- 
