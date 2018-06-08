@@ -68,7 +68,7 @@ $tr->getResponse($word); // Returns raw array of translated data.
 
 ### Advanced Configuration
 
-This package uses [Guzzle](https://github.com/guzzle/guzzle) for HTTP requests. You can pass an associative array of [guzzle client configuration options](http://guzzle.readthedocs.org/en/5.3/clients.html#creating-a-client) as a third parameter to `TranslateClient` constructor.
+This package uses [Guzzle](https://github.com/guzzle/guzzle) for HTTP requests. You can pass an associative array of [guzzle client configuration options](http://docs.guzzlephp.org/en/latest/request-options.html) as a third parameter to `TranslateClient` constructor.
 
 You can configure proxy, user-agent, default headers, connection timeout and so on using this options.
 
