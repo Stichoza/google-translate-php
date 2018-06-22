@@ -128,7 +128,7 @@ Return value may be boolean `FALSE` if there is no detected language.
 
 #### Available languages
 
-Supported languages are listed in [Google API docs](https://cloud.google.com/translate/v2/using_rest#language-params).
+Supported languages are listed in [Google API docs](https://cloud.google.com/translate/docs/languages).
 
 ### Errors and Exception Handling
 
