@@ -36,25 +36,8 @@ class GoogleTokenGenerator implements TokenProviderInterface
         $tkk = $this->TKK();
         $b = $tkk[0];
 
-        for ($d = [], $e = 0, $f = 0; $f < $this->JS_length($a); $f++) {
-            $g = $this->JS_charCodeAt($a, $f);
-            if (128 > $g) {
-                $d[$e++] = $g;
-            } else {
-                if (2048 > $g) {
-                    $d[$e++] = $g >> 6 | 192;
-                } else {
-                    if (55296 == ($g & 64512) && $f + 1 < $this->JS_length($a) && 56320 == ($this->JS_charCodeAt($a, $f + 1) & 64512)) {
-                        $g = 65536 + (($g & 1023) << 10) + ($this->JS_charCodeAt($a, ++$f) & 1023);
-                        $d[$e++] = $g >> 18 | 240;
-                        $d[$e++] = $g >> 12 & 63 | 128;
-                    } else {
-                        $d[$e++] = $g >> 12 | 224;
-                    }
-                    $d[$e++] = $g >> 6 & 63 | 128;
-                }
-                $d[$e++] = $g & 63 | 128;
-            }
+        for ($d = [], $e = 0, $f = 0; $f < strlen($a); $f++) {
+            $d[$e++] = ord(substr($a, $f, 1));
         }
         $a = $b;
         for ($e = 0; $e < count($d); $e++) {
@@ -135,30 +118,5 @@ class GoogleTokenGenerator implements TokenProviderInterface
         }
 
         return $a;
-    }
-
-    /**
-     * Get JS charCodeAt equivalent result with UTF-16 encoding
-     *
-     * @param string $str
-     * @param int    $index
-     *
-     * @return number
-     */
-    private function JS_charCodeAt($str, $index) {
-        $utf16 = mb_convert_encoding($str, 'UTF-16LE', 'UTF-8');
-        return ord($utf16[$index*2]) + (ord($utf16[$index*2+1]) << 8);
-    }
-
-    /**
-     * Get JS equivalent string length with UTF-16 encoding
-     *
-     * @param string $str
-     *
-     * @return number
-     */
-    private function JS_length($str) {
-        $utf16 = mb_convert_encoding($str, 'UTF-16LE', 'UTF-8');
-        return strlen($utf16)/2;
     }
 }
