@@ -3,9 +3,10 @@
 namespace Stichoza\GoogleTranslate\Tests;
 
 use ReflectionClass;
+use PHPUnit\Framework\TestCase;
 use Stichoza\GoogleTranslate\TranslateClient;
 
-class UtilityTest extends \PHPUnit_Framework_TestCase
+class UtilityTest extends TestCase
 {
     public function setUp()
     {

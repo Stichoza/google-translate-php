@@ -2,9 +2,10 @@
 
 namespace Stichoza\GoogleTranslate\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Stichoza\GoogleTranslate\TranslateClient;
 
-class LanguageDetectionTest extends \PHPUnit_Framework_TestCase
+class LanguageDetectionTest extends TestCase
 {
     public function setUp()
     {

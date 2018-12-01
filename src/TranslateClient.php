@@ -295,16 +295,14 @@ class TranslateClient
      */
     private function getResponse($data)
     {
-        if (!is_string($data) && !is_array($data)) {
+        if (!is_string($data)) {
             throw new InvalidArgumentException('Invalid argument provided');
         }
-
-        $tokenData = is_array($data) ? implode('', $data) : $data;
 
         $queryArray = array_merge($this->urlParams, [
             'sl'   => $this->sourceLanguage,
             'tl'   => $this->targetLanguage,
-            'tk'   => $this->tokenProvider->generateToken($this->sourceLanguage, $this->targetLanguage, $tokenData),
+            'tk'   => $this->tokenProvider->generateToken($this->sourceLanguage, $this->targetLanguage, $data),
         ]);
 
         $queryUrl = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', http_build_query($queryArray));
@@ -353,8 +351,6 @@ class TranslateClient
      */
     private function instanceTranslate($data)
     {
-        // Whether or not is the data an array
-        $isArray = is_array($data);
 
         // Rethrow exceptions
         try {
@@ -379,13 +375,10 @@ class TranslateClient
 
         // the response contains only single translation, don't create loop that will end with
         // invalid foreach and warning
-        if ($isArray || !is_string($responseArray)) {
-            $responseArrayForLanguages = ($isArray) ? $responseArray[0] : [$responseArray];
-            foreach ($responseArrayForLanguages as $itemArray) {
-                foreach ($itemArray as $item) {
-                    if (is_string($item)) {
-                        $detectedLanguages[] = $item;
-                    }
+        if (!is_string($responseArray)) {
+            foreach ($responseArray as $item) {
+                if (is_string($item)) {
+                    $detectedLanguages[] = $item;
                 }
             }
         }
@@ -406,17 +399,8 @@ class TranslateClient
             }
         }
 
-        // Reduce array to generate translated sentenece
-        if ($isArray) {
-            $carry = [];
-            foreach ($responseArray[0] as $item) {
-                $carry[] = $item[0][0][0];
-            }
-
-            return $carry;
-        }
         // the response can be sometimes an translated string.
-        elseif (is_string($responseArray)) {
+        if (is_string($responseArray)) {
             return $responseArray;
         } else {
             if (is_array($responseArray[0])) {
@@ -479,8 +463,8 @@ class TranslateClient
      *
      * @return bool
      */
-    private function isValidLocale($lang)
+    private function isValidLocale($lang) : bool
     {
-        return (bool) preg_match('/^([a-z]{2})(-[A-Z]{2})?$/', $lang);
+        return !!preg_match('/^([a-z]{2})(-[A-Z]{2})?$/', $lang);
     }
 }
