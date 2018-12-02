@@ -15,11 +15,10 @@ class GoogleTokenGenerator implements TokenProviderInterface
      *
      * @param string $source Source language
      * @param string $target Target language
-     * @param string $text   Text to translate
-     *
-     * @return mixed A token
+     * @param string $text Text to translate
+     * @return string Token
      */
-    public function generateToken($source, $target, $text)
+    public function generateToken(string $source, string $target, string $text) : string
     {
         return $this->TL($text);
     }
