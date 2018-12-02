@@ -24,37 +24,37 @@ class GoogleTranslate
     /**
      * @var \GuzzleHttp\Client HTTP Client
      */
-    private $client;
+    protected $client;
 
     /**
      * @var string|null Source language - from where the string should be translated
      */
-    private $source;
+    protected $source;
 
     /**
      * @var string Target language - to which language string should be translated
      */
-    private $target;
+    protected $target;
 
     /**
      * @var string|null Last detected source language
      */
-    private $lastDetectedSource;
+    protected $lastDetectedSource;
 
     /**
      * @var string Google Translate URL base
      */
-    private $url = 'https://translate.google.com/translate_a/single';
+    protected $url = 'https://translate.google.com/translate_a/single';
 
     /**
      * @var array Dynamic GuzzleHttp client options
      */
-    private $options = [];
+    protected $options = [];
 
     /**
      * @var array URL Parameters
      */
-    private $urlParams = [
+    protected $urlParams = [
         'client'   => 't',
         'hl'       => 'en',
         'dt'       => 't',
@@ -76,7 +76,7 @@ class GoogleTranslate
     /**
      * @var array Regex key-value patterns to replace on response data
      */
-    private $resultRegexes = [
+    protected $resultRegexes = [
         '/,+/'  => ',',
         '/\[,/' => '[',
     ];
@@ -84,7 +84,7 @@ class GoogleTranslate
     /**
      * @var TokenProviderInterface Token provider
      */
-    private $tokenProvider;
+    protected $tokenProvider;
 
     /**
      * Class constructor.
@@ -265,7 +265,7 @@ class GoogleTranslate
      * @param string $lang Langauge code to verify
      * @return bool
      */
-    private function isValidLocale(string $lang) : bool
+    protected function isValidLocale(string $lang) : bool
     {
         return (bool) preg_match('/^([a-z]{2})(-[A-Z]{2})?$/', $lang);
     }
@@ -278,7 +278,7 @@ class GoogleTranslate
      * @throws UnexpectedValueException If received data cannot be decoded
      * @return array Response
      */
-    private function getResponse(string $string)
+    protected function getResponse(string $string)
     {
         $queryArray = array_merge($this->urlParams, [
             'sl'   => $this->source,
