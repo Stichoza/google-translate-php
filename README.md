@@ -1,7 +1,7 @@
 Google Translate PHP
 ====================
 
-[![Build Status](https://travis-ci.org/Stichoza/google-translate-php.svg?branch=master)](https://travis-ci.org/Stichoza/google-translate-php) [![Latest Stable Version](https://img.shields.io/packagist/v/Stichoza/google-translate-php.svg)](https://packagist.org/packages/stichoza/google-translate-php) [![Total Downloads](https://img.shields.io/packagist/dt/Stichoza/google-translate-php.svg)](https://packagist.org/packages/stichoza/google-translate-php) [![Downloads Month](https://img.shields.io/packagist/dm/Stichoza/google-translate-php.svg)](https://packagist.org/packages/stichoza/google-translate-php) ![Liberapay patrons](https://img.shields.io/liberapay/patrons/Changaco.svg)
+[![Build Status](https://travis-ci.org/Stichoza/google-translate-php.svg?branch=master)](https://travis-ci.org/Stichoza/google-translate-php) [![Latest Stable Version](https://img.shields.io/packagist/v/Stichoza/google-translate-php.svg)](https://packagist.org/packages/stichoza/google-translate-php) [![Total Downloads](https://img.shields.io/packagist/dt/Stichoza/google-translate-php.svg)](https://packagist.org/packages/stichoza/google-translate-php) [![Downloads Month](https://img.shields.io/packagist/dm/Stichoza/google-translate-php.svg)](https://packagist.org/packages/stichoza/google-translate-php) [![Petreon donation](https://img.shields.io/badge/patreon-donate-orange.svg)](https://www.patreon.com/stichoza)
 
 Free Google Translate API PHP Package. Translates totally free of charge.
 
@@ -13,33 +13,21 @@ Install this package via [Composer](https://getcomposer.org/).
 composer require stichoza/google-translate-php
 ```
 
-Or edit your project's `composer.json` to require `stichoza/google-translate-php` and then run `composer update`.
+## Basic Usage
 
-```json
-"require": {
-    "stichoza/google-translate-php": "~4.0"
-}
-```
-
-## Usage
-
-### Basic Usage
-
-> **Note:** You should have composer's autoloader included `require 'vendor/autoload.php'` (that's obvious.)
-
-Instantiate TranslateClient object
+Create GoogleTranslate object
 
 ```php
-use Stichoza\GoogleTranslate\TranslateClient;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 
-$tr = new TranslateClient('en', 'ka');
+$tr = new GoogleTranslate('en'); // Translates into English
 ```
-Or set/change languages later
+Or you can change languages later
 ```php
-$tr = new TranslateClient(); // Default is from 'auto' to 'en'
+$tr = new GoogleTranslate(); // Translates to 'en' from auto-detected language by default
 $tr->setSource('en'); // Translate from English
+$tr->setSource(); // Detect language automatically
 $tr->setTarget('ka'); // Translate to Georgian
-$tr->setUrlBase('http://translate.google.cn/translate_a/single'); // Set Google Translate URL base (This is not necessary, only for some countries)
 ```
 Translate sentences
 ```php
@@ -49,31 +37,59 @@ Also, you can also use method chaining
 ```php
 echo $tr->setSource('en')->setTarget('ka')->translate('Goodbye');
 ```
-Or call a static method
+Or call a shorthand static method `trans`
 ```php
-echo TranslateClient::translate('en', 'ka', 'Hello again');
+echo GoogleTranslate::trans('Hello again', 'ka', 'en');
 ```
 
-As of v3.2 multiple sentence/array translation is available.
+## Advanced Usage
+
+### Language Detection
+
+To detect language automatically, just set the source language to `null`
 
 ```php
-echo $tr->translate(['I can dance', 'I like trains', 'Double rainbow']);
+$tr = new GoogleTranslate('es', null); // Or simply do not pass the second parameter 
 ```
-
-As of v3.2.3 you can call `getResponse()` method to get raw response from Google Translate. Note that this method is not available for static calls.
 
 ```php
-$tr->getResponse($word); // Returns raw array of translated data.
+$tr->setSource(); // Another way
 ```
 
-### Advanced Configuration
+#### Get Detected Language
 
-This package uses [Guzzle](https://github.com/guzzle/guzzle) for HTTP requests. You can pass an associative array of [guzzle client configuration options](http://docs.guzzlephp.org/en/latest/request-options.html) as a third parameter to `TranslateClient` constructor.
+You can also use `getLastDetectedSource()` to get detected language.
+
+```php
+$tr = new GoogleTranslate('fr');
+
+$text = $tr->translate('Hello World!');
+
+echo $tr->getLastDetectedSource(); // Output: en
+```
+
+Return value will be `null` if the language couldn't be detected.
+
+#### Available languages
+
+Supported languages are listed in [Google API docs](https://cloud.google.com/translate/docs/languages).
+
+### Custom URL
+
+You can override the default Google Translate url by `setUrl` method. Useful for some countries
+
+```php
+$tr->setUrl('http://translate.google.cn/translate_a/single'); 
+```
+
+### HTTP Client Configuration
+
+This package uses [Guzzle](https://github.com/guzzle/guzzle) for HTTP requests. You can pass an array of [guzzle client configuration options](http://docs.guzzlephp.org/en/latest/request-options.html) as a third parameter to `GoogleTranslate` constructor, or just use `setOptions` method.
 
 You can configure proxy, user-agent, default headers, connection timeout and so on using this options.
 
 ```php
-$tr = new TranslateClient(null, 'en', [
+$tr = new GoogleTranslate('en', 'ka', [
     'timeout' => 10,
     'proxy' => [
         'http'  => 'tcp://localhost:8125',
@@ -85,50 +101,23 @@ $tr = new TranslateClient(null, 'en', [
 ]);
 ```
 
-You can use `setHttpOption` method configure [guzzle client configuration options](http://docs.guzzlephp.org/en/latest/request-options.html).
-
 ```php
-// set proxy to tcp://localhost:8090
-$tr->setHttpOption(['proxy' => 'tcp://localhost:8090'])->translate('Hello');
+// Set proxy to tcp://localhost:8090
+$tr->setOptions(['proxy' => 'tcp://localhost:8090'])->translate('Hello');
 
-// set proxy to socks5://localhost:1080
-$tr->setHttpOption(['proxy' => 'socks5://localhost:1080'])->translate('World');
+// Set proxy to socks5://localhost:1080
+$tr->setOptions(['proxy' => 'socks5://localhost:1080'])->translate('World');
 ```
 
 For more information, see [Creating a Client](http://guzzle.readthedocs.org/en/latest/quickstart.html#creating-a-client) section in Guzzle docs (6.x version).
 
-### Language Detection
+### Using Raw Response
 
-To detect language automatically, just set the source language to `null`
-
-```php
-$tr = new TranslateClient(null, 'es'); // Detect language and translate to Spanish
-```
+For advanced usage, you might need the raw results that Google Translate provides. you can use `getResponse` method for that.
 
 ```php
-$tr->setSource(null); // Another way
+$responseArray = $tr->getResponse('Hello world!');
 ```
-
-#### Get Detected Language
-
-You can also use `getLastDetectedSource()` method both statically and non-statically to get detected language.
-
-```php
-$tr = new TranslateClient(null, 'fr');
-
-$text = $tr->translate('Hello World!');
-
-echo $tr->getLastDetectedSource();             // Output: en
-echo TranslateClient::getLastDetectedSource(); // Output: en
-```
-
-> **Note:** Value of last detected source is same for both static and non-static method calls.
-
-Return value may be boolean `FALSE` if there is no detected language.
-
-#### Available languages
-
-Supported languages are listed in [Google API docs](https://cloud.google.com/translate/docs/languages).
 
 ### Errors and Exception Handling
 
@@ -144,7 +133,7 @@ In addition `translate()` method will return boolean `FALSE` if there is no tran
 ### Known limitations
  
  - `503 Service Unavailable` response:  
-   If you are getting this error, it is most likely that Google has banned your external IP address and/or [requires you to solve a CAPTCHA](https://github.com/Stichoza/google-translate-php/issues/18). This is not a bug in this package. Google has become stricter, and it seems like they keep lowering the number of allowed requests per IP per a certain amount of time. Try sending less requests to stay under the radar, or change your IP frequently ([for example using proxies](#advanced-configuration)). Please note that once an IP is banned, even if it's only temporary, the ban can last from a few minutes to more than 12-24 hours, as each case is different.
+   If you are getting this error, it is most likely that Google has banned your external IP address and/or [requires you to solve a CAPTCHA](https://github.com/Stichoza/google-translate-php/issues/18). This is not a bug in this package. Google has become stricter, and it seems like they keep lowering the number of allowed requests per IP per a certain amount of time. Try sending less requests to stay under the radar, or change your IP frequently ([for example using proxies](#http-client-configuration)). Please note that once an IP is banned, even if it's only temporary, the ban can last from a few minutes to more than 12-24 hours, as each case is different.
  - `413 Request Entity Too Large` response:  
    This error means that your input string is too long. Google only allows a maximum of 5000 characters to be translated at once. If you want to translate a longer text, you can split it to shorter parts, and translate them one-by-one.
  
