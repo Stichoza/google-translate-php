@@ -4,10 +4,8 @@ namespace Stichoza\GoogleTranslate;
 
 use BadMethodCallException;
 use ErrorException;
-use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
-use InvalidArgumentException;
 use Stichoza\GoogleTranslate\Tokens\GoogleTokenGenerator;
 use Stichoza\GoogleTranslate\Tokens\TokenProviderInterface;
 use UnexpectedValueException;
@@ -92,39 +90,18 @@ class GoogleTranslate
      * For more information about HTTP client configuration options, see "Request Options" in
      * GuzzleHttp docs: http://docs.guzzlephp.org/en/stable/request-options.html
      *
-     * @param string $source Source language (Optional)
-     * @param string $target Target language (Optional)
-     * @param array $options Associative array of http client configuration options (Optional)
+     * @param string $target Target language
+     * @param string $source Source language
+     * @param array $options Associative array of http client configuration options
      * @param TokenProviderInterface|null $tokenProvider
      */
-    public function __construct($source = null, $target = 'en', $options = [], TokenProviderInterface $tokenProvider = null)
+    public function __construct(string $target = 'en', string $source = null, array $options = [], TokenProviderInterface $tokenProvider = null)
     {
         $this->client = new Client($options); // Create HTTP client
-        $this->setSource($source)->setTarget($target); // Set languages
-        $this->setTokenProvider($tokenProvider ?? new GoogleTokenGenerator());
-    }
-
-    /**
-     * Override translate method for static call.
-     *
-     * @throws BadMethodCallException   If calling nonexistent method
-     * @throws InvalidArgumentException If parameters are passed incorrectly
-     * @throws InvalidArgumentException If the provided argument is not of type 'string'
-     * @throws ErrorException           If the HTTP request fails
-     * @throws UnexpectedValueException If received data cannot be decoded
-     * @throws Exception
-     */
-    public static function __callStatic($name, $args)
-    {
-        if ($name == 'translate') {
-            return (new self)
-                ->setOptions($args[3] ?? [])
-                ->setSource($args[2] ?? null)
-                ->setTarget($args[1] ?? 'en')
-                ->translate($args[0] ?? null);
-        } else {
-            throw new BadMethodCallException("Method [{$name}] does not exist");
-        }
+        $this->setTokenProvider($tokenProvider ?? new GoogleTokenGenerator())
+            ->setOptions($options) // Options are already set in client constructor tho.
+            ->setSource($source)
+            ->setTarget($target);
     }
 
     /**
@@ -133,7 +110,7 @@ class GoogleTranslate
      * @param string|null $source Language code
      * @return GoogleTranslate
      */
-    public function setSource($source = null) : self
+    public function setSource(string $source = null) : self
     {
         $this->source = $source ?? 'auto';
         return $this;
@@ -145,7 +122,7 @@ class GoogleTranslate
      * @param string $target Language code
      * @return GoogleTranslate
      */
-    public function setTarget($target) : self
+    public function setTarget(string $target) : self
     {
         $this->target = $target;
         return $this;
@@ -157,7 +134,7 @@ class GoogleTranslate
      * @param string $url Google Translate URL base
      * @return GoogleTranslate
      */
-    public function setUrl($url) : self
+    public function setUrl(string $url) : self
     {
         $this->url = $url;
         return $this;
@@ -185,6 +162,38 @@ class GoogleTranslate
     {
         $this->tokenProvider = $tokenProvider;
         return $this;
+    }
+
+    /**
+     * Get last detected source language
+     *
+     * @return string|null Last detected source language
+     */
+    public function getLastDetectedSource()
+    {
+        return $this->lastDetectedSource;
+    }
+
+    /**
+     * Override translate method for static call.
+     *
+     * @param string $string
+     * @param string $target
+     * @param string|null $source
+     * @param array $options
+     * @param TokenProviderInterface|null $tokenProvider
+     * @return null|string
+     * @throws ErrorException If the HTTP request fails
+     * @throws UnexpectedValueException If received data cannot be decoded
+     */
+    public static function t(string $string, string $target = 'en', string $source = null, array $options = [], TokenProviderInterface $tokenProvider = null)
+    {
+        return (new self)
+            ->setTokenProvider($tokenProvider ?? new GoogleTokenGenerator())
+            ->setOptions($options) // Options are already set in client constructor tho.
+            ->setSource($source)
+            ->setTarget($target)
+            ->translate($string);
     }
 
     /**
@@ -260,25 +269,14 @@ class GoogleTranslate
     }
 
     /**
-     * Check if given locale is valid.
-     *
-     * @param string $lang Langauge code to verify
-     * @return bool
-     */
-    protected function isValidLocale(string $lang) : bool
-    {
-        return (bool) preg_match('/^([a-z]{2})(-[A-Z]{2})?$/', $lang);
-    }
-
-    /**
      * Get response array.
      *
      * @param string $string String to translate
      * @throws ErrorException           If the HTTP request fails
      * @throws UnexpectedValueException If received data cannot be decoded
-     * @return array Response
+     * @return array|string Response
      */
-    protected function getResponse(string $string)
+    public function getResponse(string $string) : array
     {
         $queryArray = array_merge($this->urlParams, [
             'sl'   => $this->source,
@@ -314,5 +312,16 @@ class GoogleTranslate
         }
 
         return $bodyArray;
+    }
+
+    /**
+     * Check if given locale is valid.
+     *
+     * @param string $lang Langauge code to verify
+     * @return bool
+     */
+    protected function isValidLocale(string $lang) : bool
+    {
+        return (bool) preg_match('/^([a-z]{2})(-[A-Z]{2})?$/', $lang);
     }
 }
