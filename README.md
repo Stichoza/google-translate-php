@@ -123,16 +123,14 @@ $responseArray = $tr->getResponse('Hello world!');
 
 ### Errors and Exception Handling
 
-Both static and non-static `translate()` methods will throw following Exceptions:
+Static method `trans()` and non-static `translate()` and `getResponse()` will throw following Exceptions:
 
- - `InvalidArgumentException` If parameters are passed incorrectly.
  - `ErrorException` If the HTTP request fails for some reason.
  - `UnexpectedValueException` If data received from Google cannot be decoded.
- - `BadMethodCallException` If you call something wrong. Call `translate()`, not Ghost Busters
 
-In addition `translate()` method will return boolean `FALSE` if there is no translation available.
+In addition, `translate()` and `trans()` methods will return `null` if there is no translation available.
 
-### Known limitations
+### Known Limitations
  
  - `503 Service Unavailable` response:  
    If you are getting this error, it is most likely that Google has banned your external IP address and/or [requires you to solve a CAPTCHA](https://github.com/Stichoza/google-translate-php/issues/18). This is not a bug in this package. Google has become stricter, and it seems like they keep lowering the number of allowed requests per IP per a certain amount of time. Try sending less requests to stay under the radar, or change your IP frequently ([for example using proxies](#http-client-configuration)). Please note that once an IP is banned, even if it's only temporary, the ban can last from a few minutes to more than 12-24 hours, as each case is different.
