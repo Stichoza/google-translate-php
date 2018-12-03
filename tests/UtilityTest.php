@@ -55,7 +55,7 @@ class UtilityTest extends TestCase
         $output = str_replace("\r", '', stream_get_contents($res));
         $this->assertContains('User-Agent: Foo', $output);
 
-        GoogleTranslate::t('world', 'en', null, [
+        GoogleTranslate::trans('world', 'en', null, [
             'debug'   => $res,
             'headers' => [
                 'User-Agent' => 'Bar',

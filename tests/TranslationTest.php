@@ -17,7 +17,7 @@ class TranslationTest extends TestCase
     public function testTranslationEquality()
     {
         try {
-            $resultOne = GoogleTranslate::t('Hello', 'ka', 'en');
+            $resultOne = GoogleTranslate::trans('Hello', 'ka', 'en');
         } catch (\ErrorException $e) {
             $resultOne = null;
         }
@@ -29,7 +29,7 @@ class TranslationTest extends TestCase
     public function testUTF16Translation()
     {
         try {
-            $resultOne = GoogleTranslate::t('yes 👍🏽', 'de', 'en');
+            $resultOne = GoogleTranslate::trans('yes 👍🏽', 'de', 'en');
         } catch (\ErrorException $e) {
             $resultOne = null;
         }
