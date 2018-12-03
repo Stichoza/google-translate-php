@@ -141,3 +141,9 @@ In addition, `translate()` and `trans()` methods will return `null` if there is 
 
 This package is developed for educational purposes only. Do not depend on this package as it may break anytime as it is based on crawling the Google Translate website. Consider buying [Official Google Translate API](https://cloud.google.com/translate/) for other types of usage.
 
+## Donation
+
+If this package helped you reduce your time to develop something, or it solved any major problems you had, feel free give me a cup of coffee :)
+
+ - [Patreon](https://www.patreon.com/stichoza)
+ - [PayPal](https://paypal.me/stichoza)
