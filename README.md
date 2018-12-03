@@ -13,7 +13,7 @@ Install this package via [Composer](https://getcomposer.org/).
 composer require stichoza/google-translate-php
 ```
 
-> Note: **PHP 7.1 or later** is required. For older versoins, use [`^3.2`](https://github.com/Stichoza/google-translate-php/tree/v3.2.14) version tag of this package.
+> Note: **PHP 7.1 or later** is required. For older versoins, use [`^3.2`](https://github.com/Stichoza/google-translate-php/tree/3.2) version of this package.
 
 ## Basic Usage
 
