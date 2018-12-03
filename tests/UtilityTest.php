@@ -4,13 +4,17 @@ namespace Stichoza\GoogleTranslate\Tests;
 
 use ReflectionClass;
 use PHPUnit\Framework\TestCase;
-use Stichoza\GoogleTranslate\TranslateClient;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 
 class UtilityTest extends TestCase
 {
+    public $tr;
+
+    public $method;
+
     public function setUp()
     {
-        $this->tr = new TranslateClient();
+        $this->tr = new GoogleTranslate();
         $reflection = new ReflectionClass(get_class($this->tr));
         $this->method = $reflection->getMethod('isValidLocale');
         $this->method->setAccessible(true);
@@ -37,11 +41,11 @@ class UtilityTest extends TestCase
         }
     }
 
-    public function testSetHttpOption()
+    public function testSetOptions()
     {
         $res = fopen('php://memory', 'r+');
 
-        $this->tr->setHttpOption([
+        $this->tr->setOptions([
             'debug'   => $res,
             'headers' => [
                 'User-Agent' => 'Foo',
@@ -51,12 +55,12 @@ class UtilityTest extends TestCase
         $output = str_replace("\r", '', stream_get_contents($res));
         $this->assertContains('User-Agent: Foo', $output);
 
-        $this->tr->setHttpOption([
+        GoogleTranslate::t('world', 'en', null, [
             'debug'   => $res,
             'headers' => [
                 'User-Agent' => 'Bar',
             ],
-        ])->translate('world');
+        ]);
         rewind($res);
         $output = str_replace("\r", '', stream_get_contents($res));
         $this->assertContains('User-Agent: Bar', $output);
