@@ -3,18 +3,24 @@
 namespace Stichoza\GoogleTranslate\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Stichoza\GoogleTranslate\TranslateClient;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 
 class TranslationTest extends TestCase
 {
+    public $tr;
+
     public function setUp()
     {
-        $this->tr = new TranslateClient();
+        $this->tr = new GoogleTranslate();
     }
 
     public function testTranslationEquality()
     {
-        $resultOne = TranslateClient::translate('en', 'ka', 'Hello');
+        try {
+            $resultOne = GoogleTranslate::t('Hello', 'ka', 'en');
+        } catch (\ErrorException $e) {
+            $resultOne = null;
+        }
         $resultTwo = $this->tr->setSource('en')->setTarget('ka')->translate('Hello');
 
         $this->assertEquals($resultOne, $resultTwo, 'გამარჯობა');
@@ -22,7 +28,11 @@ class TranslationTest extends TestCase
 
     public function testUTF16Translation()
     {
-        $resultOne = TranslateClient::translate('en', 'de', 'yes 👍🏽');
+        try {
+            $resultOne = GoogleTranslate::t('yes 👍🏽', 'de', 'en');
+        } catch (\ErrorException $e) {
+            $resultOne = null;
+        }
         $resultTwo = $this->tr->setSource('en')->setTarget('de')->translate('yes 👍🏽');
 
         $this->assertEquals($resultOne, $resultTwo, 'ja 👍🏽');
