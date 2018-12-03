@@ -91,29 +91,17 @@ class GoogleTranslate
      * GuzzleHttp docs: http://docs.guzzlephp.org/en/stable/request-options.html
      *
      * @param string $target Target language
-     * @param string $source Source language
-     * @param array $options Associative array of http client configuration options
+     * @param string|null $source Source language
+     * @param array|null $options Associative array of http client configuration options
      * @param TokenProviderInterface|null $tokenProvider
      */
-    public function __construct(string $target = 'en', string $source = null, array $options = [], TokenProviderInterface $tokenProvider = null)
+    public function __construct(string $target = 'en', string $source = null, array $options = null, TokenProviderInterface $tokenProvider = null)
     {
         $this->client = new Client($options); // Create HTTP client
-        $this->setTokenProvider($tokenProvider ?? new GoogleTokenGenerator())
+        $this->setTokenProvider($tokenProvider ?? new GoogleTokenGenerator)
             ->setOptions($options) // Options are already set in client constructor tho.
             ->setSource($source)
             ->setTarget($target);
-    }
-
-    /**
-     * Set source language for translation.
-     *
-     * @param string|null $source Language code
-     * @return GoogleTranslate
-     */
-    public function setSource(string $source = null) : self
-    {
-        $this->source = $source ?? 'auto';
-        return $this;
     }
 
     /**
@@ -125,6 +113,18 @@ class GoogleTranslate
     public function setTarget(string $target) : self
     {
         $this->target = $target;
+        return $this;
+    }
+
+    /**
+     * Set source language for translation.
+     *
+     * @param string|null $source Language code
+     * @return GoogleTranslate
+     */
+    public function setSource(string $source = null) : self
+    {
+        $this->source = $source ?? 'auto';
         return $this;
     }
 
@@ -146,9 +146,9 @@ class GoogleTranslate
      * @param array $options guzzleHttp client options.
      * @return GoogleTranslate
      */
-    public function setOptions(array $options) : self
+    public function setOptions(array $options = null) : self
     {
-        $this->options = $options;
+        $this->options = $options ?? [];
         return $this;
     }
 
@@ -189,7 +189,7 @@ class GoogleTranslate
     public static function t(string $string, string $target = 'en', string $source = null, array $options = [], TokenProviderInterface $tokenProvider = null)
     {
         return (new self)
-            ->setTokenProvider($tokenProvider ?? new GoogleTokenGenerator())
+            ->setTokenProvider($tokenProvider ?? new GoogleTokenGenerator)
             ->setOptions($options) // Options are already set in client constructor tho.
             ->setSource($source)
             ->setTarget($target)
