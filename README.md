@@ -147,3 +147,4 @@ If this package helped you reduce your time to develop something, or it solved a
 
  - [Patreon](https://www.patreon.com/stichoza)
  - [PayPal](https://paypal.me/stichoza)
+ 
