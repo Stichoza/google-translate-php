@@ -76,6 +76,14 @@ Return value will be `null` if the language couldn't be detected.
 
 Supported languages are listed in [Google API docs](https://cloud.google.com/translate/docs/languages).
 
+### Using Raw Response
+
+For advanced usage, you might need the raw results that Google Translate provides. you can use `getResponse` method for that.
+
+```php
+$responseArray = $tr->getResponse('Hello world!');
+```
+
 ### Custom URL
 
 You can override the default Google Translate url by `setUrl` method. Useful for some countries
@@ -113,12 +121,28 @@ $tr->setOptions(['proxy' => 'socks5://localhost:1080'])->translate('World');
 
 For more information, see [Creating a Client](http://guzzle.readthedocs.org/en/latest/quickstart.html#creating-a-client) section in Guzzle docs (6.x version).
 
-### Using Raw Response
+### Custom Token Generator
 
-For advanced usage, you might need the raw results that Google Translate provides. you can use `getResponse` method for that.
+You can override the token generator class by passing a generator object as a fourth parameter of constructor or just use `setTokenProvider` method.
+
+Generator must implement `Stichoza\GoogleTranslate\Tokens\TokenProviderInterface`.
 
 ```php
-$responseArray = $tr->getResponse('Hello world!');
+use Stichoza\GoogleTranslate\Tokens\TokenProviderInterface;
+
+class MyTokenGenerator implements TokenProviderInterface
+{
+    public function generateToken(string $source, string $target, string $text) : string
+    {
+        // Your code here
+    }
+}
+```
+
+And use:
+
+```php
+$tr->setTokenProvider(new MyTokenGenerator);
 ```
 
 ### Errors and Exception Handling
