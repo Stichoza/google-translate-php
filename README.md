@@ -5,6 +5,21 @@ Google Translate PHP
 
 Free Google Translate API PHP Package. Translates totally free of charge.
 
+---
+
+ - [Installation](#installation)
+ - [Basic Usage](#basic-usage)
+ - [Advanced Usage](#advanced-usage)
+   - [Language Detection](#language-detection)
+   - [Using Raw Response](#using-raw-response)
+   - [Custom URL](#custom-url)
+   - [HTTP Client Configuration](#http-client-configuration)
+   - [Custom Token Generator](#custom-token-generator)
+   - [Errors and Exception Handling](#errors-and-exception-handling)
+ - [Known Limitations](#known-limitations)
+ - [Disclaimer](#disclaimer)
+ - [Donation](#donation)
+
 ## Installation
 
 Install this package via [Composer](https://getcomposer.org/).
@@ -150,7 +165,7 @@ Static method `trans()` and non-static `translate()` and `getResponse()` will th
 
 In addition, `translate()` and `trans()` methods will return `null` if there is no translation available.
 
-### Known Limitations
+## Known Limitations
  
  - `503 Service Unavailable` response:  
    If you are getting this error, it is most likely that Google has banned your external IP address and/or [requires you to solve a CAPTCHA](https://github.com/Stichoza/google-translate-php/issues/18). This is not a bug in this package. Google has become stricter, and it seems like they keep lowering the number of allowed requests per IP per a certain amount of time. Try sending less requests to stay under the radar, or change your IP frequently ([for example using proxies](#http-client-configuration)). Please note that once an IP is banned, even if it's only temporary, the ban can last from a few minutes to more than 12-24 hours, as each case is different.
