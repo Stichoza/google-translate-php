@@ -48,7 +48,7 @@ echo GoogleTranslate::trans('Hello again', 'ka', 'en');
 
 ### Language Detection
 
-To detect language automatically, just set the source language to `null`
+To detect language automatically, just set the source language to `null`:
 
 ```php
 $tr = new GoogleTranslate('es', null); // Or simply do not pass the second parameter 
@@ -58,9 +58,7 @@ $tr = new GoogleTranslate('es', null); // Or simply do not pass the second param
 $tr->setSource(); // Another way
 ```
 
-#### Get Detected Language
-
-You can also use `getLastDetectedSource()` to get detected language.
+Use `getLastDetectedSource()` to get detected language:
 
 ```php
 $tr = new GoogleTranslate('fr');
@@ -71,8 +69,6 @@ echo $tr->getLastDetectedSource(); // Output: en
 ```
 
 Return value will be `null` if the language couldn't be detected.
-
-#### Available languages
 
 Supported languages are listed in [Google API docs](https://cloud.google.com/translate/docs/languages).
 
