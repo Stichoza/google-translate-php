@@ -53,7 +53,7 @@ class GoogleTranslate
      * @var array URL Parameters
      */
     protected $urlParams = [
-        'client'   => 't',
+        'client'   => 'webapp',
         'hl'       => 'en',
         'dt'       => [
             't',   // Translate
@@ -293,20 +293,14 @@ class GoogleTranslate
             'sl'   => $this->source,
             'tl'   => $this->target,
             'tk'   => $this->tokenProvider->generateToken($this->source, $this->target, $string),
+            'q'    => $string
         ]);
 
         $queryUrl = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', http_build_query($queryArray));
 
-        $queryBodyArray = [
-            'q' => $string,
-        ];
-
-        $queryBodyEncoded = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', http_build_query($queryBodyArray));
-
         try {
-            $response = $this->client->post($this->url, [
+            $response = $this->client->get($this->url, [
                     'query' => $queryUrl,
-                    'body'  => $queryBodyEncoded,
                 ] + $this->options);
         } catch (RequestException $e) {
             throw new ErrorException($e->getMessage());
