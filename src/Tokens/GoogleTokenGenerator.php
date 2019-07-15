@@ -73,10 +73,14 @@ class GoogleTokenGenerator implements TokenProviderInterface
     /**
      * @return array
      */
-    private function TKK()
-    {
-        return ['406398', (561666268 + 1526272306)];
-    }
+    private function TKK(){
+	$site = file_get_contents("http://translate.google.com/");
+	$address = strpos($site, "tkk:'") + 5;
+	$length = strpos($site, "',experiment_ids", $address) - $address;
+	$TKK = substr($site, $address, $length); 
+	$seprator = strpos($TKK, ".");
+	return array(intval(substr($TKK, 0, $seprator)), intval(substr($TKK, $seprator + 1)));
+}
 
     /**
      * Process token data by applying multiple operations.
