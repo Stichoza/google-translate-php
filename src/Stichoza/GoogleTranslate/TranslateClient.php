@@ -67,7 +67,7 @@ class TranslateClient
      * @var array URL Parameters
      */
     private $urlParams = [
-        'client'   => 't',
+        'client'   => 'webapp',
         'hl'       => 'en',
         'dt'       => 't',
         'sl'       => null, // Source language
@@ -305,20 +305,14 @@ class TranslateClient
             'sl'   => $this->sourceLanguage,
             'tl'   => $this->targetLanguage,
             'tk'   => $this->tokenProvider->generateToken($this->sourceLanguage, $this->targetLanguage, $tokenData),
+            'q'    => $tokenData
         ]);
 
         $queryUrl = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', http_build_query($queryArray));
 
-        $queryBodyArray = [
-            'q' => $data,
-        ];
-
-        $queryBodyEncoded = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', http_build_query($queryBodyArray));
-
         try {
-            $response = $this->httpClient->post($this->urlBase, [
+            $response = $this->httpClient->get($this->urlBase, [
                     'query' => $queryUrl,
-                    'body'  => $queryBodyEncoded,
                 ] + $this->httpOptions);
         } catch (GuzzleRequestException $e) {
             throw new ErrorException($e->getMessage());
