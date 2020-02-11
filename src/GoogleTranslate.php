@@ -179,7 +179,7 @@ class GoogleTranslate
      *
      * @return string|null Last detected source language
      */
-    public function getLastDetectedSource()
+    public function getLastDetectedSource(): ?string
     {
         return $this->lastDetectedSource;
     }
@@ -196,7 +196,7 @@ class GoogleTranslate
      * @throws ErrorException If the HTTP request fails
      * @throws UnexpectedValueException If received data cannot be decoded
      */
-    public static function trans(string $string, string $target = 'en', string $source = null, array $options = [], TokenProviderInterface $tokenProvider = null)
+    public static function trans(string $string, string $target = 'en', string $source = null, array $options = [], TokenProviderInterface $tokenProvider = null): ?string
     {
         return (new self)
             ->setTokenProvider($tokenProvider ?? new GoogleTokenGenerator)
@@ -217,7 +217,7 @@ class GoogleTranslate
      * @throws ErrorException           If the HTTP request fails
      * @throws UnexpectedValueException If received data cannot be decoded
      */
-    public function translate(string $string): string
+    public function translate(string $string): ?string
     {
         /*
          * if source lang and target lang are the same
