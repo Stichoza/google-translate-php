@@ -2,7 +2,6 @@
 
 namespace Stichoza\GoogleTranslate;
 
-use BadMethodCallException;
 use ErrorException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
@@ -121,7 +120,7 @@ class GoogleTranslate
      * @param string $target Language code
      * @return GoogleTranslate
      */
-    public function setTarget(string $target) : self
+    public function setTarget(string $target): self
     {
         $this->target = $target;
         return $this;
@@ -133,7 +132,7 @@ class GoogleTranslate
      * @param string|null $source Language code
      * @return GoogleTranslate
      */
-    public function setSource(string $source = null) : self
+    public function setSource(string $source = null): self
     {
         $this->source = $source ?? 'auto';
         return $this;
@@ -145,7 +144,7 @@ class GoogleTranslate
      * @param string $url Google Translate URL base
      * @return GoogleTranslate
      */
-    public function setUrl(string $url) : self
+    public function setUrl(string $url): self
     {
         $this->url = $url;
         return $this;
@@ -157,7 +156,7 @@ class GoogleTranslate
      * @param array $options guzzleHttp client options.
      * @return GoogleTranslate
      */
-    public function setOptions(array $options = null) : self
+    public function setOptions(array $options = null): self
     {
         $this->options = $options ?? [];
         return $this;
@@ -169,7 +168,7 @@ class GoogleTranslate
      * @param TokenProviderInterface $tokenProvider
      * @return GoogleTranslate
      */
-    public function setTokenProvider(TokenProviderInterface $tokenProvider) : self
+    public function setTokenProvider(TokenProviderInterface $tokenProvider): self
     {
         $this->tokenProvider = $tokenProvider;
         return $this;
@@ -218,7 +217,7 @@ class GoogleTranslate
      * @throws ErrorException           If the HTTP request fails
      * @throws UnexpectedValueException If received data cannot be decoded
      */
-    public function translate(string $string) : string
+    public function translate(string $string): string
     {
         /*
          * if source lang and target lang are the same
@@ -293,7 +292,7 @@ class GoogleTranslate
      * @throws UnexpectedValueException If received data cannot be decoded
      * @return array|string Response
      */
-    public function getResponse(string $string) : array
+    public function getResponse(string $string): array
     {
         $queryArray = array_merge($this->urlParams, [
             'sl'   => $this->source,
@@ -331,7 +330,7 @@ class GoogleTranslate
      * @param string $lang Langauge code to verify
      * @return bool
      */
-    protected function isValidLocale(string $lang) : bool
+    protected function isValidLocale(string $lang): bool
     {
         return (bool) preg_match('/^([a-z]{2})(-[A-Z]{2})?$/', $lang);
     }
