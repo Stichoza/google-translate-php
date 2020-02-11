@@ -18,7 +18,7 @@ class GoogleTokenGenerator implements TokenProviderInterface
      * @param string $text Text to translate
      * @return string Token
      */
-    public function generateToken(string $source, string $target, string $text) : string
+    public function generateToken(string $source, string $target, string $text): string
     {
         return $this->TL($text);
     }
@@ -144,7 +144,8 @@ class GoogleTokenGenerator implements TokenProviderInterface
      *
      * @return number
      */
-    private function JS_charCodeAt($str, $index) {
+    private function JS_charCodeAt($str, $index)
+    {
         $utf16 = mb_convert_encoding($str, 'UTF-16LE', 'UTF-8');
         return ord($utf16[$index*2]) + (ord($utf16[$index*2+1]) << 8);
     }
@@ -156,7 +157,8 @@ class GoogleTokenGenerator implements TokenProviderInterface
      *
      * @return number
      */
-    private function JS_length($str) {
+    private function JS_length($str)
+    {
         $utf16 = mb_convert_encoding($str, 'UTF-16LE', 'UTF-8');
         return strlen($utf16)/2;
     }
