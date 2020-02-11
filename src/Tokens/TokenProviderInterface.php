@@ -15,5 +15,5 @@ interface TokenProviderInterface
      * @param string $text Text to translate
      * @return string Token
      */
-    public function generateToken(string $source, string $target, string $text) : string;
+    public function generateToken(string $source, string $target, string $text): string;
 }
