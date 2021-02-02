@@ -41,7 +41,7 @@ class GoogleTranslate
     /**
      * @var string Google Translate URL base
      */
-    protected $url = 'https://translate.google.com/translate_a/single';
+    protected $url = 'https://translate.googleapis.com/translate_a/single';
 
     /**
      * @var array Dynamic GuzzleHttp client options
@@ -52,7 +52,7 @@ class GoogleTranslate
      * @var array URL Parameters
      */
     protected $urlParams = [
-        'client'   => 'webapp',
+        'client'   => 'gtx',
         'hl'       => 'en',
         'dt'       => [
             't',   // Translate
