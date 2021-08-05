@@ -156,6 +156,12 @@ And use:
 $tr->setTokenProvider(new MyTokenGenerator);
 ```
 
+### Translation Client (Quality)
+
+Google Translate has a parameter named `client` which defines quality of translation. First it was set to `webapp` but later google added `gtx` value which results in a better translation quality in terms of grammar and overall meaning of sentences.
+
+You can use `->setClient()` method to switch between clients. For example if you want to use older version of translation algorithm, type `$tr->setClient('webapp')->translate('lorem ipsum...')`. Default value is `gtx`.
+
 ### Errors and Exception Handling
 
 Static method `trans()` and non-static `translate()` and `getResponse()` will throw following Exceptions:
