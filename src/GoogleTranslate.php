@@ -151,6 +151,18 @@ class GoogleTranslate
     }
 
     /**
+     * Set Google Translate client param (webapp, gtx, etc.)
+     *
+     * @param string $client Google Translate client param (webapp, gtx, etc.)
+     * @return GoogleTranslate
+     */
+    public function setClient(string $client): self
+    {
+        $this->urlParams['client'] = $client;
+        return $this;
+    }
+
+    /**
      * Set GuzzleHttp client options.
      *
      * @param array $options guzzleHttp client options.
