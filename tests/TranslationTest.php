@@ -42,6 +42,6 @@ class TranslationTest extends TestCase
     {
         $rawResult = $this->tr->getResponse('cat');
 
-        $this->assertTrue(is_array($rawResult), 'Method getResponse() should return an array.');
+        $this->assertIsArray($rawResult, 'Method getResponse() should return an array');
     }
 }
