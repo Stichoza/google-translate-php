@@ -1,7 +1,7 @@
 {
     "name": "stichoza/google-translate-php",
     "description": "Free Google Translate API PHP Package",
-    "keywords": ["google", "translate", "translator", "php", "translating"],
+    "keywords": ["google", "translate", "translator", "php", "translating", "language"],
     "license": "MIT",
     "homepage": "http://github.com/Stichoza/google-translate-php",
     "authors": [
