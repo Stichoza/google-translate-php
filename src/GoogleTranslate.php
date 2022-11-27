@@ -302,7 +302,8 @@ class GoogleTranslate
             'q'    => $string
         ]);
 
-        $queryUrl = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', http_build_query($queryArray));
+        // Remove array indexes from URL so that "&dt[2]=" turns into "&dt=" and so on.
+        $queryUrl = preg_replace('/%5B\d+%5D=/', '=', http_build_query($queryArray));
 
         try {
             $response = $this->client->get($this->url, [
