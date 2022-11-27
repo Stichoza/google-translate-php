@@ -7,6 +7,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Stichoza\GoogleTranslate\Tokens\GoogleTokenGenerator;
 use Stichoza\GoogleTranslate\Tokens\TokenProviderInterface;
+use Throwable;
 use UnexpectedValueException;
 
 /**
@@ -310,7 +311,7 @@ class GoogleTranslate
             $response = $this->client->get($this->url, [
                     'query' => $queryUrl,
                 ] + $this->options);
-        } catch (RequestException $e) {
+        } catch (Throwable $e) {
             throw new ErrorException($e->getMessage(), $e->getCode());
         }
 
