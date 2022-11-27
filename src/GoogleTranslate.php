@@ -278,7 +278,7 @@ class GoogleTranslate
         }
 
         if (is_array($responseArray[0])) {
-            return (string) array_reduce($responseArray[0], function ($carry, $item) {
+            return (string) array_reduce($responseArray[0], static function ($carry, $item) {
                 $carry .= $item[0];
                 return $carry;
             });
