@@ -165,12 +165,12 @@ class GoogleTranslate
     /**
      * Set GuzzleHttp client options.
      *
-     * @param array $options guzzleHttp client options.
+     * @param array $options GuzzleHttp client options.
      * @return GoogleTranslate
      */
-    public function setOptions(array $options = null): self
+    public function setOptions(array $options = []): self
     {
-        $this->options = $options ?? [];
+        $this->options = $options;
         return $this;
     }
 
