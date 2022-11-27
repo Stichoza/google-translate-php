@@ -239,7 +239,7 @@ class GoogleTranslate
         $responseArray = $this->getResponse($string);
 
         // Check if translation exists
-        if (!isset($responseArray[0]) || empty($responseArray[0])) {
+        if (empty($responseArray[0])) {
             return null;
         }
 
