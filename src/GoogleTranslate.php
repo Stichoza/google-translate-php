@@ -231,11 +231,10 @@ class GoogleTranslate
      */
     public function translate(string $string): ?string
     {
-        /*
-         * if source lang and target lang are the same
-         * just return the string without any request to google
-         */
-        if ($this->source == $this->target) return $string;
+        // If the source and target languages are the same, just return the string without any request to Google.
+        if ($this->source === $this->target) {
+            return $string;
+        }
 
         $responseArray = $this->getResponse($string);
 
