@@ -21,37 +21,37 @@ class GoogleTranslate
     /**
      * @var \GuzzleHttp\Client HTTP Client
      */
-    protected $client;
+    protected Client $client;
 
     /**
-     * @var string|null Source language - from where the string should be translated
+     * @var string|null Source language which the string should be translated from.
      */
-    protected $source;
+    protected ?string $source;
 
     /**
-     * @var string Target language - to which language string should be translated
+     * @var string|null Target language which the string should be translated to.
      */
-    protected $target;
+    protected ?string $target;
 
     /**
-     * @var string|null Last detected source language
+     * @var string|null Last detected source language.
      */
-    protected $lastDetectedSource;
+    protected ?string $lastDetectedSource;
 
     /**
-     * @var string Google Translate URL base
+     * @var string Google Translate base URL.
      */
-    protected $url = 'https://translate.google.com/translate_a/single';
+    protected string $url = 'https://translate.google.com/translate_a/single';
 
     /**
      * @var array Dynamic GuzzleHttp client options
      */
-    protected $options = [];
+    protected array $options = [];
 
     /**
      * @var array URL Parameters
      */
-    protected $urlParams = [
+    protected array $urlParams = [
         'client'   => 'gtx',
         'hl'       => 'en',
         'dt'       => [
@@ -84,7 +84,7 @@ class GoogleTranslate
     /**
      * @var array Regex key-value patterns to replace on response data
      */
-    protected $resultRegexes = [
+    protected array $resultRegexes = [
         '/,+/'  => ',',
         '/\[,/' => '[',
     ];
@@ -92,7 +92,7 @@ class GoogleTranslate
     /**
      * @var TokenProviderInterface Token provider
      */
-    protected $tokenProvider;
+    protected TokenProviderInterface $tokenProvider;
 
     /**
      * Class constructor.
