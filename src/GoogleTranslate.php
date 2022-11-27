@@ -247,13 +247,10 @@ class GoogleTranslate
         // Detect languages
         $detectedLanguages = [];
 
-        // the response contains only single translation, don't create loop that will end with
-        // invalid foreach and warning
-        if (!is_string($responseArray)) {
-            foreach ($responseArray as $item) {
-                if (is_string($item)) {
-                    $detectedLanguages[] = $item;
-                }
+        // Do not iterate over detected languages if the response contains a single translation
+        foreach ($responseArray as $item) {
+            if (is_string($item)) {
+                $detectedLanguages[] = $item;
             }
         }
 
