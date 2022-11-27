@@ -236,7 +236,7 @@ class GoogleTranslate
          * just return the string without any request to google
          */
         if ($this->source == $this->target) return $string;
-        
+
         $responseArray = $this->getResponse($string);
 
         /*
@@ -281,19 +281,19 @@ class GoogleTranslate
             }
         }
 
-        // the response can be sometimes an translated string.
+        // The response sometime can be a translated string.
         if (is_string($responseArray)) {
             return $responseArray;
-        } else {
-            if (is_array($responseArray[0])) {
-                return (string) array_reduce($responseArray[0], function ($carry, $item) {
-                    $carry .= $item[0];
-                    return $carry;
-                });
-            } else {
-                return (string) $responseArray[0];
-            }
         }
+
+        if (is_array($responseArray[0])) {
+            return (string) array_reduce($responseArray[0], function ($carry, $item) {
+                $carry .= $item[0];
+                return $carry;
+            });
+        }
+
+        return (string) $responseArray[0];
     }
 
     /**
