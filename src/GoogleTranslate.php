@@ -13,7 +13,7 @@ use UnexpectedValueException;
  * Free Google Translate API PHP Package.
  *
  * @author      Levan Velijanashvili <me@stichoza.com>
- * @link        http://stichoza.com/
+ * @link        https://stichoza.com/
  * @license     MIT
  */
 class GoogleTranslate
@@ -330,7 +330,7 @@ class GoogleTranslate
     /**
      * Check if given locale is valid.
      *
-     * @param string $lang Langauge code to verify
+     * @param string $lang Language code to verify
      * @return bool
      */
     protected function isValidLocale(string $lang): bool
