@@ -103,10 +103,10 @@ class GoogleTranslate
      *
      * @param string $target Target language
      * @param string|null $source Source language
-     * @param array|null $options Associative array of http client configuration options
+     * @param array $options Associative array of http client configuration options
      * @param TokenProviderInterface|null $tokenProvider
      */
-    public function __construct(string $target = 'en', string $source = null, array $options = null, TokenProviderInterface $tokenProvider = null)
+    public function __construct(string $target = 'en', string $source = null, array $options = [], TokenProviderInterface $tokenProvider = null)
     {
         $this->client = new Client();
         $this->setTokenProvider($tokenProvider ?? new GoogleTokenGenerator)
