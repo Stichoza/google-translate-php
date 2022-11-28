@@ -54,7 +54,7 @@ class UtilityTest extends TestCase
         ])->translate('hello');
         rewind($res);
         $output = str_replace("\r", '', stream_get_contents($res));
-        $this->assertContains('User-Agent: Foo', $output);
+        $this->assertStringContainsString('User-Agent: Foo', $output);
 
         GoogleTranslate::trans('world', 'en', null, [
             'debug'   => $res,
@@ -64,7 +64,7 @@ class UtilityTest extends TestCase
         ]);
         rewind($res);
         $output = str_replace("\r", '', stream_get_contents($res));
-        $this->assertContains('User-Agent: Bar', $output);
+        $this->assertStringContainsString('User-Agent: Bar', $output);
         fclose($res);
     }
 }
