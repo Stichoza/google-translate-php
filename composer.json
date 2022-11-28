@@ -11,8 +11,8 @@
         }
     ],
     "require": {
-        "php": "^8",
-        "guzzlehttp/guzzle": "~6.0|~7.0",
+        "php": "^8.0",
+        "guzzlehttp/guzzle": "^7.0",
         "ext-json": "*",
         "ext-mbstring": "*"
     },
