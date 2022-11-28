@@ -336,6 +336,6 @@ class GoogleTranslate
      */
     protected function isValidLocale(string $lang): bool
     {
-        return (bool) preg_match('/^([a-z]{2})(-[A-Z]{2})?$/', $lang);
+        return (bool) preg_match('/^([a-z]{2,3})(-[A-Za-z]{2,4})?$/', $lang);
     }
 }
