@@ -2,6 +2,7 @@
 
 namespace Stichoza\GoogleTranslate\Tests;
 
+use Exception;
 use ReflectionClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
@@ -66,7 +67,28 @@ class UtilityTest extends TestCase
         ]);
         rewind($res);
         $output = str_replace("\r", '', stream_get_contents($res));
+
         $this->assertStringContainsString('User-Agent: Bar', $output);
+
+        fclose($res);
+    }
+
+    public function testSetUrl()
+    {
+        $res = fopen('php://memory', 'r+');
+
+        try {
+            $this->tr
+                ->setUrl('https://example.com')
+                ->setOptions(['debug' => $res])
+                ->translate('hello');
+        } catch (Exception) {}
+
+        rewind($res);
+        $output = str_replace("\r", '', stream_get_contents($res));
+
+        $this->assertStringContainsString('Host: example.com', $output);
+
         fclose($res);
     }
 }
