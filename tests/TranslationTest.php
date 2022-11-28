@@ -7,9 +7,9 @@ use Stichoza\GoogleTranslate\GoogleTranslate;
 
 class TranslationTest extends TestCase
 {
-    public $tr;
+    public GoogleTranslate $tr;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->tr = new GoogleTranslate();
     }
@@ -42,6 +42,6 @@ class TranslationTest extends TestCase
     {
         $rawResult = $this->tr->getResponse('cat');
 
-        $this->assertTrue(is_array($rawResult), 'Method getResponse() should return an array.');
+        $this->assertIsArray($rawResult, 'Method getResponse() should return an array');
     }
 }

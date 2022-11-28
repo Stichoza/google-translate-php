@@ -2,19 +2,19 @@
 
 namespace Stichoza\GoogleTranslate;
 
-use BadMethodCallException;
 use ErrorException;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
+use JsonException;
 use Stichoza\GoogleTranslate\Tokens\GoogleTokenGenerator;
 use Stichoza\GoogleTranslate\Tokens\TokenProviderInterface;
+use Throwable;
 use UnexpectedValueException;
 
 /**
  * Free Google Translate API PHP Package.
  *
  * @author      Levan Velijanashvili <me@stichoza.com>
- * @link        http://stichoza.com/
+ * @link        https://stichoza.com/
  * @license     MIT
  */
 class GoogleTranslate
@@ -22,38 +22,38 @@ class GoogleTranslate
     /**
      * @var \GuzzleHttp\Client HTTP Client
      */
-    protected $client;
+    protected Client $client;
 
     /**
-     * @var string|null Source language - from where the string should be translated
+     * @var string|null Source language which the string should be translated from.
      */
-    protected $source;
+    protected ?string $source;
 
     /**
-     * @var string Target language - to which language string should be translated
+     * @var string|null Target language which the string should be translated to.
      */
-    protected $target;
+    protected ?string $target;
 
     /**
-     * @var string|null Last detected source language
+     * @var string|null Last detected source language.
      */
-    protected $lastDetectedSource;
+    protected ?string $lastDetectedSource;
 
     /**
-     * @var string Google Translate URL base
+     * @var string Google Translate base URL.
      */
-    protected $url = 'https://translate.google.com/translate_a/single';
+    protected string $url = 'https://translate.google.com/translate_a/single';
 
     /**
      * @var array Dynamic GuzzleHttp client options
      */
-    protected $options = [];
+    protected array $options = [];
 
     /**
      * @var array URL Parameters
      */
-    protected $urlParams = [
-        'client'   => 'webapp',
+    protected array $urlParams = [
+        'client'   => 'gtx',
         'hl'       => 'en',
         'dt'       => [
             't',   // Translate
@@ -85,7 +85,7 @@ class GoogleTranslate
     /**
      * @var array Regex key-value patterns to replace on response data
      */
-    protected $resultRegexes = [
+    protected array $resultRegexes = [
         '/,+/'  => ',',
         '/\[,/' => '[',
     ];
@@ -93,7 +93,7 @@ class GoogleTranslate
     /**
      * @var TokenProviderInterface Token provider
      */
-    protected $tokenProvider;
+    protected TokenProviderInterface $tokenProvider;
 
     /**
      * Class constructor.
@@ -103,10 +103,10 @@ class GoogleTranslate
      *
      * @param string $target Target language
      * @param string|null $source Source language
-     * @param array|null $options Associative array of http client configuration options
+     * @param array $options Associative array of http client configuration options
      * @param TokenProviderInterface|null $tokenProvider
      */
-    public function __construct(string $target = 'en', string $source = null, array $options = null, TokenProviderInterface $tokenProvider = null)
+    public function __construct(string $target = 'en', string $source = null, array $options = [], TokenProviderInterface $tokenProvider = null)
     {
         $this->client = new Client();
         $this->setTokenProvider($tokenProvider ?? new GoogleTokenGenerator)
@@ -121,7 +121,7 @@ class GoogleTranslate
      * @param string $target Language code
      * @return GoogleTranslate
      */
-    public function setTarget(string $target) : self
+    public function setTarget(string $target): self
     {
         $this->target = $target;
         return $this;
@@ -133,7 +133,7 @@ class GoogleTranslate
      * @param string|null $source Language code
      * @return GoogleTranslate
      */
-    public function setSource(string $source = null) : self
+    public function setSource(string $source = null): self
     {
         $this->source = $source ?? 'auto';
         return $this;
@@ -145,21 +145,33 @@ class GoogleTranslate
      * @param string $url Google Translate URL base
      * @return GoogleTranslate
      */
-    public function setUrl(string $url) : self
+    public function setUrl(string $url): self
     {
         $this->url = $url;
         return $this;
     }
 
     /**
-     * Set GuzzleHttp client options.
+     * Set Google Translate client param (webapp, gtx, etc.)
      *
-     * @param array $options guzzleHttp client options.
+     * @param string $client Google Translate client param (webapp, gtx, etc.)
      * @return GoogleTranslate
      */
-    public function setOptions(array $options = null) : self
+    public function setClient(string $client): self
     {
-        $this->options = $options ?? [];
+        $this->urlParams['client'] = $client;
+        return $this;
+    }
+
+    /**
+     * Set GuzzleHttp client options.
+     *
+     * @param array $options GuzzleHttp client options.
+     * @return GoogleTranslate
+     */
+    public function setOptions(array $options = []): self
+    {
+        $this->options = $options;
         return $this;
     }
 
@@ -169,7 +181,7 @@ class GoogleTranslate
      * @param TokenProviderInterface $tokenProvider
      * @return GoogleTranslate
      */
-    public function setTokenProvider(TokenProviderInterface $tokenProvider) : self
+    public function setTokenProvider(TokenProviderInterface $tokenProvider): self
     {
         $this->tokenProvider = $tokenProvider;
         return $this;
@@ -180,7 +192,7 @@ class GoogleTranslate
      *
      * @return string|null Last detected source language
      */
-    public function getLastDetectedSource()
+    public function getLastDetectedSource(): ?string
     {
         return $this->lastDetectedSource;
     }
@@ -197,7 +209,7 @@ class GoogleTranslate
      * @throws ErrorException If the HTTP request fails
      * @throws UnexpectedValueException If received data cannot be decoded
      */
-    public static function trans(string $string, string $target = 'en', string $source = null, array $options = [], TokenProviderInterface $tokenProvider = null)
+    public static function trans(string $string, string $target = 'en', string $source = null, array $options = [], TokenProviderInterface $tokenProvider = null): ?string
     {
         return (new self)
             ->setTokenProvider($tokenProvider ?? new GoogleTokenGenerator)
@@ -218,43 +230,31 @@ class GoogleTranslate
      * @throws ErrorException           If the HTTP request fails
      * @throws UnexpectedValueException If received data cannot be decoded
      */
-    public function translate(string $string) : string
+    public function translate(string $string): ?string
     {
-        /*
-         * if source lang and target lang are the same
-         * just return the string without any request to google
-         */
-        if ($this->source == $this->target) return $string;
-        
-        $responseArray = $this->getResponse($string);
-
-        /*
-         * if response in text and the content has zero the empty returns true, lets check
-         * if response is string and not empty and create array for further logic
-         */
-        if (is_string($responseArray) && $responseArray != '') {
-            $responseArray = [$responseArray];
+        // If the source and target languages are the same, just return the string without any request to Google.
+        if ($this->source === $this->target) {
+            return $string;
         }
 
+        $responseArray = $this->getResponse($string);
+
         // Check if translation exists
-        if (!isset($responseArray[0]) || empty($responseArray[0])) {
+        if (empty($responseArray[0])) {
             return null;
         }
 
         // Detect languages
         $detectedLanguages = [];
 
-        // the response contains only single translation, don't create loop that will end with
-        // invalid foreach and warning
-        if (!is_string($responseArray)) {
-            foreach ($responseArray as $item) {
-                if (is_string($item)) {
-                    $detectedLanguages[] = $item;
-                }
+        // One way of detecting language
+        foreach ($responseArray as $item) {
+            if (is_string($item)) {
+                $detectedLanguages[] = $item;
             }
         }
 
-        // Another case of detected language
+        // Another way of detecting language
         if (isset($responseArray[count($responseArray) - 2][0][0])) {
             $detectedLanguages[] = $responseArray[count($responseArray) - 2][0][0];
         }
@@ -270,19 +270,19 @@ class GoogleTranslate
             }
         }
 
-        // the response can be sometimes an translated string.
+        // The response sometime can be a translated string.
         if (is_string($responseArray)) {
             return $responseArray;
-        } else {
-            if (is_array($responseArray[0])) {
-                return (string) array_reduce($responseArray[0], function ($carry, $item) {
-                    $carry .= $item[0];
-                    return $carry;
-                });
-            } else {
-                return (string) $responseArray[0];
-            }
         }
+
+        if (is_array($responseArray[0])) {
+            return (string) array_reduce($responseArray[0], static function ($carry, $item) {
+                $carry .= $item[0];
+                return $carry;
+            });
+        }
+
+        return (string) $responseArray[0];
     }
 
     /**
@@ -293,7 +293,7 @@ class GoogleTranslate
      * @throws UnexpectedValueException If received data cannot be decoded
      * @return array|string Response
      */
-    public function getResponse(string $string) : array
+    public function getResponse(string $string): array
     {
         $queryArray = array_merge($this->urlParams, [
             'sl'   => $this->source,
@@ -302,14 +302,15 @@ class GoogleTranslate
             'q'    => $string
         ]);
 
-        $queryUrl = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', http_build_query($queryArray));
+        // Remove array indexes from URL so that "&dt[2]=" turns into "&dt=" and so on.
+        $queryUrl = preg_replace('/%5B\d+%5D=/', '=', http_build_query($queryArray));
 
         try {
             $response = $this->client->get($this->url, [
                     'query' => $queryUrl,
                 ] + $this->options);
-        } catch (RequestException $e) {
-            throw new ErrorException($e->getMessage());
+        } catch (Throwable $e) {
+            throw new ErrorException($e->getMessage(), $e->getCode());
         }
 
         $body = $response->getBody(); // Get response body
@@ -318,7 +319,9 @@ class GoogleTranslate
         $bodyJson = preg_replace(array_keys($this->resultRegexes), array_values($this->resultRegexes), $body);
 
         // Decode JSON data
-        if (($bodyArray = json_decode($bodyJson, true)) === null) {
+        try {
+            $bodyArray = json_decode($bodyJson, true, flags: JSON_THROW_ON_ERROR);
+        } catch (JsonException) {
             throw new UnexpectedValueException('Data cannot be decoded or it is deeper than the recursion limit');
         }
 
@@ -328,10 +331,10 @@ class GoogleTranslate
     /**
      * Check if given locale is valid.
      *
-     * @param string $lang Langauge code to verify
+     * @param string $lang Language code to verify
      * @return bool
      */
-    protected function isValidLocale(string $lang) : bool
+    protected function isValidLocale(string $lang): bool
     {
         return (bool) preg_match('/^([a-z]{2})(-[A-Z]{2})?$/', $lang);
     }
