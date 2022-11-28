@@ -27,8 +27,13 @@ Install this package via [Composer](https://getcomposer.org/).
 ```
 composer require stichoza/google-translate-php
 ```
+> Note: **PHP 8.0 or later** is required. Use following versions of this package for older PHP versions:
 
-> Note: **PHP 7.1 or later** is required. For older versions, use `^3.2` version of this package (see [old docs](https://github.com/Stichoza/google-translate-php/tree/3.2#google-translate-php)).
+| Package version | PHP Version | Documentation                                                                             |
+|-----------------|-------------|-------------------------------------------------------------------------------------------|
+| `^5.0`          | PHP >= 8.0  |                                                                                           |
+| `^4.1`          | PHP >= 7.1  | [v4 Docs](https://github.com/Stichoza/google-translate-php/tree/4.1#google-translate-php) |
+| `^3.2`          | PHP < 7.1   | [v3 Docs](https://github.com/Stichoza/google-translate-php/tree/3.2#google-translate-php) |
 
 ## Basic Usage
 
