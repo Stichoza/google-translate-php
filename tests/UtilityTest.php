@@ -27,14 +27,16 @@ class UtilityTest extends TestCase
         $t = $this->tr;
 
         $booleanAssertions = [
-            'ab'      => true,
-            'ab-CD'   => true,
-            'ab-CDE'  => false,
-            'abc-DE'  => false,
-            'abc-DEF' => false,
-            'abc'     => false,
-            'ab-'     => false,
-            'a'       => false,
+            'ab'       => true, // ka, ge, ua
+            'ab-CD'    => true, // zh-CN, zh-TW
+            'ab-CDE'   => true, //
+            'abc-DE'   => true,
+            'abc-DEF'  => true,
+            'abc-Defg' => true, // mni-Mtei
+            'abc'      => true, // fil, gom, ckb
+            'abcd'     => false,
+            'ab-'      => false,
+            'a'        => false,
         ];
 
         foreach ($booleanAssertions as $key => $value) {
