@@ -291,7 +291,7 @@ class GoogleTranslate
      * @param string $string String to translate
      * @throws ErrorException           If the HTTP request fails
      * @throws UnexpectedValueException If received data cannot be decoded
-     * @return array|string Response
+     * @return array Response
      */
     public function getResponse(string $string): array
     {
