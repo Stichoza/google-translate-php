@@ -19,6 +19,9 @@
     "require-dev": {
         "phpunit/phpunit": "^9.5.10"
     },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
     "autoload": {
         "psr-4": {
             "Stichoza\\GoogleTranslate\\": "src/"
