@@ -4,15 +4,16 @@ namespace Stichoza\GoogleTranslate\Tests;
 
 use ReflectionClass;
 use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
 use Stichoza\GoogleTranslate\GoogleTranslate;
 
 class UtilityTest extends TestCase
 {
-    public $tr;
+    public GoogleTranslate $tr;
 
-    public $method;
+    public ReflectionMethod $method;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->tr = new GoogleTranslate();
         $reflection = new ReflectionClass(get_class($this->tr));

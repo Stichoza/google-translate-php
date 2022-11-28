@@ -7,9 +7,9 @@ use Stichoza\GoogleTranslate\GoogleTranslate;
 
 class TranslationTest extends TestCase
 {
-    public $tr;
+    public GoogleTranslate $tr;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->tr = new GoogleTranslate();
     }
