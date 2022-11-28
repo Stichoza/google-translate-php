@@ -23,7 +23,19 @@ class TranslationTest extends TestCase
         }
         $resultTwo = $this->tr->setSource('en')->setTarget('ka')->translate('Hello');
 
-        $this->assertEquals($resultOne, $resultTwo, 'გამარჯობა');
+        $this->assertEqualsIgnoringCase($resultOne, $resultTwo, 'Salam');
+    }
+
+    public function testNewerLanguageTranslation()
+    {
+        try {
+            $resultOne = GoogleTranslate::trans('Hello', 'tk', 'en');
+        } catch (\ErrorException $e) {
+            $resultOne = null;
+        }
+        $resultTwo = $this->tr->setSource('en')->setTarget('tk')->translate('Hello');
+
+        $this->assertEqualsIgnoringCase($resultOne, $resultTwo, 'Salam');
     }
 
     public function testUTF16Translation()
@@ -35,7 +47,7 @@ class TranslationTest extends TestCase
         }
         $resultTwo = $this->tr->setSource('en')->setTarget('de')->translate('yes 👍🏽');
 
-        $this->assertEquals($resultOne, $resultTwo, 'ja 👍🏽');
+        $this->assertEqualsIgnoringCase($resultOne, $resultTwo, 'ja 👍🏽');
     }
 
     public function testLargeTextTranslation()
