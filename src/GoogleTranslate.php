@@ -4,7 +4,7 @@ namespace Stichoza\GoogleTranslate;
 
 use ErrorException;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
+use JsonException;
 use Stichoza\GoogleTranslate\Tokens\GoogleTokenGenerator;
 use Stichoza\GoogleTranslate\Tokens\TokenProviderInterface;
 use Throwable;
@@ -319,7 +319,9 @@ class GoogleTranslate
         $bodyJson = preg_replace(array_keys($this->resultRegexes), array_values($this->resultRegexes), $body);
 
         // Decode JSON data
-        if (($bodyArray = json_decode($bodyJson, true)) === null) {
+        try {
+            $bodyArray = json_decode($bodyJson, true, flags: JSON_THROW_ON_ERROR);
+        } catch (JsonException) {
             throw new UnexpectedValueException('Data cannot be decoded or it is deeper than the recursion limit');
         }
 
