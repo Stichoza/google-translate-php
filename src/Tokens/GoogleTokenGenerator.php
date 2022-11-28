@@ -10,8 +10,6 @@ namespace Stichoza\GoogleTranslate\Tokens;
  */
 class GoogleTokenGenerator implements TokenProviderInterface
 {
-    protected array $tkk = ['406398', 2087938574];
-
     /**
      * Generate and return a token.
      *
@@ -22,20 +20,18 @@ class GoogleTokenGenerator implements TokenProviderInterface
      */
     public function generateToken(string $source, string $target, string $text): string
     {
-        $a = $text;
+        $tkk = ['406398', 2087938574];
 
-        $b = $this->tkk[0];
-
-        for ($d = [], $e = 0, $f = 0; $f < $this->length($a); $f++) {
-            $g = $this->charCodeAt($a, $f);
+        for ($d = [], $e = 0, $f = 0; $f < $this->length($text); $f++) {
+            $g = $this->charCodeAt($text, $f);
             if (128 > $g) {
                 $d[$e++] = $g;
             } else {
                 if (2048 > $g) {
                     $d[$e++] = $g >> 6 | 192;
                 } else {
-                    if ($g & 64512 === 55296 && $f + 1 < $this->length($a) && ($this->charCodeAt($a, $f + 1) & 64512) === 56320) {
-                        $g = 65536 + (($g & 1023) << 10) + ($this->charCodeAt($a, ++$f) & 1023);
+                    if ($g & 64512 === 55296 && $f + 1 < $this->length($text) && ($this->charCodeAt($text, $f + 1) & 64512) === 56320) {
+                        $g = 65536 + (($g & 1023) << 10) + ($this->charCodeAt($text, ++$f) & 1023);
                         $d[$e++] = $g >> 18 | 240;
                         $d[$e++] = $g >> 12 & 63 | 128;
                     } else {
@@ -46,31 +42,32 @@ class GoogleTokenGenerator implements TokenProviderInterface
                 $d[$e++] = $g & 63 | 128;
             }
         }
-        $a = $b;
+
+        $a = $tkk[0];
         foreach ($d as $value) {
             $a += $value;
-            $a = $this->RL($a, '+-a^+6');
+            $a = $this->rl($a, '+-a^+6');
         }
-        $a = $this->RL($a, '+-3^+b+-f');
-        $a ^= $this->tkk[1] ? $this->tkk[1] + 0 : 0;
+        $a = $this->rl($a, '+-3^+b+-f');
+        $a ^= $tkk[1] ? $tkk[1] + 0 : 0;
         if (0 > $a) {
             $a = ($a & 2147483647) + 2147483648;
         }
         $a = fmod($a, 1000000);
 
-        return $a . '.' . ($a ^ $b);
+        return $a . '.' . ($a ^ $tkk[0]);
     }
 
     /**
      * Process token data by applying multiple operations.
-     * (Params are safe, no need for multibyte functions)
+     * (Parameters are safe, no need for multibyte functions)
      *
      * @param int $a
      * @param string $b
      *
      * @return int
      */
-    private function RL($a, $b)
+    private function rl(int $a, string $b): int
     {
         for ($c = 0; $c < strlen($b) - 2; $c += 3) {
             $d = $b[$c + 2];
@@ -87,20 +84,20 @@ class GoogleTokenGenerator implements TokenProviderInterface
      * https://msdn.microsoft.com/en-us/library/342xfs5s(v=vs.94).aspx
      * http://stackoverflow.com/a/43359819/2953830
      *
-     * @param $a
-     * @param $b
+     * @param int $a
+     * @param int $b
      *
-     * @return number
+     * @return int
      */
-    private function unsignedRightShift($a, $b)
+    private function unsignedRightShift(int $a, int $b): int
     {
         if ($b >= 32 || $b < -32) {
-            $m = (int)($b / 32);
+            $m = (int) ($b / 32);
             $b -= ($m * 32);
         }
 
         if ($b < 0) {
-            $b = 32 + $b;
+            $b += 32;
         }
 
         if ($b === 0) {
