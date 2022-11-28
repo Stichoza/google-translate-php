@@ -28,7 +28,7 @@ Install this package via [Composer](https://getcomposer.org/).
 composer require stichoza/google-translate-php
 ```
 
-> Note: **PHP 7.1 or later** is required. For older versoins, use `^3.2` version of this package (see [old docs](https://github.com/Stichoza/google-translate-php/tree/3.2#google-translate-php)).
+> Note: **PHP 7.1 or later** is required. For older versions, use `^3.2` version of this package (see [old docs](https://github.com/Stichoza/google-translate-php/tree/3.2#google-translate-php)).
 
 ## Basic Usage
 
@@ -143,7 +143,7 @@ use Stichoza\GoogleTranslate\Tokens\TokenProviderInterface;
 
 class MyTokenGenerator implements TokenProviderInterface
 {
-    public function generateToken(string $source, string $target, string $text) : string
+    public function generateToken(string $source, string $target, string $text): string
     {
         // Your code here
     }
@@ -155,6 +155,12 @@ And use:
 ```php
 $tr->setTokenProvider(new MyTokenGenerator);
 ```
+
+### Translation Client (Quality)
+
+Google Translate has a parameter named `client` which defines quality of translation. First it was set to `webapp` but later google added `gtx` value which results in a better translation quality in terms of grammar and overall meaning of sentences.
+
+You can use `->setClient()` method to switch between clients. For example if you want to use older version of translation algorithm, type `$tr->setClient('webapp')->translate('lorem ipsum...')`. Default value is `gtx`.
 
 ### Errors and Exception Handling
 
@@ -176,15 +182,15 @@ In addition, `translate()` and `trans()` methods will return `null` if there is 
  - `403 Forbidden` response:
    This is not an issue with this package. Google Translate itself has some problems when it comes to translating some characters and HTML entities. See https://github.com/Stichoza/google-translate-php/issues/119#issuecomment-558078133
 
- 
+
 ## Disclaimer
 
 This package is developed for educational purposes only. Do not depend on this package as it may break anytime as it is based on crawling the Google Translate website. Consider buying [Official Google Translate API](https://cloud.google.com/translate/) for other types of usage.
 
 ## Donation
 
-If this package helped you reduce your time to develop something, or it solved any major problems you had, feel free give me a cup of coffee :)
+If this package helped you reduce your time to develop something, or it solved any major problems you had, feel free to give me a cup of coffee :)
 
  - [Patreon](https://www.patreon.com/stichoza)
  - [PayPal](https://paypal.me/stichoza)
- 
+
