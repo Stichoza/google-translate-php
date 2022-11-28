@@ -79,7 +79,7 @@ class UtilityTest extends TestCase
 
         try {
             $this->tr
-                ->setUrl('https://example.com')
+                ->setUrl('https://translate.google.cn/translate_a/single')
                 ->setOptions(['debug' => $res])
                 ->translate('hello');
         } catch (Exception) {}
@@ -87,7 +87,8 @@ class UtilityTest extends TestCase
         rewind($res);
         $output = str_replace("\r", '', stream_get_contents($res));
 
-        $this->assertStringContainsString('Host: example.com', $output);
+        $this->assertStringContainsString('Host: translate.google.cn', $output);
+        $this->assertStringContainsString('Connected to translate.google.cn', $output);
 
         fclose($res);
     }
