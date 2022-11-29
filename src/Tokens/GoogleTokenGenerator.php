@@ -24,10 +24,10 @@ class GoogleTokenGenerator implements TokenProviderInterface
 
         for ($d = [], $e = 0, $f = 0; $f < $this->length($text); $f++) {
             $g = $this->charCodeAt($text, $f);
-            if (128 > $g) {
+            if ($g < 128) {
                 $d[$e++] = $g;
             } else {
-                if (2048 > $g) {
+                if ($g < 2048) {
                     $d[$e++] = $g >> 6 | 192;
                 } else {
                     if ($g & 64512 === 55296 && $f + 1 < $this->length($text) && ($this->charCodeAt($text, $f + 1) & 64512) === 56320) {
@@ -49,8 +49,8 @@ class GoogleTokenGenerator implements TokenProviderInterface
             $a = $this->rl($a, '+-a^+6');
         }
         $a = $this->rl($a, '+-3^+b+-f');
-        $a ^= $tkk[1] ? $tkk[1] + 0 : 0;
-        if (0 > $a) {
+        $a ^= $tkk[1];
+        if ($a < 0) {
             $a = ($a & 2147483647) + 2147483648;
         }
         $a = fmod($a, 1000000);
