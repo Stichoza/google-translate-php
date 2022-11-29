@@ -4,6 +4,7 @@ namespace Stichoza\GoogleTranslate;
 
 use ErrorException;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use JsonException;
 use Stichoza\GoogleTranslate\Exceptions\LargeTextException;
 use Stichoza\GoogleTranslate\Exceptions\RateLimitException;
