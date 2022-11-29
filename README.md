@@ -135,7 +135,7 @@ $tr->setOptions(['proxy' => 'tcp://localhost:8090'])->translate('Hello');
 $tr->setOptions(['proxy' => 'socks5://localhost:1080'])->translate('World');
 ```
 
-For more information, see [Creating a Client](http://guzzle.readthedocs.org/en/latest/quickstart.html#creating-a-client) section in Guzzle docs (6.x version).
+For more information, see [Creating a Client](http://guzzle.readthedocs.org/en/latest/quickstart.html#creating-a-client) section in Guzzle docs.
 
 ### Custom Token Generator
 
