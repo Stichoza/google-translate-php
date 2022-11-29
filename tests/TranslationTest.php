@@ -37,14 +37,9 @@ class TranslationTest extends TestCase
 
     public function testNewerLanguageTranslation(): void
     {
-        try {
-            $resultOne = GoogleTranslate::trans('Hello', 'tk', 'en');
-        } catch (\ErrorException $e) {
-            $resultOne = null;
-        }
-        $resultTwo = $this->tr->setSource('en')->setTarget('tk')->translate('Hello');
+        $result = $this->tr->setSource('en')->setTarget('tk')->translate('Hello');
 
-        $this->assertEqualsIgnoringCase($resultOne, $resultTwo, 'Salam');
+        $this->assertEqualsIgnoringCase($result, 'Salam', 'Newer languages should be translatable.');
     }
 
     public function testUTF16Translation(): void
