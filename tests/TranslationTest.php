@@ -27,6 +27,14 @@ class TranslationTest extends TestCase
         $this->assertEqualsIgnoringCase($resultOne, $resultTwo, 'Salam');
     }
 
+    public function testTranslationEquality(): void
+    {
+        $resultOne = GoogleTranslate::trans('Hello', 'ka', 'en');
+        $resultTwo = $this->tr->setSource('en')->setTarget('ka')->translate('Hello');
+
+        $this->assertEqualsIgnoringCase($resultOne, $resultTwo, 'Static and instance methods should return same result.');
+    }
+
     public function testNewerLanguageTranslation(): void
     {
         try {
