@@ -14,7 +14,7 @@ class TranslationTest extends TestCase
         $this->tr = new GoogleTranslate();
     }
 
-    public function testTranslationEquality()
+    public function testTranslationEquality(): void
     {
         try {
             $resultOne = GoogleTranslate::trans('Hello', 'ka', 'en');
@@ -26,7 +26,7 @@ class TranslationTest extends TestCase
         $this->assertEqualsIgnoringCase($resultOne, $resultTwo, 'Salam');
     }
 
-    public function testNewerLanguageTranslation()
+    public function testNewerLanguageTranslation(): void
     {
         try {
             $resultOne = GoogleTranslate::trans('Hello', 'tk', 'en');
@@ -38,7 +38,7 @@ class TranslationTest extends TestCase
         $this->assertEqualsIgnoringCase($resultOne, $resultTwo, 'Salam');
     }
 
-    public function testUTF16Translation()
+    public function testUTF16Translation(): void
     {
         try {
             $resultOne = GoogleTranslate::trans('yes 👍🏽', 'de', 'en');
@@ -50,7 +50,7 @@ class TranslationTest extends TestCase
         $this->assertEqualsIgnoringCase($resultOne, $resultTwo, 'ja 👍🏽');
     }
 
-    public function testLargeTextTranslation()
+    public function testLargeTextTranslation(): void
     {
         $text = "Google Translate is a multilingual neural machine translation service developed by Google to translate text, documents and websites from one language into another. It offers a website interface, a mobile app for Android and iOS, and an API that helps developers build browser extensions and software applications. As of November 2022, Google Translate supports 133 languages at various levels, and as of April 2016, claimed over 500 million total users, with more than 100 billion words translated daily, after the company stated in May 2013 that it served over 200 million people daily.";
 
@@ -60,7 +60,7 @@ class TranslationTest extends TestCase
         $this->assertNotEquals($text, $output);
     }
 
-    public function testRawResponse()
+    public function testRawResponse(): void
     {
         $rawResult = $this->tr->getResponse('cat');
 

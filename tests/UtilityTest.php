@@ -21,7 +21,7 @@ class UtilityTest extends TestCase
         $this->reflection = new ReflectionClass(GoogleTranslate::class);
     }
 
-    public function testIsValidLocale()
+    public function testIsValidLocale(): void
     {
         $method = $this->reflection->getMethod('isValidLocale');
 
@@ -45,7 +45,7 @@ class UtilityTest extends TestCase
         }
     }
 
-    public function testSetOptions()
+    public function testSetOptions(): void
     {
         $res = fopen('php://memory', 'rb+');
 
@@ -74,7 +74,7 @@ class UtilityTest extends TestCase
         fclose($res);
     }
 
-    public function testSetUrl()
+    public function testSetUrl(): void
     {
         $res = fopen('php://memory', 'rb+');
 
@@ -94,7 +94,7 @@ class UtilityTest extends TestCase
         fclose($res);
     }
 
-    public function testSetClient()
+    public function testSetClient(): void
     {
         $this->tr->setClient('test');
 
