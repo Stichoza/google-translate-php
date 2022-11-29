@@ -2,12 +2,14 @@
 
 namespace Stichoza\GoogleTranslate\Tests;
 
+use ErrorException;
 use PHPUnit\Framework\TestCase;
 use Stichoza\GoogleTranslate\Exceptions\LargeTextException;
 use Stichoza\GoogleTranslate\Exceptions\RateLimitException;
 use Stichoza\GoogleTranslate\Exceptions\TranslationDecodingException;
 use Stichoza\GoogleTranslate\Exceptions\TranslationRequestException;
 use Stichoza\GoogleTranslate\GoogleTranslate;
+use UnexpectedValueException;
 
 class ExceptionTest extends TestCase
 {
@@ -51,5 +53,19 @@ class ExceptionTest extends TestCase
         $this->expectException(TranslationDecodingException::class);
 
         $this->tr->setUrl('https://httpstat.us/200')->translate('Test');
+    }
+
+    public function testInheritanceForUnexpectedValueException(): void
+    {
+        $this->expectException(UnexpectedValueException::class);
+
+        $this->tr->setUrl('https://httpstat.us/200')->translate('Test');
+    }
+
+    public function testInheritanceForErrorException(): void
+    {
+        $this->expectException(ErrorException::class);
+
+        $this->tr->setUrl('https://httpstat.us/413')->translate('Test');
     }
 }
