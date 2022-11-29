@@ -101,7 +101,7 @@ class UtilityTest extends TestCase
         $urlParams = $this->reflection->getProperty('urlParams');
         $urlParams->setAccessible(true); // Still needed for PHP 8.0
 
-        $client = $urlParams->getValue($this->tr);
+        $client = $urlParams->getValue($this->tr)['client'];
 
         $this->assertEquals($client, 'test');
     }
