@@ -14,16 +14,11 @@ class TranslationTest extends TestCase
         $this->tr = new GoogleTranslate();
     }
 
-    public function testTranslationEquality(): void
+    public function testTranslation(): void
     {
-        try {
-            $resultOne = GoogleTranslate::trans('Hello', 'ka', 'en');
-        } catch (Exception) {
-            $resultOne = null;
-        }
-        $resultTwo = $this->tr->setSource('en')->setTarget('ka')->translate('Hello');
+        $result = $this->tr->setSource('en')->setTarget('ka')->translate('Hello');
 
-        $this->assertEqualsIgnoringCase($resultOne, $resultTwo, 'Salam');
+        $this->assertEqualsIgnoringCase($result, 'გამარჯობა', 'Translation should be correct.');
     }
 
     public function testTranslationEquality(): void
