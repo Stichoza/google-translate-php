@@ -2,6 +2,7 @@
 
 namespace Stichoza\GoogleTranslate\Tests;
 
+use Exception;
 use PHPUnit\Framework\TestCase;
 use Stichoza\GoogleTranslate\GoogleTranslate;
 
@@ -18,7 +19,7 @@ class TranslationTest extends TestCase
     {
         try {
             $resultOne = GoogleTranslate::trans('Hello', 'ka', 'en');
-        } catch (\ErrorException $e) {
+        } catch (Exception) {
             $resultOne = null;
         }
         $resultTwo = $this->tr->setSource('en')->setTarget('ka')->translate('Hello');
@@ -42,7 +43,7 @@ class TranslationTest extends TestCase
     {
         try {
             $resultOne = GoogleTranslate::trans('yes 👍🏽', 'de', 'en');
-        } catch (\ErrorException $e) {
+        } catch (Exception) {
             $resultOne = null;
         }
         $resultTwo = $this->tr->setSource('en')->setTarget('de')->translate('yes 👍🏽');
