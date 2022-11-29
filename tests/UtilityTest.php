@@ -25,6 +25,8 @@ class UtilityTest extends TestCase
     {
         $method = $this->reflection->getMethod('isValidLocale');
 
+        $method->setAccessible(true); // Still needed for PHP 8.0
+
         $booleanAssertions = [
             'ab'       => true, // ka, ge, ua
             'ab-CD'    => true, // zh-CN, zh-TW
