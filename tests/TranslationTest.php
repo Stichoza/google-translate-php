@@ -49,8 +49,9 @@ class TranslationTest extends TestCase
 
         $output = $this->tr->setTarget('uk')->translate($text);
 
-        $this->assertIsString($output);
-        $this->assertNotEquals($text, $output);
+        $this->assertIsString($output, 'Translation should be string');
+        $this->assertNotEmpty($output, 'Translation should not be empty');
+        $this->assertNotEqualsIgnoringCase($text, $output, 'Translation should be different from original');
     }
 
     public function testRawResponse(): void
