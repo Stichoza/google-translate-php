@@ -17,15 +17,15 @@ class UtilityTest extends TestCase
     public function setUp(): void
     {
         $this->tr = new GoogleTranslate();
-        $reflection = new ReflectionClass(get_class($this->tr));
-        $this->method = $reflection->getMethod('isValidLocale');
-        $this->method->setAccessible(true);
+
+        $this->reflection = new ReflectionClass(GoogleTranslate::class);
     }
 
     public function testIsValidLocale()
     {
-        $m = $this->method;
-        $t = $this->tr;
+        $method = $this->reflection->getMethod('isValidLocale');
+
+        $method->setAccessible(true);
 
         $booleanAssertions = [
             'ab'       => true, // ka, ge, ua
@@ -41,7 +41,7 @@ class UtilityTest extends TestCase
         ];
 
         foreach ($booleanAssertions as $key => $value) {
-            $this->assertEquals($m->invokeArgs($t, [$key]), $value);
+            $this->assertEquals($method->invokeArgs($this->tr, [$key]), $value);
         }
     }
 
@@ -91,5 +91,16 @@ class UtilityTest extends TestCase
         $this->assertStringContainsString('Connected to translate.google.cn', $output);
 
         fclose($res);
+    }
+
+    public function testSetClient()
+    {
+        $this->tr->setClient('test');
+
+        $urlParams = $this->reflection
+            ->getProperty('urlParams')
+            ->getValue($this->tr);
+
+        $this->assertEquals($urlParams['client'], 'test');
     }
 }
