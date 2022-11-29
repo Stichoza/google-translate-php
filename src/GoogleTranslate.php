@@ -106,9 +106,9 @@ class GoogleTranslate
      * For more information about HTTP client configuration options, see "Request Options" in
      * GuzzleHttp docs: http://docs.guzzlephp.org/en/stable/request-options.html
      *
-     * @param string $target Target language
-     * @param string|null $source Source language
-     * @param array $options Associative array of http client configuration options
+     * @param string $target Target language code
+     * @param string|null $source Source language code (null for automatic language detection)
+     * @param array $options HTTP client configuration options
      * @param TokenProviderInterface|null $tokenProvider
      */
     public function __construct(string $target = 'en', string $source = null, array $options = [], TokenProviderInterface $tokenProvider = null)
@@ -123,7 +123,7 @@ class GoogleTranslate
     /**
      * Set target language for translation.
      *
-     * @param string $target Language code
+     * @param string $target Target language code
      * @return GoogleTranslate
      */
     public function setTarget(string $target): self
@@ -135,7 +135,7 @@ class GoogleTranslate
     /**
      * Set source language for translation.
      *
-     * @param string|null $source Language code
+     * @param string|null $source Source language code (null for automatic language detection)
      * @return GoogleTranslate
      */
     public function setSource(string $source = null): self
@@ -171,7 +171,7 @@ class GoogleTranslate
     /**
      * Set GuzzleHttp client options.
      *
-     * @param array $options GuzzleHttp client options.
+     * @param array $options HTTP client options.
      * @return GoogleTranslate
      */
     public function setOptions(array $options = []): self
@@ -183,7 +183,7 @@ class GoogleTranslate
     /**
      * Set token provider.
      *
-     * @param TokenProviderInterface $tokenProvider
+     * @param TokenProviderInterface $tokenProvider Token provider instance
      * @return GoogleTranslate
      */
     public function setTokenProvider(TokenProviderInterface $tokenProvider): self
@@ -205,11 +205,11 @@ class GoogleTranslate
     /**
      * Override translate method for static call.
      *
-     * @param string $string
-     * @param string $target
-     * @param string|null $source
-     * @param array $options
-     * @param TokenProviderInterface|null $tokenProvider
+     * @param string $string String to translate
+     * @param string $target Target language code
+     * @param string|null $source Source language code (null for automatic language detection)
+     * @param array $options HTTP client configuration options
+     * @param TokenProviderInterface|null $tokenProvider Custom token provider
      * @return null|string
      * @throws LargeTextException If translation text is too large
      * @throws RateLimitException If Google has blocked you for excessive requests
