@@ -5,6 +5,10 @@ namespace Stichoza\GoogleTranslate;
 use ErrorException;
 use GuzzleHttp\Client;
 use JsonException;
+use Stichoza\GoogleTranslate\Exceptions\LargeTextException;
+use Stichoza\GoogleTranslate\Exceptions\RateLimitException;
+use Stichoza\GoogleTranslate\Exceptions\TranslationDecodingException;
+use Stichoza\GoogleTranslate\Exceptions\TranslationRequestException;
 use Stichoza\GoogleTranslate\Tokens\GoogleTokenGenerator;
 use Stichoza\GoogleTranslate\Tokens\TokenProviderInterface;
 use Throwable;
@@ -309,6 +313,12 @@ class GoogleTranslate
             $response = $this->client->get($this->url, [
                     'query' => $queryUrl,
                 ] + $this->options);
+        } catch (GuzzleException $e) {
+            match ($e->getCode()) {
+                429, 503 => throw new RateLimitException($e->getMessage(), $e->getCode()),
+                413 => throw new LargeTextException($e->getMessage(), $e->getCode()),
+                default => throw new TranslationRequestException($e->getMessage(), $e->getCode()),
+            };
         } catch (Throwable $e) {
             throw new TranslationRequestException($e->getMessage(), $e->getCode());
         }
