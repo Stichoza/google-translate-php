@@ -169,10 +169,21 @@ You can use `->setClient()` method to switch between clients. For example if you
 
 ### Errors and Exception Handling
 
-Static method `trans()` and non-static `translate()` and `getResponse()` will throw following Exceptions:
+Static method `trans()` and non-static `translate()` and `getResponse()` methods will throw following exceptions:
 
  - `ErrorException` If the HTTP request fails for some reason.
  - `UnexpectedValueException` If data received from Google cannot be decoded.
+
+As of **v5.1.0** concrete exceptions are available in `\Stichoza\GoogleTranslate\Exceptions` namespace:
+
+ - `LargeTextException` If the requested text is too large to translate.
+ - `RateLimitException` If Google has blocked you for excessive amount requests.
+ - `TranslationRequestException` If any other HTTP related error occurs during translation.
+ - `TranslationDecodingException` If the response JSON cannot be decoded.
+
+All concrete exceptions are backwards compatible, so if you were using older versions, you won't have to update your code.
+
+`TranslationDecodingException` extends `UnexpectedValueException`, while `LargeTextException`, `RateLimitException` and `TranslationRequestException` extend `ErrorException` that was used in older versions (`<5.1.0`) of this package.
 
 In addition, `translate()` and `trans()` methods will return `null` if there is no translation available.
 
