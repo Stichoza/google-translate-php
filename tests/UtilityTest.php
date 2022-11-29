@@ -45,7 +45,7 @@ class UtilityTest extends TestCase
 
     public function testSetOptions()
     {
-        $res = fopen('php://memory', 'r+');
+        $res = fopen('php://memory', 'rb+');
 
         $this->tr->setOptions([
             'debug'   => $res,
@@ -63,8 +63,9 @@ class UtilityTest extends TestCase
                 'User-Agent' => 'Bar',
             ],
         ]);
+
         rewind($res);
-        $output = str_replace("\r", '', stream_get_contents($res));
+        $output = stream_get_contents($res);
 
         $this->assertStringContainsString('User-Agent: Bar', $output);
 
@@ -73,7 +74,7 @@ class UtilityTest extends TestCase
 
     public function testSetUrl()
     {
-        $res = fopen('php://memory', 'r+');
+        $res = fopen('php://memory', 'rb+');
 
         try {
             $this->tr
@@ -83,7 +84,7 @@ class UtilityTest extends TestCase
         } catch (Exception) {}
 
         rewind($res);
-        $output = str_replace("\r", '', stream_get_contents($res));
+        $output = stream_get_contents($res);
 
         $this->assertStringContainsString('Host: translate.google.cn', $output);
         $this->assertStringContainsString('Connected to translate.google.cn', $output);
