@@ -211,8 +211,10 @@ class GoogleTranslate
      * @param array $options
      * @param TokenProviderInterface|null $tokenProvider
      * @return null|string
-     * @throws ErrorException If the HTTP request fails
-     * @throws UnexpectedValueException If received data cannot be decoded
+     * @throws LargeTextException If translation text is too large
+     * @throws RateLimitException If Google has blocked you for excessive requests
+     * @throws TranslationRequestException If any other HTTP related error occurs
+     * @throws TranslationDecodingException If response JSON cannot be decoded
      */
     public static function trans(string $string, string $target = 'en', string $source = null, array $options = [], TokenProviderInterface $tokenProvider = null): ?string
     {
@@ -232,8 +234,10 @@ class GoogleTranslate
      *
      * @param string $string String to translate
      * @return string|null
-     * @throws ErrorException           If the HTTP request fails
-     * @throws UnexpectedValueException If received data cannot be decoded
+     * @throws LargeTextException If translation text is too large
+     * @throws RateLimitException If Google has blocked you for excessive requests
+     * @throws TranslationRequestException If any other HTTP related error occurs
+     * @throws TranslationDecodingException If response JSON cannot be decoded
      */
     public function translate(string $string): ?string
     {
@@ -294,9 +298,11 @@ class GoogleTranslate
      * Get response array.
      *
      * @param string $string String to translate
-     * @throws ErrorException           If the HTTP request fails
-     * @throws UnexpectedValueException If received data cannot be decoded
      * @return array Response
+     * @throws LargeTextException If translation text is too large
+     * @throws RateLimitException If Google has blocked you for excessive requests
+     * @throws TranslationRequestException If any other HTTP related error occurs
+     * @throws TranslationDecodingException If response JSON cannot be decoded
      */
     public function getResponse(string $string): array
     {
