@@ -31,7 +31,7 @@ composer require stichoza/google-translate-php
 
 | Package version | PHP Version | Documentation                                                                             |
 |-----------------|-------------|-------------------------------------------------------------------------------------------|
-| `^5.0`          | PHP >= 8.0  | [v5 Docs](#google-translate-php)                                                          |
+| `^5.1`          | PHP >= 8.0  | [v5 Docs](#google-translate-php)                                                          |
 | `^4.1`          | PHP >= 7.1  | [v4 Docs](https://github.com/Stichoza/google-translate-php/tree/4.1#google-translate-php) |
 | `^3.2`          | PHP < 7.1   | [v3 Docs](https://github.com/Stichoza/google-translate-php/tree/3.2#google-translate-php) |
 
