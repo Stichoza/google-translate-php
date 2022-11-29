@@ -25,8 +25,6 @@ class UtilityTest extends TestCase
     {
         $method = $this->reflection->getMethod('isValidLocale');
 
-        $method->setAccessible(true);
-
         $booleanAssertions = [
             'ab'       => true, // ka, ge, ua
             'ab-CD'    => true, // zh-CN, zh-TW
@@ -41,7 +39,7 @@ class UtilityTest extends TestCase
         ];
 
         foreach ($booleanAssertions as $key => $value) {
-            $this->assertEquals($method->invokeArgs($this->tr, [$key]), $value);
+            $this->assertEquals($method->invoke($this->tr, $key), $value);
         }
     }
 
