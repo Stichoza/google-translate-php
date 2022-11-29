@@ -310,7 +310,7 @@ class GoogleTranslate
                     'query' => $queryUrl,
                 ] + $this->options);
         } catch (Throwable $e) {
-            throw new ErrorException($e->getMessage(), $e->getCode());
+            throw new TranslationRequestException($e->getMessage(), $e->getCode());
         }
 
         $body = $response->getBody(); // Get response body
