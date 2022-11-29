@@ -2,7 +2,6 @@
 
 namespace Stichoza\GoogleTranslate\Tests;
 
-use Exception;
 use PHPUnit\Framework\TestCase;
 use Stichoza\GoogleTranslate\GoogleTranslate;
 
@@ -44,14 +43,9 @@ class TranslationTest extends TestCase
 
     public function testUTF16Translation(): void
     {
-        try {
-            $resultOne = GoogleTranslate::trans('yes 👍🏽', 'de', 'en');
-        } catch (Exception) {
-            $resultOne = null;
-        }
-        $resultTwo = $this->tr->setSource('en')->setTarget('de')->translate('yes 👍🏽');
+        $result = $this->tr->setSource('en')->setTarget('de')->translate('yes 👍🏽');
 
-        $this->assertEqualsIgnoringCase($resultOne, $resultTwo, 'ja 👍🏽');
+        $this->assertEqualsIgnoringCase($result, 'ja 👍🏽', 'UTF-16 strings should be translatable');
     }
 
     public function testLargeTextTranslation(): void
