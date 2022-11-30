@@ -2,7 +2,6 @@
 
 namespace Stichoza\GoogleTranslate;
 
-use ErrorException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use JsonException;
@@ -13,7 +12,6 @@ use Stichoza\GoogleTranslate\Exceptions\TranslationRequestException;
 use Stichoza\GoogleTranslate\Tokens\GoogleTokenGenerator;
 use Stichoza\GoogleTranslate\Tokens\TokenProviderInterface;
 use Throwable;
-use UnexpectedValueException;
 
 /**
  * Free Google Translate API PHP Package.
