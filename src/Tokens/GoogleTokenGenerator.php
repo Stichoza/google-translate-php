@@ -126,9 +126,7 @@ class GoogleTokenGenerator implements TokenProviderInterface
      */
     private function charCodeAt(string $string, int $index): int
     {
-        $utf16 = mb_convert_encoding($string, 'UTF-16LE', 'UTF-8');
-
-        return ord($utf16[$index * 2]) + (ord($utf16[$index * 2 + 1]) << 8);
+        return mb_ord(mb_substr($string, $index, 1));
     }
 
     /**
@@ -140,8 +138,6 @@ class GoogleTokenGenerator implements TokenProviderInterface
      */
     private function length(string $string): int
     {
-        $utf16 = mb_convert_encoding($string, 'UTF-16LE', 'UTF-8');
-
-        return strlen($utf16) / 2;
+        return mb_strlen($string);
     }
 }
