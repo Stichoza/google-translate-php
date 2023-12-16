@@ -29,6 +29,13 @@ class TranslationTest extends TestCase
         $this->assertEqualsIgnoringCase($resultOne, $resultTwo, 'Static and instance methods should return same result.');
     }
 
+    public function testTranslationKeyExtraction(): void
+    {
+        $result = $this->tr->setSource('en')->setTarget('fr')->translate('Hello :name');
+
+        $this->assertEquals('Bonjour :name', $result, 'Translation should be correct with proper key extraction.');
+    }
+
     public function testNewerLanguageTranslation(): void
     {
         $result = $this->tr->setSource('en')->setTarget('tk')->translate('Hello');
@@ -59,5 +66,47 @@ class TranslationTest extends TestCase
         $rawResult = $this->tr->getResponse('cat');
 
         $this->assertIsArray($rawResult, 'Method getResponse() should return an array');
+    }
+
+    public function testGetReplacements(): void
+    {
+        $replacements = $this->tr->getReplacements('Hello :name are you :some_greeting?');
+
+        $this->assertEquals(['name', 'some_greeting'], $replacements, 'Replacements should be extracted from string');
+    }
+
+    public function testGetEmptyReplacements(): void
+    {
+        $replacements = $this->tr->getReplacements('Hello');
+
+        $this->assertEquals([], $replacements, 'Replacements should be empty');
+    }
+
+    public function testExtract(): void
+    {
+        $extracted = $this->tr->extract('Hello :name are you :some_greeting?');
+
+        $this->assertEquals('Hello ${0} are you ${1}?', $extracted, 'Extraction should change strings to placeholder tokens');
+    }
+
+    public function testEmptyExtract(): void
+    {
+        $extracted = $this->tr->extract('Hello');
+
+        $this->assertEquals('Hello', $extracted, 'Extraction should not change strings');
+    }
+
+    public function testInject(): void
+    {
+        $replaced = $this->tr->inject('Hello ${0} are you ${1}?', ['name', 'some_greeting']);
+
+        $this->assertEquals('Hello :name are you :some_greeting?', $replaced, 'Replacement should change placeholder tokens to strings');
+    }
+
+    public function testEmptyInject(): void
+    {
+        $replaced = $this->tr->inject('Hello', []);
+
+        $this->assertEquals('Hello', $replaced, 'Replacement should not change strings');
     }
 }

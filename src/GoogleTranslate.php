@@ -37,6 +37,11 @@ class GoogleTranslate
      */
     protected ?string $target;
 
+    /*
+     * @var string|null Regex pattern to match replaceable parts in a string, defualts to "words"
+     */
+    protected string $pattern = '/:(\w+)/';
+
     /**
      * @var string|null Last detected source language.
      */
@@ -112,7 +117,7 @@ class GoogleTranslate
     public function __construct(string $target = 'en', string $source = null, array $options = [], TokenProviderInterface $tokenProvider = null)
     {
         $this->client = new Client();
-        $this->setTokenProvider($tokenProvider ?? new GoogleTokenGenerator)
+        $this->setTokenProvider($tokenProvider ?? new GoogleTokenGenerator())
             ->setOptions($options) // Options are already set in client constructor tho.
             ->setSource($source)
             ->setTarget($target);
@@ -191,6 +196,18 @@ class GoogleTranslate
     }
 
     /**
+     * Set the regex pattern to match replaceable parts in a string
+     *
+     * @param string $pattern
+     * @return self
+     */
+    public function setPattern(string $pattern): self
+    {
+        $this->pattern = $pattern;
+        return $this;
+    }
+
+    /**
      * Get last detected source language
      *
      * @return string|null Last detected source language
@@ -216,8 +233,8 @@ class GoogleTranslate
      */
     public static function trans(string $string, string $target = 'en', string $source = null, array $options = [], TokenProviderInterface $tokenProvider = null): ?string
     {
-        return (new self)
-            ->setTokenProvider($tokenProvider ?? new GoogleTokenGenerator)
+        return (new self())
+            ->setTokenProvider($tokenProvider ?? new GoogleTokenGenerator())
             ->setOptions($options) // Options are already set in client constructor tho.
             ->setSource($source)
             ->setTarget($target)
@@ -244,7 +261,11 @@ class GoogleTranslate
             return $string;
         }
 
-        $responseArray = $this->getResponse($string);
+        // Extract replaceable keywords from string and transform to array for use later
+        $replacements = $this->getReplacements($string);
+
+        // Reaplce replaceable keywords with ${\d} for replacement later
+        $responseArray = $this->getResponse($this->extract($string));
 
         // Check if translation exists
         if (empty($responseArray[0])) {
@@ -278,18 +299,80 @@ class GoogleTranslate
         }
 
         // The response sometime can be a translated string.
+        $output = '';
         if (is_string($responseArray)) {
-            return $responseArray;
-        }
-
-        if (is_array($responseArray[0])) {
-            return (string) array_reduce($responseArray[0], static function ($carry, $item) {
+            $output = $this->inject($responseArray, $replacements);
+        } elseif (is_array($responseArray[0])) {
+            $output = (string) $this->inject(array_reduce($responseArray[0], static function ($carry, $item) {
                 $carry .= $item[0];
                 return $carry;
-            });
+            }), $replacements);
+        } else {
+            $output = (string) $this->inject($responseArray[0], $replacements);
         }
 
-        return (string) $responseArray[0];
+        return $this->inject($this->sanitize($output), $replacements);
+    }
+
+    /**
+     * Extract replaceable keywords from string using the supplied pattern
+     *
+     * @param string $string
+     * @return string
+     */
+    public function extract(string $string): string
+    {
+        return preg_replace_callback(
+            $this->pattern,
+            function ($matches) {
+                static $index = -1;
+
+                $index++;
+
+                return '${' . $index . '}';
+            },
+            $string
+        );
+    }
+
+    /**
+     * Inject the replacements back into the translated string
+     *
+     * @param string $string
+     * @param array<string> $replacements
+     * @return string
+     */
+    public function inject(string $string, array $replacements): string
+    {
+        return preg_replace_callback(
+            '/\${(\d+)}/',
+            fn($matches) => ':' . $replacements[$matches[1]],
+            $string
+        );
+    }
+
+    /**
+     * Extract an array of replaceable parts to be injected into the translated string
+     * at a later time
+     *
+     * @return array<string>
+     */
+    public function getReplacements(string $string): array
+    {
+        $matches = [];
+        preg_match_all($this->pattern, $string, $matches);
+        return $matches[1];
+    }
+
+    /**
+     * Cleans up weird spaces returned from Google Translate.
+     *
+     * @param string $string
+     * @return string
+     */
+    protected function sanitize(string $string): string
+    {
+        return preg_replace('/\xc2\xa0/', ' ', $string);
     }
 
     /**
