@@ -31,9 +31,23 @@ class TranslationTest extends TestCase
 
     public function testTranslationKeyExtraction(): void
     {
-        $result = $this->tr->setSource('en')->setTarget('fr')->translate('Hello :name');
+        $result = $this->tr->setSource('en')->setTarget('fr')->preserveParameters()->translate('Hello :name, how are :type_of_greeting?');
 
-        $this->assertEquals('Bonjour :name', $result, 'Translation should be correct with proper key extraction.');
+        $this->assertEquals('Bonjour :name, comment vont :type_of_greeting ?', $result, 'Translation should be correct with proper key extraction.');
+    }
+
+    public function testCanIgnoreTranslationKeyExtraction()
+    {
+        $result = $this->tr->setSource('en')->setTarget('fr')->translate('Hello :name how are :greeting?');
+
+        $this->assertEquals('Bonjour :nom, comment allez-vous :salut ?', $result, 'Translation should be correct and ignores key extraction if not set.');
+    }
+
+    public function testCanCustomizeExtractionPattern()
+    {
+        $result = $this->tr->setSource('en')->setTarget('fr')->preserveParameters('/\{\{([^}]+)\}\}/')->translate('Hello {{name}}, how are {{type_of_greeting}}?');
+
+        $this->assertEquals('Bonjour {{name}}, comment vont {{type_of_greeting}} ?', $result, 'Translation should be correct and ignores key extraction if not set.');
     }
 
     public function testNewerLanguageTranslation(): void
@@ -66,47 +80,5 @@ class TranslationTest extends TestCase
         $rawResult = $this->tr->getResponse('cat');
 
         $this->assertIsArray($rawResult, 'Method getResponse() should return an array');
-    }
-
-    public function testGetReplacements(): void
-    {
-        $replacements = $this->tr->getReplacements('Hello :name are you :some_greeting?');
-
-        $this->assertEquals(['name', 'some_greeting'], $replacements, 'Replacements should be extracted from string');
-    }
-
-    public function testGetEmptyReplacements(): void
-    {
-        $replacements = $this->tr->getReplacements('Hello');
-
-        $this->assertEquals([], $replacements, 'Replacements should be empty');
-    }
-
-    public function testExtract(): void
-    {
-        $extracted = $this->tr->extract('Hello :name are you :some_greeting?');
-
-        $this->assertEquals('Hello ${0} are you ${1}?', $extracted, 'Extraction should change strings to placeholder tokens');
-    }
-
-    public function testEmptyExtract(): void
-    {
-        $extracted = $this->tr->extract('Hello');
-
-        $this->assertEquals('Hello', $extracted, 'Extraction should not change strings');
-    }
-
-    public function testInject(): void
-    {
-        $replaced = $this->tr->inject('Hello ${0} are you ${1}?', ['name', 'some_greeting']);
-
-        $this->assertEquals('Hello :name are you :some_greeting?', $replaced, 'Replacement should change placeholder tokens to strings');
-    }
-
-    public function testEmptyInject(): void
-    {
-        $replaced = $this->tr->inject('Hello', []);
-
-        $this->assertEquals('Hello', $replaced, 'Replacement should not change strings');
     }
 }
