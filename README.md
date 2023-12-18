@@ -93,6 +93,36 @@ Return value will be `null` if the language couldn't be detected.
 
 Supported languages are listed in [Google API docs](https://cloud.google.com/translate/docs/languages).
 
+### Preserving Parameters
+
+The `preserveParameters()` method allows you to preserve certain parameters in strings while performing translations. This is particularly useful when dealing with localization files or templating engines where specific placeholders need to be excluded from translation.
+
+Default regex is `/:(\w+)/` which covers parameters starting with `:`. Useful for translating language files of Laravel and other frameworks. You can also pass your custom regex to modify the parameter syntax.
+
+```php
+$tr = new GoogleTranslate('de');
+
+$text = $tr->translate('Page :current of :total'); // Seite :aktuell von :gesamt
+
+$text = $tr->preserveParameters()
+           ->translate('Page :current of :total'); // Seite :current von :total
+```
+
+Or use custom regex:
+
+```php
+$text = $tr->preserveParameters('/\{\{([^}]+)\}\}/')
+           ->translate('Page {{current}} of {{total}}'); // Seite {{current}} von {{total}}
+```
+
+You can use same feature with static `trans()` method too.
+
+```php
+GoogleTranslate::trans('Welcome :name', 'fr', preserveParameters: true); // Default regex
+
+GoogleTranslate::trans('Welcome {{name}}', 'fr', preserveParameters: '/\{\{([^}]+)\}\}/'); // Custom regex
+```
+
 ### Using Raw Response
 
 For advanced usage, you might need the raw results that Google Translate provides. you can use `getResponse` method for that.
