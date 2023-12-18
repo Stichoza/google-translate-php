@@ -96,6 +96,7 @@ class GoogleTranslate
     protected array $resultRegexes = [
         '/,+/'  => ',',
         '/\[,/' => '[',
+        '/\xc2\xa0/' => ' ',
     ];
 
     /**
@@ -303,7 +304,7 @@ class GoogleTranslate
             $output = (string) $responseArray[0];
         }
 
-        return $this->injectParameters($this->sanitize($output), $replacements);
+        return $this->injectParameters($output, $replacements);
     }
 
     /**
@@ -383,17 +384,6 @@ class GoogleTranslate
         preg_match_all($this->pattern, $string, $matches);
 
         return $matches[0];
-    }
-
-    /**
-     * Cleans up weird spaces returned from Google Translate.
-     *
-     * @param string $string
-     * @return string
-     */
-    protected function sanitize(string $string): string
-    {
-        return preg_replace('/\xc2\xa0/', ' ', $string);
     }
 
     /**
