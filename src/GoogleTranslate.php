@@ -37,6 +37,11 @@ class GoogleTranslate
      */
     protected ?string $target;
 
+    /*
+     * @var string|null Regex pattern to match replaceable parts in a string, defualts to "words"
+     */
+    protected ?string $pattern;
+
     /**
      * @var string|null Last detected source language.
      */
@@ -108,14 +113,16 @@ class GoogleTranslate
      * @param string|null $source Source language code (null for automatic language detection)
      * @param array $options HTTP client configuration options
      * @param TokenProviderInterface|null $tokenProvider
+     * @param string|null $pattern Regex pattern to match replaceable parts in a string
      */
-    public function __construct(string $target = 'en', string $source = null, array $options = [], TokenProviderInterface $tokenProvider = null)
+    public function __construct(string $target = 'en', string $source = null, array $options = [], TokenProviderInterface $tokenProvider = null, ?string $pattern = null)
     {
         $this->client = new Client();
         $this->setTokenProvider($tokenProvider ?? new GoogleTokenGenerator)
             ->setOptions($options) // Options are already set in client constructor tho.
             ->setSource($source)
-            ->setTarget($target);
+            ->setTarget($target)
+            ->preserveParameters($pattern);
     }
 
     /**
@@ -208,19 +215,21 @@ class GoogleTranslate
      * @param string|null $source Source language code (null for automatic language detection)
      * @param array $options HTTP client configuration options
      * @param TokenProviderInterface|null $tokenProvider Custom token provider
+     * @param string|null $pattern Regex pattern to match replaceable parts in a string
      * @return null|string
      * @throws LargeTextException If translation text is too large
      * @throws RateLimitException If Google has blocked you for excessive requests
      * @throws TranslationRequestException If any other HTTP related error occurs
      * @throws TranslationDecodingException If response JSON cannot be decoded
      */
-    public static function trans(string $string, string $target = 'en', string $source = null, array $options = [], TokenProviderInterface $tokenProvider = null): ?string
+    public static function trans(string $string, string $target = 'en', string $source = null, array $options = [], TokenProviderInterface $tokenProvider = null, ?string $pattern = null): ?string
     {
         return (new self)
             ->setTokenProvider($tokenProvider ?? new GoogleTokenGenerator)
             ->setOptions($options) // Options are already set in client constructor tho.
             ->setSource($source)
             ->setTarget($target)
+            ->preserveParameters($pattern)
             ->translate($string);
     }
 
@@ -244,7 +253,11 @@ class GoogleTranslate
             return $string;
         }
 
-        $responseArray = $this->getResponse($string);
+        // Extract replaceable keywords from string and transform to array for use later
+        $replacements = $this->getParameters($string);
+
+        // Replace replaceable keywords with ${\d} for replacement later
+        $responseArray = $this->getResponse($this->extractParameters($string));
 
         // Check if translation exists
         if (empty($responseArray[0])) {
@@ -278,18 +291,109 @@ class GoogleTranslate
         }
 
         // The response sometime can be a translated string.
+        $output = '';
         if (is_string($responseArray)) {
-            return $responseArray;
-        }
-
-        if (is_array($responseArray[0])) {
-            return (string) array_reduce($responseArray[0], static function ($carry, $item) {
+            $output = $responseArray;
+        } elseif (is_array($responseArray[0])) {
+            $output = (string) array_reduce($responseArray[0], static function ($carry, $item) {
                 $carry .= $item[0];
                 return $carry;
             });
+        } else {
+            $output = (string) $responseArray[0];
         }
 
-        return (string) $responseArray[0];
+        return $this->injectParameters($this->sanitize($output), $replacements);
+    }
+
+    /**
+     * Set a custom pattern for extracting replaceable keywords from the string,
+     * default to extracting words prefixed with a colon
+     *
+     * @example (e.g. "Hello :name" will extract "name")
+     *
+     * @param string|null $pattern
+     * @return self
+     */
+    public function preserveParameters(?string $pattern = '/:(\w+)/'): self
+    {
+        $this->pattern = $pattern;
+        return $this;
+    }
+
+    /**
+     * Extract replaceable keywords from string using the supplied pattern
+     *
+     * @param string $string
+     * @return string
+     */
+    protected function extractParameters(string $string): string
+    {
+        // If no pattern, return string as is
+        if (!$this->pattern) {
+            return $string;
+        }
+
+        // Replace all matches of our pattern with ${\d} for replacement later
+        return preg_replace_callback(
+            $this->pattern,
+            function ($matches) {
+                static $index = -1;
+
+                $index++;
+
+                return '${' . $index . '}';
+            },
+            $string
+        );
+    }
+
+    /**
+     * Inject the replacements back into the translated string
+     *
+     * @param string $string
+     * @param array<string> $replacements
+     * @return string
+     */
+    protected function injectParameters(string $string, array $replacements): string
+    {
+        return preg_replace_callback(
+            '/\${(\d+)}/',
+            fn($matches) => $replacements[$matches[1]],
+            $string
+        );
+    }
+
+    /**
+     * Extract an array of replaceable parts to be injected into the translated string
+     * at a later time
+     *
+     * @return array<string>
+     */
+    protected function getParameters(string $string): array
+    {
+        $matches = [];
+
+        // If no pattern is set, return empty array
+        if (!$this->pattern) {
+            return $matches;
+        }
+
+        // Find all matches for the pattern in our string
+        preg_match_all($this->pattern, $string, $matches);
+
+        return $matches[0];
+    }
+
+    /**
+     * Cleans up weird spaces returned from Google Translate.
+     *
+     * @param string $string
+     * @return string
+     */
+    protected function sanitize(string $string): string
+    {
+        return preg_replace('/\xc2\xa0/', ' ', $string);
     }
 
     /**
