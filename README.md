@@ -11,6 +11,7 @@ Free Google Translate API PHP Package. Translates totally free of charge.
  - **[Basic Usage](#basic-usage)**
  - [Advanced Usage](#advanced-usage)
    - [Language Detection](#language-detection)
+   - [Preserving Parameters](#preserving-parameters)
    - [Using Raw Response](#using-raw-response)
    - [Custom URL](#custom-url)
    - [HTTP Client Configuration](#http-client-configuration)
