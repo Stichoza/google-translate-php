@@ -292,7 +292,6 @@ class GoogleTranslate
         }
 
         // The response sometime can be a translated string.
-        $output = '';
         if (is_string($responseArray)) {
             $output = $responseArray;
         } elseif (is_array($responseArray[0])) {
@@ -304,7 +303,7 @@ class GoogleTranslate
             $output = (string) $responseArray[0];
         }
 
-        return $this->injectParameters($output, $replacements);
+        return $this->pattern ? $this->injectParameters($output, $replacements) : $output;
     }
 
     /**
