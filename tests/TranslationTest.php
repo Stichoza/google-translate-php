@@ -18,7 +18,7 @@ class TranslationTest extends TestCase
     {
         $result = $this->tr->setSource('en')->setTarget('ka')->translate('Hello');
 
-        $this->assertEqualsIgnoringCase($result, 'გამარჯობა', 'Translation should be correct.');
+        $this->assertEqualsIgnoringCase('გამარჯობა', $result, 'Translation should be correct.');
     }
 
     public function testTranslationEquality(): void
@@ -36,14 +36,14 @@ class TranslationTest extends TestCase
         $this->assertEquals('Bonjour :name, comment vont :type_of_greeting ?', $result, 'Translation should be correct with proper key extraction.');
     }
 
-    public function testCanIgnoreTranslationKeyExtraction()
+    public function testCanIgnoreTranslationKeyExtraction(): void
     {
         $result = $this->tr->setSource('en')->setTarget('fr')->translate('Hello :name how are :greeting?');
 
         $this->assertEquals('Bonjour :nom, comment allez-vous :salut ?', $result, 'Translation should be correct and ignores key extraction if not set.');
     }
 
-    public function testCanCustomizeExtractionPattern()
+    public function testCanCustomizeExtractionPattern(): void
     {
         $result = $this->tr->setSource('en')->setTarget('fr')->preserveParameters('/\{\{([^}]+)\}\}/')->translate('Hello {{name}}, how are {{type_of_greeting}}?');
 
@@ -54,14 +54,14 @@ class TranslationTest extends TestCase
     {
         $result = $this->tr->setSource('en')->setTarget('tk')->translate('Hello');
 
-        $this->assertEqualsIgnoringCase($result, 'Salam', 'Newer languages should be translatable.');
+        $this->assertEqualsIgnoringCase('Salam', $result, 'Newer languages should be translatable.');
     }
 
     public function testUTF16Translation(): void
     {
         $result = $this->tr->setSource('en')->setTarget('de')->translate('yes 👍🏽');
 
-        $this->assertEqualsIgnoringCase($result, 'ja 👍🏽', 'UTF-16 strings should be translatable');
+        $this->assertEqualsIgnoringCase('ja 👍🏽', $result, 'UTF-16 strings should be translatable');
     }
 
     public function testLargeTextTranslation(): void
