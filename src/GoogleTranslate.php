@@ -114,16 +114,16 @@ class GoogleTranslate
      * @param string|null $source Source language code (null for automatic language detection)
      * @param array $options HTTP client configuration options
      * @param TokenProviderInterface|null $tokenProvider
-     * @param string|null $pattern Regex pattern to match replaceable parts in a string
+     * @param bool|string $preserveParameters Boolean or custom regex pattern to match parameters
      */
-    public function __construct(string $target = 'en', string $source = null, array $options = [], TokenProviderInterface $tokenProvider = null, ?string $pattern = null)
+    public function __construct(string $target = 'en', string $source = null, array $options = [], TokenProviderInterface $tokenProvider = null, bool|string $preserveParameters = false)
     {
         $this->client = new Client();
         $this->setTokenProvider($tokenProvider ?? new GoogleTokenGenerator)
             ->setOptions($options) // Options are already set in client constructor tho.
             ->setSource($source)
             ->setTarget($target)
-            ->preserveParameters($pattern);
+            ->preserveParameters($preserveParameters);
     }
 
     /**
@@ -216,21 +216,21 @@ class GoogleTranslate
      * @param string|null $source Source language code (null for automatic language detection)
      * @param array $options HTTP client configuration options
      * @param TokenProviderInterface|null $tokenProvider Custom token provider
-     * @param string|null $pattern Regex pattern to match replaceable parts in a string
+     * @param bool|string $preserveParameters Boolean or custom regex pattern to match parameters
      * @return null|string
      * @throws LargeTextException If translation text is too large
      * @throws RateLimitException If Google has blocked you for excessive requests
      * @throws TranslationRequestException If any other HTTP related error occurs
      * @throws TranslationDecodingException If response JSON cannot be decoded
      */
-    public static function trans(string $string, string $target = 'en', string $source = null, array $options = [], TokenProviderInterface $tokenProvider = null, ?string $pattern = null): ?string
+    public static function trans(string $string, string $target = 'en', string $source = null, array $options = [], TokenProviderInterface $tokenProvider = null, bool|string $preserveParameters = false): ?string
     {
         return (new self)
             ->setTokenProvider($tokenProvider ?? new GoogleTokenGenerator)
             ->setOptions($options) // Options are already set in client constructor tho.
             ->setSource($source)
             ->setTarget($target)
-            ->preserveParameters($pattern)
+            ->preserveParameters($preserveParameters)
             ->translate($string);
     }
 
@@ -312,12 +312,19 @@ class GoogleTranslate
      *
      * @example (e.g. "Hello :name" will extract "name")
      *
-     * @param string|null $pattern
+     * @param bool|string $pattern Boolean or custom regex pattern to match parameters
      * @return self
      */
-    public function preserveParameters(?string $pattern = '/:(\w+)/'): self
+    public function preserveParameters(bool|string $pattern = true): self
     {
-        $this->pattern = $pattern;
+        if ($pattern === true) {
+            $this->pattern = '/:(\w+)/'; // Default regex
+        } elseif ($pattern === false) {
+            $this->pattern = null;
+        } elseif (is_string($pattern)) {
+            $this->pattern = $pattern;
+        }
+
         return $this;
     }
 
