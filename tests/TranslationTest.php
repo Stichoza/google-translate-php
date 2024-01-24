@@ -87,4 +87,16 @@ class TranslationTest extends TestCase
 
         $this->assertIsArray($rawResult, 'Method getResponse() should return an array');
     }
+
+    /**
+     * @see https://github.com/Stichoza/google-translate-php/issues/201
+     */
+    public function testItProperlyTranslateStringsInFrenchThatWouldOtherwiseCauseIssues(): void
+    {
+        $resultOne = $this->tr->setSource('en')->setTarget('fr')->translate('What is :real_q_encoded?');
+        $resultTwo = $this->tr->setSource('en')->setTarget('fr')->preserveParameters('#\{([^}]+)}#')->translate('What is {real_q_encoded}?');
+
+        $this->assertEquals('Qu\'est-ce que :real_q_encoded ?', $resultOne, 'Translation should be correct.');
+        $this->assertEquals('Qu\'est-ce que {real_q_encoded} ?', $resultTwo, 'Translation should be correct.');
+    }
 }
