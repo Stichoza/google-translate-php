@@ -118,7 +118,7 @@ class GoogleTranslate
      */
     public function __construct(string $target = 'en', string $source = null, array $options = [], TokenProviderInterface $tokenProvider = null, bool|string $preserveParameters = false)
     {
-        $this->client = new Client;
+        $this->client = new Client();
         $this->setTokenProvider($tokenProvider ?? new GoogleTokenGenerator)
             ->setOptions($options) // Options are already set in client constructor tho.
             ->setSource($source)
