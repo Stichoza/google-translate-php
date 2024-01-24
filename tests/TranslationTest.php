@@ -34,8 +34,8 @@ class TranslationTest extends TestCase
         $resultOne = GoogleTranslate::trans('Hello :name how are :type_of_greeting?', 'fr', 'en', preserveParameters: true);
         $resultTwo = $this->tr->setSource('en')->setTarget('fr')->preserveParameters()->translate('Hello :name, how are :type_of_greeting?');
 
-        $this->assertEquals('Bonjour :name, comment vont :type_of_greeting ?', $resultOne, 'Translation should be correct with proper key extraction.');
-        $this->assertEquals('Bonjour :name, comment vont :type_of_greeting ?', $resultTwo, 'Translation should be correct with proper key extraction.');
+        $this->assertEquals('Bonjour :name, comment va :type_of_greeting ?', $resultOne, 'Translation should be correct with proper key extraction.');
+        $this->assertEquals('Bonjour :name, comment va :type_of_greeting ?', $resultTwo, 'Translation should be correct with proper key extraction.');
     }
 
     public function testCanIgnoreTranslationKeyExtraction(): void
@@ -52,8 +52,8 @@ class TranslationTest extends TestCase
         $resultOne = GoogleTranslate::trans('Hello {{name}}, how are {{type_of_greeting}}?', 'fr', 'en', preserveParameters: '/\{\{([^}]+)\}\}/');
         $resultTwo = $this->tr->setSource('en')->setTarget('fr')->preserveParameters('/\{\{([^}]+)\}\}/')->translate('Hello {{name}}, how are {{type_of_greeting}}?');
 
-        $this->assertEquals('Bonjour {{name}}, comment vont {{type_of_greeting}} ?', $resultOne, 'Translation should be correct and ignores key extraction if not set.');
-        $this->assertEquals('Bonjour {{name}}, comment vont {{type_of_greeting}} ?', $resultTwo, 'Translation should be correct and ignores key extraction if not set.');
+        $this->assertEquals('Bonjour {{name}}, comment va {{type_of_greeting}} ?', $resultOne, 'Translation should be correct and ignores key extraction if not set.');
+        $this->assertEquals('Bonjour {{name}}, comment va {{type_of_greeting}} ?', $resultTwo, 'Translation should be correct and ignores key extraction if not set.');
     }
 
     public function testNewerLanguageTranslation(): void
