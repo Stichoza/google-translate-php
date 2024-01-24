@@ -257,7 +257,7 @@ class GoogleTranslate
         // Extract replaceable keywords from string and transform to array for use later
         $replacements = $this->getParameters($string);
 
-        // Replace replaceable keywords with ${\d} for replacement later
+        // Replace replaceable keywords with #{\d} for replacement later
         $responseArray = $this->getResponse($this->extractParameters($string));
 
         // Check if translation exists
@@ -341,7 +341,7 @@ class GoogleTranslate
             return $string;
         }
 
-        // Replace all matches of our pattern with ${\d} for replacement later
+        // Replace all matches of our pattern with #{\d} for replacement later
         return preg_replace_callback(
             $this->pattern,
             function ($matches) {
@@ -349,7 +349,7 @@ class GoogleTranslate
 
                 $index++;
 
-                return '${' . $index . '}';
+                return '#{' . $index . '}';
             },
             $string
         );
@@ -365,7 +365,7 @@ class GoogleTranslate
     protected function injectParameters(string $string, array $replacements): string
     {
         return preg_replace_callback(
-            '/\${(\d+)}/',
+            '/\#{(\d+)}/',
             fn($matches) => $replacements[$matches[1]],
             $string
         );
