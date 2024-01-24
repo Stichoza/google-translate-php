@@ -118,8 +118,8 @@ class GoogleTranslate
      */
     public function __construct(string $target = 'en', string $source = null, array $options = [], TokenProviderInterface $tokenProvider = null, bool|string $preserveParameters = false)
     {
-        $this->client = new Client();
-        $this->setTokenProvider($tokenProvider ?? new GoogleTokenGenerator())
+        $this->client = new Client;
+        $this->setTokenProvider($tokenProvider ?? new GoogleTokenGenerator)
             ->setOptions($options) // Options are already set in client constructor tho.
             ->setSource($source)
             ->setTarget($target)
@@ -225,8 +225,8 @@ class GoogleTranslate
      */
     public static function trans(string $string, string $target = 'en', string $source = null, array $options = [], TokenProviderInterface $tokenProvider = null, bool|string $preserveParameters = false): ?string
     {
-        return (new self())
-            ->setTokenProvider($tokenProvider ?? new GoogleTokenGenerator())
+        return (new self)
+            ->setTokenProvider($tokenProvider ?? new GoogleTokenGenerator)
             ->setOptions($options) // Options are already set in client constructor tho.
             ->setSource($source)
             ->setTarget($target)
