@@ -296,7 +296,7 @@ class GoogleTranslate
             $output = $responseArray;
         } elseif (is_array($responseArray[0])) {
             $output = (string) array_reduce($responseArray[0], static function ($carry, $item) {
-                $carry .= $item[0];
+                $carry .= trim($item[0]);
                 return $carry;
             });
         } else {
