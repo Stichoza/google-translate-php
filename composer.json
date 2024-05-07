@@ -1,14 +1,14 @@
 {
-    "name": "stichoza/google-translate-php",
+    "name": "themismin/google-translate-php",
     "description": "Free Google Translate API PHP Package",
     "keywords": ["google", "translate", "translator", "php", "translating"],
     "license": "MIT",
     "type": "library",
-    "homepage": "https://github.com/Stichoza/google-translate-php",
+    "homepage": "https://github.com/themismin/google-translate-php",
     "authors": [
         {
-            "name": "Levan Velijanashvili",
-            "email": "me@stichoza.com"
+            "name": "themismin",
+            "email": "themismin@gmail.com"
         }
     ],
     "require": {
