@@ -5,6 +5,7 @@ namespace Stichoza\GoogleTranslate;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use JsonException;
+use Stichoza\GoogleTranslate\Exceptions\LanguagesRequestException;
 use Stichoza\GoogleTranslate\Exceptions\LargeTextException;
 use Stichoza\GoogleTranslate\Exceptions\RateLimitException;
 use Stichoza\GoogleTranslate\Exceptions\TranslationDecodingException;
@@ -366,7 +367,7 @@ class GoogleTranslate
     {
         // Remove space added by google in the parameters
         $string = preg_replace('/#\{\s*(\d+)\s*\}/', '#{$1}', $string);
-        
+
         return preg_replace_callback(
             '/\#{(\d+)}/',
             fn($matches) => $replacements[$matches[1]],
@@ -455,5 +456,81 @@ class GoogleTranslate
     protected function isValidLocale(string $lang): bool
     {
         return (bool) preg_match('/^([a-z]{2,3})(-[A-Za-z]{2,4})?$/', $lang);
+    }
+
+    /**
+     * Fetch the list of supported languages from Google Translate
+     *
+     * @param string|null $target iso code of display language, when null returns only iso codes
+     * @return string[]|array<string, string>
+     * @throws RateLimitException
+     * @throws LanguagesRequestException
+     */
+    public static function langs(?string $target = null): array
+    {
+        return (new self)->languages($target);
+    }
+
+    /**
+     * Fetch the list of supported languages from Google Translate
+     *
+     * @param string|null $target iso code of display language, when null returns only iso codes
+     * @return string[]|array<string, string>
+     * @throws RateLimitException
+     * @throws LanguagesRequestException
+     */
+    public function languages(?string $target = null): array
+    {
+        $languages = $this->localizedLanguages($target ?? $this->target ?? $this->source ?? '');
+
+        if ($target === null) {
+            return array_keys($languages);
+        }
+
+        return $languages;
+    }
+
+    /**
+     * Fetch the list of supported languages from Google Translate
+     *
+     * @param string $target iso code of localized display language
+     * @return array<string, string>
+     * @throws RateLimitException
+     * @throws LanguagesRequestException
+     */
+    public function localizedLanguages(string $target): array
+    {
+        $menu = 'sl'; // 'tl';
+        $url = "https://translate.google.com/m?mui=$menu&hl=$target";
+
+        try {
+            $response = $this->client->get($url, $this->options);
+        } catch (GuzzleException $e) {
+            match ($e->getCode()) {
+                429, 503 => throw new RateLimitException($e->getMessage(), $e->getCode()),
+                default => throw new LanguagesRequestException($e->getMessage(), $e->getCode()),
+            };
+        } catch (Throwable $e) {
+            throw new LanguagesRequestException($e->getMessage(), $e->getCode());
+        }
+
+        // add a meta tag to ensure the HTML content is treated as UTF-8, fixes xpath node values
+        $html = preg_replace('/<head>/i', '<head><meta charset="UTF-8">', $response->getBody()->getContents());
+
+        // Prepare to crawl DOM
+        $dom = new \DOMDocument();
+        @$dom->loadHTML($html);
+        $xpath = new \DOMXPath($dom);
+
+        $nodes = $xpath->query('//div[@class="language-item"]/a');
+
+        $languages = [];
+        foreach ($nodes as $node) {
+            $href = $node->getAttribute('href');
+            $code = strtok(substr($href, strpos($href, "$menu=") + strlen("$menu=")), '&');
+            $languages[$code] = $node->nodeValue;
+        }
+
+        return $languages;
     }
 }
