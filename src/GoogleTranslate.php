@@ -520,7 +520,7 @@ class GoogleTranslate
 
         // Prepare to crawl DOM
         $dom = new \DOMDocument();
-        @$dom->loadHTML($html);
+        $dom->loadHTML($html);
         $xpath = new \DOMXPath($dom);
 
         $nodes = $xpath->query('//div[@class="language-item"]/a');
