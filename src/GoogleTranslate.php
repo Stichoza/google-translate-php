@@ -501,7 +501,8 @@ class GoogleTranslate
     public function localizedLanguages(string $target): array
     {
         $menu = 'sl'; // 'tl';
-        $url = "https://translate.google.com/m?mui=$menu&hl=$target";
+        $url = parse_url($this->url);
+        $url = $url['scheme'].'://'.$url['host']."/m?mui=$menu&hl=$target";
 
         try {
             $response = $this->client->get($url, $this->options);
