@@ -502,7 +502,7 @@ class GoogleTranslate
     {
         $menu = 'sl'; // 'tl';
         $url = parse_url($this->url);
-        $url = $url['scheme'].'://'.$url['host']."/m?mui=$menu&hl=$target";
+        $url = $url['scheme'] . '://' . $url['host'] . '/m?' . http_build_query(['mui' => $menu, 'hl' => $target]);
 
         try {
             $response = $this->client->get($url, $this->options);
