@@ -4,6 +4,7 @@ namespace Stichoza\GoogleTranslate\Tests;
 
 use ErrorException;
 use PHPUnit\Framework\TestCase;
+use Stichoza\GoogleTranslate\Exceptions\LanguagesRequestException;
 use Stichoza\GoogleTranslate\Exceptions\LargeTextException;
 use Stichoza\GoogleTranslate\Exceptions\RateLimitException;
 use Stichoza\GoogleTranslate\Exceptions\TranslationDecodingException;
@@ -67,5 +68,12 @@ class ExceptionTest extends TestCase
         $this->expectException(ErrorException::class);
 
         $this->tr->setUrl('https://httpstat.us/413')->translate('Test');
+    }
+
+    public function testLanguagesRequestException(): void
+    {
+        $this->expectException(LanguagesRequestException::class);
+
+        $this->tr->setUrl('https://httpstat.us/418')->languages();
     }
 }

@@ -11,6 +11,7 @@ Free Google Translate API PHP Package. Translates totally free of charge.
  - **[Basic Usage](#basic-usage)**
  - [Advanced Usage](#advanced-usage)
    - [Language Detection](#language-detection)
+   - [Supported Languages](#supported-languages)
    - [Preserving Parameters](#preserving-parameters)
    - [Using Raw Response](#using-raw-response)
    - [Custom URL](#custom-url)
@@ -92,7 +93,41 @@ echo $tr->getLastDetectedSource(); // Output: en
 
 Return value will be `null` if the language couldn't be detected.
 
-Supported languages are listed in [Google API docs](https://cloud.google.com/translate/docs/languages).
+### Supported Languages
+
+You can get a list of all the supported languages using the `languages` method.
+
+```php
+$tr = new GoogleTranslate();
+
+$languages = $tr->languages(); // Get supported languages in iso-639 format
+
+// Output: [ 'ab', 'ace', 'ach', 'aa', 'af', 'sq', 'alz', ... ]
+```
+
+Optionally, pass a target language code to retrieve supported languages with names displayed in that language.
+
+```php
+$tr = new GoogleTranslate();
+
+$languages = $tr->languages('en'); // Get supported languages, display name in english
+// Output: [ 'en' => English', 'es' => 'Spanish', 'it' => 'Italian', ... ]
+
+echo $languages['en']; // Output: 'English'
+echo $languages['ka']; // Output: 'Georgian'
+```
+
+Same as with the `translate`/`trans` methods, you can also use a static `langs` method:
+
+```php
+GoogleTranslate::langs();
+// Output: [ 'ab', 'ace', 'ach', 'aa', 'af', 'sq', 'alz', ... ]
+
+GoogleTranslate::langs('en');
+// Output: [ 'en' => English', 'es' => 'Spanish', 'it' => 'Italian', ... ]
+```
+
+Supported languages are also listed in [Google API docs](https://cloud.google.com/translate/docs/languages).
 
 ### Preserving Parameters
 
@@ -241,4 +276,3 @@ If this package helped you reduce your time to develop something, or it solved a
 
  - [Patreon](https://www.patreon.com/stichoza)
  - [PayPal](https://paypal.me/stichoza)
-
