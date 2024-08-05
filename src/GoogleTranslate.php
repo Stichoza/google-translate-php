@@ -2,6 +2,8 @@
 
 namespace Stichoza\GoogleTranslate;
 
+use DOMDocument;
+use DOMXPath;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use JsonException;
@@ -519,9 +521,9 @@ class GoogleTranslate
         $html = preg_replace('/<head>/i', '<head><meta charset="UTF-8">', $response->getBody()->getContents());
 
         // Prepare to crawl DOM
-        $dom = new \DOMDocument();
+        $dom = new DOMDocument();
         $dom->loadHTML($html);
-        $xpath = new \DOMXPath($dom);
+        $xpath = new DOMXPath($dom);
 
         $nodes = $xpath->query('//div[@class="language-item"]/a');
 
