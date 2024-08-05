@@ -511,7 +511,7 @@ class GoogleTranslate
      * @throws RateLimitException
      * @throws LanguagesRequestException
      */
-    public function localizedLanguages(string $target): array
+    protected function localizedLanguages(string $target): array
     {
         $menu = 'sl'; // 'tl';
         $url = parse_url($this->url);
