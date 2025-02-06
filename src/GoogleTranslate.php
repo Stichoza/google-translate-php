@@ -359,15 +359,13 @@ class GoogleTranslate
 
         // Replace all matches of our pattern with #{\d} for replacement later
         return preg_replace_callback(
-            $this->pattern,
-            function ($matches) {
-                static $index = -1;
+            pattern: $this->pattern,
+            callback: static function ($matches) {
+                static $index = 0;
 
-                $index++;
-
-                return '#{' . $index . '}';
+                return '#{' . $index++ . '}';
             },
-            $string
+            subject: $string
         );
     }
 
@@ -384,9 +382,9 @@ class GoogleTranslate
         $string = preg_replace('/#\{\s*(\d+)\s*\}/', '#{$1}', $string);
 
         return preg_replace_callback(
-            '/\#{(\d+)}/',
-            fn($matches) => $replacements[$matches[1]],
-            $string
+            pattern: '/\#{(\d+)}/',
+            callback: static fn($matches) => $replacements[$matches[1]],
+            subject: $string
         );
     }
 
@@ -424,10 +422,10 @@ class GoogleTranslate
     public function getResponse(string $string): array
     {
         $queryArray = array_merge($this->urlParams, [
-            'sl'   => $this->source,
-            'tl'   => $this->target,
-            'tk'   => $this->tokenProvider->generateToken($this->source, $this->target, $string),
-            'q'    => $string
+            'sl' => $this->source,
+            'tl' => $this->target,
+            'tk' => $this->tokenProvider->generateToken($this->source, $this->target, $string),
+            'q'  => $string
         ]);
 
         // Remove array indexes from URL so that "&dt[2]=" turns into "&dt=" and so on.
