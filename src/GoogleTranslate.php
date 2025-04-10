@@ -117,7 +117,13 @@ class GoogleTranslate
      * @param TokenProviderInterface|null $tokenProvider
      * @param bool|string $preserveParameters Boolean or custom regex pattern to match parameters
      */
-    public function __construct(string $target = 'en', string $source = null, array $options = [], TokenProviderInterface $tokenProvider = null, bool|string $preserveParameters = false)
+    public function __construct(
+        string                  $target = 'en',
+        ?string                 $source = null,
+        array                   $options = [],
+        ?TokenProviderInterface $tokenProvider = null,
+        bool|string             $preserveParameters = false
+    )
     {
         $this->client = new Client();
         $this->setTokenProvider($tokenProvider ?? new GoogleTokenGenerator)
@@ -145,7 +151,7 @@ class GoogleTranslate
      * @param string|null $source Source language code (null for automatic language detection)
      * @return GoogleTranslate
      */
-    public function setSource(string $source = null): self
+    public function setSource(?string $source = null): self
     {
         $this->source = $source ?? 'auto';
         return $this;
@@ -224,7 +230,14 @@ class GoogleTranslate
      * @throws TranslationRequestException If any other HTTP related error occurs
      * @throws TranslationDecodingException If response JSON cannot be decoded
      */
-    public static function trans(string $string, string $target = 'en', string $source = null, array $options = [], TokenProviderInterface $tokenProvider = null, bool|string $preserveParameters = false): ?string
+    public static function trans(
+        string                  $string,
+        string                  $target = 'en',
+        ?string                 $source = null,
+        array                   $options = [],
+        ?TokenProviderInterface $tokenProvider = null,
+        bool|string             $preserveParameters = false
+    ): ?string
     {
         return (new self)
             ->setTokenProvider($tokenProvider ?? new GoogleTokenGenerator)
