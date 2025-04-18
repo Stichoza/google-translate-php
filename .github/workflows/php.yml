@@ -7,37 +7,54 @@ on:
     branches: [master]
 
 jobs:
-
   phpunit:
-    name: PHPUnit
+    name: PHPUnit - PHP ${{ matrix.php-version }} - ${{ matrix.dependency-versions }}
     runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
       matrix:
-        php-version:
-          - "8.0"
-          - "8.1"
-          - "8.2"
-          - "8.3"
-        dependency-versions:
-          - "lowest"
-          - "highest"
+        php-version: ["8.1", "8.2", "8.3"]
+        dependency-versions: ["lowest", "highest"]
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
-          coverage: none
+          coverage: ${{ (matrix.php-version == '8.3' && matrix.dependency-versions == 'highest') && 'xdebug' || 'none' }}
 
-      - name: Install composer dependencies
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ matrix.php-version }}-composer-${{ matrix.dependency-versions }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-${{ matrix.php-version }}-composer-${{ matrix.dependency-versions }}-
+
+      - name: Install Composer dependencies
         uses: ramsey/composer-install@v2
         with:
           dependency-versions: ${{ matrix.dependency-versions }}
 
+      - name: Run static analysis (PHPStan)
+        run: vendor/bin/phpstan analyse --level=5 src/
+        continue-on-error: true
+
       - name: Run PHPUnit
+        if: matrix.php-version != '8.3' || matrix.dependency-versions != 'highest'
         run: vendor/bin/phpunit
+
+      - name: Run PHPUnit with Coverage
+        if: matrix.php-version == '8.3' && matrix.dependency-versions == 'highest'
+        run: vendor/bin/phpunit --coverage-clover=coverage.xml
+
+      - name: Upload coverage to Codecov
+        if: matrix.php-version == '8.3' && matrix.dependency-versions == 'highest'
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.xml
+          fail_ci_if_error: true
