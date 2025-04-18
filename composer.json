@@ -19,7 +19,8 @@
         "ext-mbstring": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5.10"
+        "phpunit/phpunit": "^9.5.10",
+        "phpstan/phpstan": "^2.1"
     },
     "scripts": {
         "test": "vendor/bin/phpunit"
