@@ -14,6 +14,8 @@ class UtilityTest extends TestCase
 
     public ReflectionMethod $method;
 
+    private ReflectionClass $reflection;
+
     public function setUp(): void
     {
         $this->tr = new GoogleTranslate();

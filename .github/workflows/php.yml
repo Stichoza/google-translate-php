@@ -20,13 +20,14 @@ jobs:
           - "8.1"
           - "8.2"
           - "8.3"
+          - "8.4"
         dependency-versions:
           - "lowest"
           - "highest"
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -35,9 +36,7 @@ jobs:
           coverage: none
 
       - name: Install composer dependencies
-        uses: ramsey/composer-install@v2
-        with:
-          dependency-versions: ${{ matrix.dependency-versions }}
+        run: composer install --prefer-dist --no-progress
 
       - name: Run PHPUnit
         run: vendor/bin/phpunit
