@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Stichoza\GoogleTranslate\Tests;
 
 use Exception;
@@ -8,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 use Stichoza\GoogleTranslate\GoogleTranslate;
 
-class UtilityTest extends TestCase
+final class UtilityTest extends TestCase
 {
     public GoogleTranslate $tr;
 
