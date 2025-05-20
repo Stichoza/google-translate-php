@@ -311,7 +311,7 @@ class GoogleTranslate
         if (is_string($responseArray)) {
             $output = $responseArray;
         } elseif (is_array($responseArray[0])) {
-            $output = (string) array_reduce($responseArray[0], static function ($carry, $item) {
+            $output = (string) array_reduce($responseArray[0], static function ($carry, $item): string {
                 $carry .= $item[0];
                 return $carry;
             });
@@ -360,7 +360,7 @@ class GoogleTranslate
         // Replace all matches of our pattern with #{\d} for replacement later
         return preg_replace_callback(
             pattern: $this->pattern,
-            callback: static function ($matches) {
+            callback: static function ($matches): string {
                 static $index = 0;
 
                 return '#{' . $index++ . '}';
