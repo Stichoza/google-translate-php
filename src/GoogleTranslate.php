@@ -31,22 +31,22 @@ class GoogleTranslate
     /**
      * @var string|null Source language which the string should be translated from.
      */
-    protected ?string $source;
+    protected ?string $source = null;
 
     /**
      * @var string|null Target language which the string should be translated to.
      */
-    protected ?string $target;
+    protected ?string $target = null;
 
     /*
      * @var string|null Regex pattern to match replaceable parts in a string, defualts to "words"
      */
-    protected ?string $pattern;
+    protected ?string $pattern = null;
 
     /**
      * @var string|null Last detected source language.
      */
-    protected ?string $lastDetectedSource;
+    protected ?string $lastDetectedSource = null;
 
     /**
      * @var string Google Translate base URL.
