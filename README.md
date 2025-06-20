@@ -29,7 +29,7 @@ Install this package via [Composer](https://getcomposer.org/).
 ```
 composer require stichoza/google-translate-php
 ```
-> **Note**
+> [!Note]
 > **PHP 8.0 or later** is required. Use following versions of this package for older PHP versions:
 
 | Package version | PHP Version | Documentation                                                                             |
