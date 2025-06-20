@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Stichoza\GoogleTranslate;
 
 use DOMDocument;
@@ -26,7 +28,7 @@ use Throwable;
 class GoogleTranslate
 {
     /**
-     * @var \GuzzleHttp\Client HTTP Client
+     * @var Client HTTP Client
      */
     protected Client $client;
 

@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Stichoza\GoogleTranslate\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Stichoza\GoogleTranslate\GoogleTranslate;
 
-class TranslationTest extends TestCase
+final class TranslationTest extends TestCase
 {
     public GoogleTranslate $tr;
 
