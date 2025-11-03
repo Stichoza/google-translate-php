@@ -56,12 +56,12 @@ class GoogleTranslate
     protected string $url = 'https://translate.google.com/translate_a/single';
 
     /**
-     * @var array Dynamic GuzzleHttp client options
+     * @var array<string, mixed> Dynamic GuzzleHttp client options
      */
     protected array $options = [];
 
     /**
-     * @var array URL Parameters
+     * @var array<string, mixed> URL Parameters
      */
     protected array $urlParams = [
         'client'   => 'gtx',
@@ -115,7 +115,7 @@ class GoogleTranslate
      *
      * @param string $target Target language code
      * @param string|null $source Source language code (null for automatic language detection)
-     * @param array $options HTTP client configuration options
+     * @param array<string, mixed> $options HTTP client configuration options
      * @param TokenProviderInterface|null $tokenProvider
      * @param bool|string $preserveParameters Boolean or custom regex pattern to match parameters
      */
@@ -139,7 +139,7 @@ class GoogleTranslate
      * Set target language for translation.
      *
      * @param string $target Target language code
-     * @return GoogleTranslate
+     * @return static
      */
     public function setTarget(string $target): static
     {
@@ -151,7 +151,7 @@ class GoogleTranslate
      * Set source language for translation.
      *
      * @param string|null $source Source language code (null for automatic language detection)
-     * @return GoogleTranslate
+     * @return static
      */
     public function setSource(?string $source = null): static
     {
@@ -163,7 +163,7 @@ class GoogleTranslate
      * Set Google Translate URL base
      *
      * @param string $url Google Translate URL base
-     * @return GoogleTranslate
+     * @return static
      */
     public function setUrl(string $url): static
     {
@@ -175,7 +175,7 @@ class GoogleTranslate
      * Set Google Translate client param (webapp, gtx, etc.)
      *
      * @param string $client Google Translate client param (webapp, gtx, etc.)
-     * @return GoogleTranslate
+     * @return static
      */
     public function setClient(string $client): static
     {
@@ -186,8 +186,8 @@ class GoogleTranslate
     /**
      * Set GuzzleHttp client options.
      *
-     * @param array $options HTTP client options.
-     * @return GoogleTranslate
+     * @param array<string, mixed> $options HTTP client options.
+     * @return static
      */
     public function setOptions(array $options = []): static
     {
@@ -199,7 +199,7 @@ class GoogleTranslate
      * Set token provider.
      *
      * @param TokenProviderInterface $tokenProvider Token provider instance
-     * @return GoogleTranslate
+     * @return static
      */
     public function setTokenProvider(TokenProviderInterface $tokenProvider): static
     {
@@ -223,7 +223,7 @@ class GoogleTranslate
      * @param string $string String to translate
      * @param string $target Target language code
      * @param string|null $source Source language code (null for automatic language detection)
-     * @param array $options HTTP client configuration options
+     * @param array<string, mixed> $options HTTP client configuration options
      * @param TokenProviderInterface|null $tokenProvider Custom token provider
      * @param bool|string $preserveParameters Boolean or custom regex pattern to match parameters
      * @return null|string
@@ -329,7 +329,7 @@ class GoogleTranslate
      * @example (e.g. "Hello :name" will extract "name")
      *
      * @param bool|string $pattern Boolean or custom regex pattern to match parameters
-     * @return GoogleTranslate
+     * @return static
      */
     public function preserveParameters(bool|string $pattern = true): static
     {
