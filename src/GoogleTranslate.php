@@ -41,7 +41,7 @@ class GoogleTranslate
     protected ?string $target = null;
 
     /*
-     * @var string|null Regex pattern to match replaceable parts in a string, defualts to "words"
+     * @var string|null Regex pattern to match replaceable parts in a string, defaults to "words"
      */
     protected ?string $pattern = null;
 
@@ -136,7 +136,7 @@ class GoogleTranslate
     }
 
     /**
-     * Set target language for translation.
+     * Set the target language for translation.
      *
      * @param string $target Target language code
      * @return static
@@ -148,7 +148,7 @@ class GoogleTranslate
     }
 
     /**
-     * Set source language for translation.
+     * Set the source language for translation.
      *
      * @param string|null $source Source language code (null for automatic language detection)
      * @return static
@@ -227,9 +227,9 @@ class GoogleTranslate
      * @param TokenProviderInterface|null $tokenProvider Custom token provider
      * @param bool|string $preserveParameters Boolean or custom regex pattern to match parameters
      * @return null|string
-     * @throws LargeTextException If translation text is too large
+     * @throws LargeTextException If the translation text is too large
      * @throws RateLimitException If Google has blocked you for excessive requests
-     * @throws TranslationRequestException If any other HTTP related error occurs
+     * @throws TranslationRequestException If any other HTTP-related error occurs
      * @throws TranslationDecodingException If response JSON cannot be decoded
      */
     public static function trans(
@@ -243,7 +243,7 @@ class GoogleTranslate
     {
         return (new static)
             ->setTokenProvider($tokenProvider ?? new GoogleTokenGenerator)
-            ->setOptions($options) // Options are already set in client constructor tho.
+            ->setOptions($options) // Options are already set in the client constructor tho.
             ->setSource($source)
             ->setTarget($target)
             ->preserveParameters($preserveParameters)
@@ -253,14 +253,14 @@ class GoogleTranslate
     /**
      * Translate text.
      *
-     * This can be called from instance method translate() using __call() magic method.
+     * This can be called from the instance method translate () using __call() magic method.
      * Use $instance->translate($string) instead.
      *
      * @param string $string String to translate
      * @return string|null
-     * @throws LargeTextException If translation text is too large
+     * @throws LargeTextException If the translation text is too large
      * @throws RateLimitException If Google has blocked you for excessive requests
-     * @throws TranslationRequestException If any other HTTP related error occurs
+     * @throws TranslationRequestException If any other HTTP-related error occurs
      * @throws TranslationDecodingException If response JSON cannot be decoded
      */
     public function translate(string $string): ?string
@@ -296,10 +296,10 @@ class GoogleTranslate
             $detectedLanguages[] = $responseArray[count($responseArray) - 2][0][0];
         }
 
-        // Set initial detected language to null
+        // Set initially detected language to null
         $this->lastDetectedSource = null;
 
-        // Iterate and set last detected language
+        // Iterate and set the last detected language
         foreach ($detectedLanguages as $lang) {
             if ($this->isValidLocale($lang)) {
                 $this->lastDetectedSource = $lang;
@@ -375,7 +375,7 @@ class GoogleTranslate
      */
     protected function injectParameters(string $string, array $replacements): string
     {
-        // Remove space added by google in the parameters
+        // Remove space added by Google in the parameters
         $string = preg_replace('/#\{\s*(\d+)\s*\}/', '#{$1}', $string);
 
         return preg_replace_callback(
@@ -395,7 +395,7 @@ class GoogleTranslate
     {
         $matches = [];
 
-        // If no pattern is set, return empty array
+        // If no pattern is set, return an empty array
         if (!$this->pattern) {
             return $matches;
         }
@@ -411,9 +411,9 @@ class GoogleTranslate
      *
      * @param string $string String to translate
      * @return array Response
-     * @throws LargeTextException If translation text is too large
+     * @throws LargeTextException If the translation text is too large
      * @throws RateLimitException If Google has blocked you for excessive requests
-     * @throws TranslationRequestException If any other HTTP related error occurs
+     * @throws TranslationRequestException If any other HTTP-related error occurs
      * @throws TranslationDecodingException If response JSON cannot be decoded
      */
     public function getResponse(string $string): array
@@ -444,7 +444,7 @@ class GoogleTranslate
 
         $body = $response->getBody(); // Get response body
 
-        // Modify body to avoid json errors
+        // Modify the body to avoid JSON errors
         $bodyJson = preg_replace(array_keys($this->resultRegexes), array_values($this->resultRegexes), $body);
 
         // Decode JSON data

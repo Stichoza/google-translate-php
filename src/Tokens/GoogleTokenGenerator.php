@@ -5,7 +5,7 @@ namespace Stichoza\GoogleTranslate\Tokens;
 /**
  * Google Token Generator.
  *
- * Thanks to @helen5106, @tehmaestro and few other cool guys
+ * Thanks to @helen5106, @tehmaestro and a few other cool guys
  * at https://github.com/Stichoza/google-translate-php/issues/32
  */
 class GoogleTokenGenerator implements TokenProviderInterface
