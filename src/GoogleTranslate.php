@@ -94,7 +94,7 @@ class GoogleTranslate
     ];
 
     /**
-     * @var array Regex key-value patterns to replace on response data
+     * @var array<string, string> Regex key-value patterns to replace on response data
      */
     protected array $resultRegexes = [
         '/,+/'  => ',',
@@ -141,7 +141,7 @@ class GoogleTranslate
      * @param string $target Target language code
      * @return GoogleTranslate
      */
-    public function setTarget(string $target): self
+    public function setTarget(string $target): static
     {
         $this->target = $target;
         return $this;
@@ -153,7 +153,7 @@ class GoogleTranslate
      * @param string|null $source Source language code (null for automatic language detection)
      * @return GoogleTranslate
      */
-    public function setSource(?string $source = null): self
+    public function setSource(?string $source = null): static
     {
         $this->source = $source ?? 'auto';
         return $this;
@@ -165,7 +165,7 @@ class GoogleTranslate
      * @param string $url Google Translate URL base
      * @return GoogleTranslate
      */
-    public function setUrl(string $url): self
+    public function setUrl(string $url): static
     {
         $this->url = $url;
         return $this;
@@ -177,7 +177,7 @@ class GoogleTranslate
      * @param string $client Google Translate client param (webapp, gtx, etc.)
      * @return GoogleTranslate
      */
-    public function setClient(string $client): self
+    public function setClient(string $client): static
     {
         $this->urlParams['client'] = $client;
         return $this;
@@ -189,7 +189,7 @@ class GoogleTranslate
      * @param array $options HTTP client options.
      * @return GoogleTranslate
      */
-    public function setOptions(array $options = []): self
+    public function setOptions(array $options = []): static
     {
         $this->options = $options;
         return $this;
@@ -201,7 +201,7 @@ class GoogleTranslate
      * @param TokenProviderInterface $tokenProvider Token provider instance
      * @return GoogleTranslate
      */
-    public function setTokenProvider(TokenProviderInterface $tokenProvider): self
+    public function setTokenProvider(TokenProviderInterface $tokenProvider): static
     {
         $this->tokenProvider = $tokenProvider;
         return $this;
@@ -329,9 +329,9 @@ class GoogleTranslate
      * @example (e.g. "Hello :name" will extract "name")
      *
      * @param bool|string $pattern Boolean or custom regex pattern to match parameters
-     * @return self
+     * @return GoogleTranslate
      */
-    public function preserveParameters(bool|string $pattern = true): self
+    public function preserveParameters(bool|string $pattern = true): static
     {
         if ($pattern === true) {
             $this->pattern = '/:(\w+)/'; // Default regex
