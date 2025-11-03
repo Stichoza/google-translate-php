@@ -241,7 +241,7 @@ class GoogleTranslate
         bool|string             $preserveParameters = false
     ): ?string
     {
-        return (new self)
+        return (new static)
             ->setTokenProvider($tokenProvider ?? new GoogleTokenGenerator)
             ->setOptions($options) // Options are already set in client constructor tho.
             ->setSource($source)
@@ -307,10 +307,7 @@ class GoogleTranslate
             }
         }
 
-        // The response sometime can be a translated string.
-        if (is_string($responseArray)) {
-            $output = $responseArray;
-        } elseif (is_array($responseArray[0])) {
+        if (is_array($responseArray[0])) {
             $output = (string) array_reduce($responseArray[0], static function ($carry, $item) {
                 $carry .= $item[0];
                 return $carry;
@@ -457,7 +454,7 @@ class GoogleTranslate
             throw new TranslationDecodingException('Data cannot be decoded or it is deeper than the recursion limit');
         }
 
-        return $bodyArray;
+        return (array) $bodyArray;
     }
 
     /**
