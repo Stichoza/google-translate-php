@@ -321,9 +321,7 @@ class GoogleTranslate
 
     /**
      * Set a custom pattern for extracting replaceable keywords from the string,
-     * default to extracting words prefixed with a colon
-     *
-     * @example (e.g. "Hello :name" will extract "name")
+     * default to extracting words prefixed with a colon. (e.g. `Hello :name` will extract `name`)
      *
      * @param bool|string $pattern Boolean or custom regex pattern to match parameters
      * @return static
@@ -363,7 +361,7 @@ class GoogleTranslate
                 return '#{' . $index++ . '}';
             },
             subject: $string
-        );
+        ) ?: $string;
     }
 
     /**
