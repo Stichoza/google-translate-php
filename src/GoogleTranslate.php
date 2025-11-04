@@ -374,10 +374,10 @@ class GoogleTranslate
     protected function injectParameters(string $string, array $replacements): string
     {
         // Remove space added by Google in the parameters
-        $string = preg_replace('/#\{\s*(\d+)\s*\}/', '#{$1}', $string);
+        $string = preg_replace('/#\{\s*(\d+)\s*}/', '#{$1}', $string);
 
         return preg_replace_callback(
-            pattern: '/\#{(\d+)}/',
+            pattern: '/#{(\d+)}/',
             callback: static fn($matches) => $replacements[$matches[1]],
             subject: $string
         );
