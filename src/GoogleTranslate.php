@@ -22,6 +22,7 @@ use Throwable;
  * @author      Levan Velijanashvili <me@stichoza.com>
  * @link        https://stichoza.com/
  * @license     MIT
+ * @phpstan-consistent-constructor
  */
 class GoogleTranslate
 {
@@ -408,7 +409,7 @@ class GoogleTranslate
      * Get response array.
      *
      * @param string $string String to translate
-     * @return array Response
+     * @return array<int|string, mixed> Response
      * @throws LargeTextException If the translation text is too large
      * @throws RateLimitException If Google has blocked you for excessive requests
      * @throws TranslationRequestException If any other HTTP-related error occurs
@@ -509,8 +510,10 @@ class GoogleTranslate
     protected function localizedLanguages(string $target): array
     {
         $menu = 'sl'; // 'tl';
-        $url = parse_url($this->url);
-        $url = $url['scheme'] . '://' . $url['host'] . '/m?' . http_build_query(['mui' => $menu, 'hl' => $target]);
+
+        $url = (array) parse_url($this->url);
+
+        $url = ($url['scheme'] ?? 'http') . '://' . ($url['host'] ?? '') . '/m?' . http_build_query(['mui' => $menu, 'hl' => $target]);
 
         try {
             $response = $this->client->get($url, $this->options);
