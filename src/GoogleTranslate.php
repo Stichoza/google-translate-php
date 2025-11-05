@@ -360,7 +360,7 @@ class GoogleTranslate
         // Replace all matches of our pattern with #{\d} for replacement later
         return preg_replace_callback(
             pattern: $this->pattern,
-            callback: static function ($matches) {
+            callback: static function () {
                 static $index = 0;
 
                 return '#{' . $index++ . '}';
