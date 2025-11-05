@@ -3,6 +3,8 @@
 namespace Stichoza\GoogleTranslate;
 
 use DOMDocument;
+use DOMElement;
+use DOMNodeList;
 use DOMXPath;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -537,10 +539,20 @@ class GoogleTranslate
         $nodes = $xpath->query('//div[@class="language-item"]/a');
 
         $languages = [];
-        foreach ($nodes as $node) {
-            $href = $node->getAttribute('href');
-            $code = strtok(substr($href, strpos($href, "$menu=") + strlen("$menu=")), '&');
-            $languages[$code] = $node->nodeValue;
+
+        if ($nodes instanceof DOMNodeList) {
+            foreach ($nodes as $node) {
+                if (!$node instanceof DOMElement) {
+                    continue;
+                }
+
+                $href = $node->getAttribute('href');
+                $code = strtok(substr($href, strpos($href, "$menu=") + strlen("$menu=")), '&');
+
+                if ($code && $node->nodeValue !== null) {
+                    $languages[$code] = $node->nodeValue;
+                }
+            }
         }
 
         return $languages;
