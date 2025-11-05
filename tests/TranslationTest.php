@@ -81,6 +81,40 @@ class TranslationTest extends TestCase
         $this->assertNotEqualsIgnoringCase($text, $output, 'Translation should be different from original');
     }
 
+    public function testVeryLargeTextTranslation(): void
+    {
+        $text = <<<TEXT
+The ball is green.
+
+Google Translate is a multilingual neural machine translation service developed by Google to translate text,
+documents and websites from one language into another.It offers a website interface, a mobile app for Android and iOS,
+and an API that helps developers build browser extensions and software applications. As of November 2025, Google Translate
+supports 249 languages and language varieties at various levels. It served over 200 million people daily in May 2013, and
+over 500 million total users as of April 2016, with more than 100 billion words translated daily.
+
+Launched in April 2006 as a statistical machine translation service, it originally used United Nations and European Parliament
+documents and transcripts to gather linguistic data. Rather than translating languages directly, it first translated text to
+English and then pivoted to the target language in most of the language combinations it posited in its grid, with a few
+exceptions including Catalan–Spanish. During a translation, it looked for patterns in millions of documents to help decide
+which words to choose and how to arrange them in the target language. In recent years, it has used a deep learning model to
+power its translations. Its accuracy, which has been criticized on several occasions, has been measured to vary greatly
+across languages. In November 2016, Google announced that Google Translate would switch to a neural machine translation
+engine – Google Neural Machine Translation (GNMT) – which translated "whole sentences at a time, rather than just piece by piece.
+It uses this broader context to help it figure out the most relevant translation, which it then rearranges and adjusts to
+be more like a human speaking with proper grammar".
+
+The sky is blue.
+TEXT;
+
+        $output = $this->tr->setTarget('fr')->translate($text);
+
+        $this->assertIsString($output, 'Translation should be string');
+        $this->assertNotEmpty($output, 'Translation should not be empty');
+        $this->assertNotEqualsIgnoringCase($text, $output, 'Translation should be different from original');
+        $this->assertStringContainsString('La balle est verte', $output, 'Translation should contain original text');
+        $this->assertStringContainsString('Le ciel est bleu', $output, 'Translation should contain original text');
+    }
+
     public function testRawResponse(): void
     {
         $rawResult = $this->tr->getResponse('cat');
