@@ -91,7 +91,14 @@ class UtilityTest extends TestCase
         $output = stream_get_contents($res);
 
         $this->assertStringContainsString('Host: translate.google.cn', $output);
-        $this->assertStringContainsString('Connected to translate.google.cn', $output);
+
+        $this->assertThat(
+            $output,
+            $this->logicalOr(
+                $this->stringContains('Connected to translate.google.cn'),
+                $this->stringContains('Established connection to translate.google.cn'),
+            ),
+        );
 
         fclose($res);
     }
