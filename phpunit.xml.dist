@@ -2,6 +2,7 @@
 <phpunit backupGlobals="false"
          backupStaticProperties="false"
          bootstrap="vendor/autoload.php"
+         cacheDirectory=".phpunit.cache"
          colors="true"
          displayDetailsOnTestsThatTriggerDeprecations="true"
          displayDetailsOnPhpunitDeprecations="true"
