@@ -445,7 +445,7 @@ class GoogleTranslate
             throw new TranslationRequestException($e->getMessage(), $e->getCode());
         }
 
-        $body = $response->getBody(); // Get response body
+        $body = $response->getBody()->getContents(); // Get response body
 
         // Modify the body to avoid JSON errors
         $bodyJson = preg_replace(array_keys($this->resultRegexes), array_values($this->resultRegexes), $body);
