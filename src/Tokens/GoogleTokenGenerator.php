@@ -32,7 +32,7 @@ class GoogleTokenGenerator implements TokenProviderInterface
                 if ($g < 2048) {
                     $d[$e++] = $g >> 6 | 192;
                 } else {
-                    if ($g & 64512 === 55296 && $f + 1 < $this->length($text) && ($this->charCodeAt($text, $f + 1) & 64512) === 56320) {
+                    if (($g & 64512) === 55296 && $f + 1 < $this->length($text) && ($this->charCodeAt($text, $f + 1) & 64512) === 56320) {
                         $g = 65536 + (($g & 1023) << 10) + ($this->charCodeAt($text, ++$f) & 1023);
                         $d[$e++] = $g >> 18 | 240;
                         $d[$e++] = $g >> 12 & 63 | 128;
