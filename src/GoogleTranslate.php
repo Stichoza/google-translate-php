@@ -31,7 +31,7 @@ use Throwable;
 class GoogleTranslate
 {
     /**
-     * @var \GuzzleHttp\Client HTTP Client
+     * @var Client HTTP Client
      */
     protected Client $client;
 
