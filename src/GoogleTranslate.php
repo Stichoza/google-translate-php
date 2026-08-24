@@ -69,7 +69,7 @@ class GoogleTranslate
      * @var array<string, mixed> URL Parameters
      */
     protected array $urlParams = [
-        'client'   => 'gtx',
+        'client'   => 'webapp',
         'hl'       => 'en',
         'dt'       => [
             't',   // Translate
