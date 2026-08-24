@@ -27,7 +27,8 @@ class UtilityTest extends TestCase
     {
         $method = $this->reflection->getMethod('isValidLocale');
 
-        $method->setAccessible(true); // Still needed for PHP 8.0
+        /** @phpstan-ignore-next-line (Still needed for PHP 8.0) */
+        $method->setAccessible(true);
 
         $booleanAssertions = [
             'ab'       => true, // ka, ge, ua
@@ -108,7 +109,9 @@ class UtilityTest extends TestCase
         $this->tr->setClient('test');
 
         $urlParams = $this->reflection->getProperty('urlParams');
-        $urlParams->setAccessible(true); // Still needed for PHP 8.0
+
+        /** @phpstan-ignore-next-line (Still needed for PHP 8.0) */
+        $urlParams->setAccessible(true);
 
         $client = $urlParams->getValue($this->tr)['client'];
 
