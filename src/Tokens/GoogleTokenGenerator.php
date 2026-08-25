@@ -24,7 +24,7 @@ class GoogleTokenGenerator implements TokenProviderInterface
     {
         $tkk = ['406398', 2087938574];
 
-        for ($d = [], $e = 0, $f = 0; $f < $this->length($text); $f++) {
+        for ($d = [], $e = 0, $f = 0; $f < $this->length($text); ++$f) {
             $g = $this->charCodeAt($text, $f);
             if ($g < 128) {
                 $d[$e++] = $g;

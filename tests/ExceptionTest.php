@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Stichoza\GoogleTranslate\Tests;
 
 use ErrorException;
@@ -12,7 +14,7 @@ use Stichoza\GoogleTranslate\Exceptions\TranslationRequestException;
 use Stichoza\GoogleTranslate\GoogleTranslate;
 use UnexpectedValueException;
 
-class ExceptionTest extends TestCase
+final class ExceptionTest extends TestCase
 {
     public GoogleTranslate $tr;
 
