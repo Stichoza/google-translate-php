@@ -24,16 +24,25 @@ class GoogleTokenGenerator implements TokenProviderInterface
     {
         $tkk = ['406398', 2087938574];
 
-        for ($d = [], $e = 0, $f = 0; $f < $this->length($text); $f++) {
-            $g = $this->charCodeAt($text, $f);
+        // Work on real UTF-16 code units (not Unicode code points) so that
+        // characters outside the Basic Multilingual Plane (e.g. most emoji,
+        // U+10000 and above) are seen as surrogate pairs, exactly like
+        // JavaScript's charCodeAt()/length. Using code points here made the
+        // surrogate-pair branch below unreachable and produced a wrong
+        // token (and a 403 from Google) whenever the text contained an emoji.
+        $units = $this->utf16CodeUnits($text);
+        $length = count($units);
+
+        for ($d = [], $e = 0, $f = 0; $f < $length; $f++) {
+            $g = $units[$f];
             if ($g < 128) {
                 $d[$e++] = $g;
             } else {
                 if ($g < 2048) {
                     $d[$e++] = $g >> 6 | 192;
                 } else {
-                    if (($g & 64512) === 55296 && $f + 1 < $this->length($text) && ($this->charCodeAt($text, $f + 1) & 64512) === 56320) {
-                        $g = 65536 + (($g & 1023) << 10) + ($this->charCodeAt($text, ++$f) & 1023);
+                    if (($g & 64512) === 55296 && $f + 1 < $length && ($units[$f + 1] & 64512) === 56320) {
+                        $g = 65536 + (($g & 1023) << 10) + ($units[++$f] & 1023);
                         $d[$e++] = $g >> 18 | 240;
                         $d[$e++] = $g >> 12 & 63 | 128;
                     } else {
@@ -119,27 +128,23 @@ class GoogleTokenGenerator implements TokenProviderInterface
     }
 
     /**
-     * Get JS charCodeAt equivalent result with UTF-16 encoding
+     * Split a UTF-8 string into true UTF-16 code units, surrogate pairs
+     * included, matching JavaScript's charCodeAt()/length semantics for
+     * characters above U+FFFF (astral plane, e.g. most emoji).
      *
      * @param string $string
-     * @param int    $index
-     *
-     * @return int
+     * @return int[]
      */
-    private function charCodeAt(string $string, int $index): int
+    private function utf16CodeUnits(string $string): array
     {
-        return mb_ord(mb_substr($string, $index, 1));
-    }
+        $utf16be = mb_convert_encoding($string, 'UTF-16BE', 'UTF-8');
 
-    /**
-     * Get JS equivalent string length with UTF-16 encoding
-     *
-     * @param string $string
-     *
-     * @return int
-     */
-    private function length(string $string): int
-    {
-        return mb_strlen($string);
+        $units = [];
+
+        for ($i = 0, $len = strlen($utf16be); $i < $len; $i += 2) {
+            $units[] = (ord($utf16be[$i]) << 8) | ord($utf16be[$i + 1]);
+        }
+
+        return $units;
     }
 }
